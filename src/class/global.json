@@ -1,0 +1,181 @@
+[
+{
+  "reduction_precision_m" : 100
+},
+{
+  "default_coor_precision_coef" : 10000
+},
+{
+    "id"     : "admin0",
+    "type"   : "Polygon",
+    "code"   : 1000000002,
+    "key"    : "S1000000002",
+    "layer"  : 1,
+    "width_mm" : 2,
+    "pen"    : [1, 1, 1],
+    "brush"  : [255, 255, 255],
+    "coor_precision_coef" : 100,
+    "attributes":
+    [
+    {
+      "code"   : 660005,
+      "name"   : "iso_code",
+      "visible": false
+    }
+    ]
+},
+{
+    "id"     : "admin1",
+    "type"   : "Line",
+    "code"   : 1000000002,
+    "key"    : "S1000000002",
+    "layer"  : 4,
+    "pen"    : [1, 1, 1],
+    "style"  : "Dash",
+    "name_code": 1,
+    "max_mip": 5000,
+    "coor_precision_coef" : 100,
+    "attributes":
+    [
+    {
+      "code"   : 660005,
+      "name"   : "iso_code",
+      "visible": false
+    }
+    ]
+},
+{
+    "id"     : "океан, море",
+    "type"   : "Polygon",
+    "code"   : 31110000,
+    "layer"  : 0,
+    "brush"  : [166, 220, 238],
+    "tcolor" : [37, 151, 194],
+    "name_code": 1
+},
+{
+    "id"     : "водоём",
+    "type"   : "Polygon",
+    "code"   : 31120002,
+    "layer"  : 2,
+    "brush"  : [166, 220, 238],
+    "tcolor" : [37, 151, 194],
+    "name_code": 1,
+    "min_mip": 20
+},
+{
+    "id"     : "Автомагистраль (автострада)",
+    "type"   : "Line",
+    "key"    : "186-000-L",
+    "layer"  : 3,
+    "width_mm" : 0.8,
+    "pen"    : [255, 130, 70],
+    "brush"  : [255, 255, 255],
+    "name_code": 1,
+    "min_mip": 20,
+    "max_mip": 500
+},
+{
+    "id"     : "Автомагистраль (автострада), мост",
+    "type"   : "Line",
+    "key"    : "186-000-L_b",
+    "layer"  : 3,
+    "width_mm" : 0.8,
+    "pen"    : [255, 130, 70],
+    "brush"  : [255, 255, 255],
+    "name_code": 1,
+    "min_mip": 20,
+    "max_mip": 500
+},
+{
+    "id"     : "усовершенствованное шоссе",
+    "type"   : "Line",
+    "key"    : "187-000-L",
+    "layer"  : 3,
+    "width_mm" : 0.6,
+    "pen"    : [253, 179, 104],
+    "brush"  : [255, 255, 255],
+    "name_code": 1,
+    "min_mip": 20,
+    "max_mip": 500
+},
+{
+    "id"     : "усовершенствованное шоссе, мост",
+    "type"   : "Line",
+    "key"    : "187-000-L_b",
+    "layer"  : 3,
+    "width_mm" : 0.6,
+    "pen"    : [253, 179, 104],
+    "brush"  : [255, 255, 255],
+    "name_code": 1,
+    "min_mip": 20,
+    "max_mip": 500
+},
+{
+    "id"     : "железная дорога ширококолейная",
+    "type"   : "Line",
+    "code"   : 61111000,
+    "layer"  : 3,
+    "width_mm" : 0.2,
+    "pen"    : [116, 116, 116],
+    "name_code": 1,
+    "min_mip": 20,
+    "max_mip": 500
+},
+{
+    "id"     : "Столицы государств",
+    "type"   : "Point",
+    "code"   : 41000001,
+    "key"    : "p_city_2",
+    "layer"  : 4,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "min_mip": 20,
+    "width_mm" : 3
+},
+{
+    "id"     : "Федеральные центры",
+    "type"   : "Point",
+    "code"   : 41000002,
+    "key"    : "p_city_3",
+    "layer"  : 5,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "min_mip": 20,
+    "width_mm" : 3
+},
+{
+    "id"     : "Региональные центры",
+    "type"   : "Point",
+    "code"   : 41000003,
+    "key"    : "p_city_4",
+    "layer"  : 6,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "min_mip": 20,
+    "width_mm" : 2
+},
+{
+    "id"     : "Города крупные",
+    "type"   : "Point",
+    "code"   : 41100000,
+    "key"    : "P0041100000",
+    "layer"  : 7,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "min_mip": 20,
+    "width_mm" : 1.5
+},
+{
+    "id"     : "Города прочие",
+    "type"   : "Point",
+    "code"   : 41100001,
+    "key"    : "P0041100001",
+    "layer"  : 8,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "width_mm" : 1.0,
+    "min_mip": 20,
+    "max_mip": 4000
+}
+]

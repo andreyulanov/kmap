@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/labels">
+        <file>center.png</file>
+        <file>minus.png</file>
+        <file>plus.png</file>
+        <file>compass.png</file>
+        <file>recordoff.png</file>
+        <file>recordon.jpg</file>
+        <file>find.png</file>
+        <file>history.png</file>
+        <file>category.png</file>
+        <file>in.png</file>
+        <file>out.png</file>
+        <file>send.png</file>
+        <file>ok.png</file>
+        <file>select.png</file>
+        <file>objects.png</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>
