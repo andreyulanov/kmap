@@ -14,6 +14,9 @@
 #include "kposgenerator.h"
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"
+#include "kxmppclient.h"
+#include <qxmpp/QXmppClient.h>
+#include <qxmpp/QXmppLogger.h>
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -144,7 +147,7 @@ int main(int argc, char* argv[])
     }
   }
   else
-    mmc_path = "/home/user/kmap/data";
+    mmc_path = ".";
 
   LocalMapDownloader loader(mmc_path + "/maplist.txt");
   scan(&mapw, &loader, mmc_path + "/maps");
@@ -349,6 +352,12 @@ int main(int argc, char* argv[])
 
   mapw.show();
   mapw.setViewPoint(start_lat_lon, 1);
+
+  ///TODO: Improve setting up of objects dir and proxy
+  KXmppClient client("./objects", "proxy.macaw.me");
+  client.logger()->setLoggingType(QXmppLogger::StdoutLogging);
+
+  client.connectToServer("knav.alice@macaw.me", "very-secure-password-for-knav-alice");
 
   return a.exec();
 }

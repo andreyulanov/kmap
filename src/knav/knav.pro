@@ -21,6 +21,7 @@ kcontrols.cpp \
  kposgenerator.cpp \
  kswitch.cpp \
  ktrackmanager.cpp \
+ kxmppclient.cpp \
 main.cpp
 
 HEADERS += \
@@ -38,7 +39,8 @@ kcontrols.h \
  knewobjectwidget.h \
  kposgenerator.h \
  kswitch.h \
- ktrackmanager.h
+ ktrackmanager.h \
+ kxmppclient.h
 
 !linux-buildroot-g++: SOURCES += \
     kheading.cpp \
@@ -69,3 +71,7 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 RESOURCES += \
  images.qrc
+
+unix|win32: LIBS += -lqxmpp
+# for qxmpp
+QT += network
