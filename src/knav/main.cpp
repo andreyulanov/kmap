@@ -355,7 +355,8 @@ int main(int argc, char* argv[])
 
   ///TODO: Improve setting up of objects dir and proxy
   KXmppClient client("./objects", "proxy.macaw.me");
-  client.logger()->setLoggingType(QXmppLogger::StdoutLogging);
+  client.logger()->setLogFilePath("client.log");
+  client.logger()->setLoggingType(QXmppLogger::FileLogging);
 
   client.connectToServer("knav.alice@macaw.me", "very-secure-password-for-knav-alice");
 

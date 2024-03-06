@@ -34,7 +34,6 @@ void KXmppClient::sendFile(const QString &jid,
                            const QString &filePath,
                            const QString &description)
 {
-    qDebug() << "Sending placeHolder";
     qDebug() << "Sending " << filePath << " to " << jid << " with description " << description;
 }
 
@@ -64,18 +63,18 @@ KXmppObjectReceiver::KXmppObjectReceiver(QXmppTransferJob *job, QString filePath
 }
 KXmppObjectReceiver::~KXmppObjectReceiver()
 {
-    qDebug() << "KXmppObjectReceiver ends its life...";
+    //qDebug() << "KXmppObjectReceiver ends its life...";
 }
 
 void KXmppObjectReceiver::slotError(QXmppTransferJob::Error error)
 {
     ///TODO: delete the file
-    qDebug() << "Transmission failed:" << error;
+    qWarning() << "Transmission failed:" << error;
 }
 
 void KXmppClient::slotFileReceived(QXmppTransferJob *job)
 {
-    qDebug() << "Got transfer request from:" << job->jid();
+    qInfo() << "Got transfer request from:" << job->jid();
 
     // do not download file in case if it does not worth it
     if (!filesWorthToReceive.match(job->fileName()).hasMatch())
