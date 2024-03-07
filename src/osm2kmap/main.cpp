@@ -13,10 +13,11 @@ class OsmParser
   QMultiMap<QString, KGeoCoor>    nodes;
   QMultiMap<QString, KGeoPolygon> ways;
   QRectF                          bounds;
+  QString                         curr_way_id;
+  KGeoPolygon                     curr_way_geom;
   Params                          getParams(QString line);
   void                            setBounds(OsmParser::Params params);
   void                            addNode(OsmParser::Params params);
-  void                            addWay(OsmParser::Params params);
   void    processWay(OsmParser::Params params);
   void    processRelation();
   QString getLineType(QString line);
@@ -61,12 +62,6 @@ void OsmParser::addNode(OsmParser::Params params)
   nodes.insert(id, coor);
 }
 
-void OsmParser::addWay(OsmParser::Params params)
-{
-  auto id = params.value("id");
-  ways.insert(id, KGeoPolygon());
-}
-
 OsmParser::OsmParser()
 {
   type_list << "bounds"
@@ -97,7 +92,6 @@ void OsmParser::parse(QString path, QVector<KShape> shapes)
   Params          curr_params;
   int             line_count = 0;
   QVector<Params> readtags;
-  KGeoPolygon     curr_way;
   while (!in.atEnd())
   {
     QString line = in.readLine().trimmed();
@@ -126,7 +120,7 @@ void OsmParser::parse(QString path, QVector<KShape> shapes)
       if (type == "node")
         addNode(params);
       if (type == "way")
-        addWay(params);
+        curr_way_id = params.value("id");
       curr_type = type;
       continue;
     }
@@ -177,8 +171,11 @@ void OsmParser::parse(QString path, QVector<KShape> shapes)
           }
         }
       }
-      curr_type.clear();
       readtags.clear();
+      if (curr_type == "way")
+        ways.insert(curr_way_id, curr_way_geom);
+      test;
+      curr_type.clear();
     }
     else
     {
@@ -186,7 +183,7 @@ void OsmParser::parse(QString path, QVector<KShape> shapes)
       if (curr_type == "way" && line.startsWith("<nd"))
       {
         auto ref = params.value("ref");
-        curr_way.append(nodes.value(ref));
+        curr_way_geom.append(nodes.value(ref));
       }
     }
   }
