@@ -246,6 +246,31 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           }
         }
 
+        auto tags = obj.value("keytags");
+        if (tags.isArray())
+        {
+          auto tag_array = tags.toArray();
+          for (auto tag: tag_array)
+          {
+            auto tag_obj = tag.toObject();
+            if (obj.isEmpty())
+              continue;
+            KOsmTag osm_tag;
+            osm_tag.key   = tag_obj.value("key").toString();
+            osm_tag.value = tag_obj.value("value").toString();
+            sh->keytags.append(osm_tag);
+          }
+        }
+
+        tags = obj.value("usetags");
+        if (tags.isArray())
+        {
+          auto tag_array = tags.toArray();
+          for (auto tag: tag_array)
+          {
+            sh->usetags.append(tag.toString());
+          }
+        }
         sh->coor_precision_coef =
             obj.value("coor_precision_coef").toInt();
         if (sh->coor_precision_coef == 0)
@@ -305,6 +330,17 @@ int KShapeManager::getShapeIdx(int code, QString key)
     idx++;
   }
   return -1;
+}
+
+QVector<KShape> KShapeManager::getShapes()
+{
+  QVector<KShape> ret;
+  for (auto sh1: shapes)
+  {
+    auto sh2 = *sh1;
+    ret.append(sh2);
+  }
+  return ret;
 }
 
 KShapeList KShapeManager::getShapeList()

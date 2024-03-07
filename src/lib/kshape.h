@@ -14,6 +14,12 @@ struct KAttribute
   double  max_mip;
 };
 
+struct KOsmTag
+{
+  QString key;
+  QString value;
+};
+
 struct KShape
 {
   Q_GADGET
@@ -57,6 +63,8 @@ public:
   int                 name_code = 0;
   QString             attrval;
   QVector<KAttribute> attributes;
+  QVector<KOsmTag>    keytags;
+  QStringList         usetags;
   void                save(QFile* f);
   void                load(QFile* f);
   bool                operator==(KShape) const;
@@ -88,6 +96,7 @@ public:
   KShape     getShapeById(QString id);
   void       loadShapes(QString path, QString images_dir = QString());
   KShapeList getShapeList();
+  QVector<KShape> getShapes();
 };
 
 #endif  // KSHAPE_H

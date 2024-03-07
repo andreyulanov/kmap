@@ -7,50 +7,85 @@
 
 class OsmParser
 {
-  QVector<QPointF>               nodes;
-  QRectF                         bounds;
-  typedef QMap<QString, QString> Params;
-  Params                         getParams(QString line);
-  void processBounds(OsmParser::Params params);
-  void processNode(OsmParser::Params params);
-  void processWay(OsmParser::Params params);
-  void processRelation();
+  typedef QMultiMap<QString, QString> Params;
+
+  QStringList                     type_list;
+  QMultiMap<QString, KGeoCoor>    nodes;
+  QMultiMap<QString, KGeoPolygon> ways;
+  QRectF                          bounds;
+  Params                          getParams(QString line);
+  void                            setBounds(OsmParser::Params params);
+  void                            addNode(OsmParser::Params params);
+  void                            addWay(OsmParser::Params params);
+  void    processWay(OsmParser::Params params);
+  void    processRelation();
+  QString getLineType(QString line);
 
 public:
-  void parse(QString path);
+  OsmParser();
+  void parse(QString path, QVector<KShape> shapes);
 };
 
 OsmParser::Params OsmParser::getParams(QString line)
 {
   auto l = line.split(' ');
+  if (l.isEmpty())
+    return OsmParser::Params();
   l.removeFirst();
+  if (l.isEmpty())
+    return OsmParser::Params();
   l.last().remove("/>");
   Params params;
   for (auto p: l)
   {
     auto cv = p.split('=');
-    params.insert(cv.first(), cv.last().remove("\""));
+    params.insert(cv.first(), cv.last().remove("\"").remove(">"));
   }
   return params;
 }
 
-void OsmParser::processBounds(OsmParser::Params params)
+void OsmParser::setBounds(OsmParser::Params params)
 {
+  bounds.setBottom(params.value("minlat").toDouble());
   bounds.setLeft(params.value("minlon").toDouble());
   bounds.setRight(params.value("maxlon").toDouble());
   bounds.setTop(params.value("maxlat").toDouble());
-  bounds.setBottom(params.value("minlat").toDouble());
 }
 
-void OsmParser::processNode(OsmParser::Params params)
+void OsmParser::addNode(OsmParser::Params params)
 {
-  QPointF node;
-  node.setX(params.value("lon").toDouble());
-  node.setY(params.value("lat").toDouble());
-  nodes.append(node);
+  auto     lat  = params.value("lat").toDouble();
+  auto     lon  = params.value("lon").toDouble();
+  KGeoCoor coor = KGeoCoor::fromDegs(lat, lon);
+  auto     id   = params.value("id");
+  nodes.insert(id, coor);
 }
 
-void OsmParser::parse(QString path)
+void OsmParser::addWay(OsmParser::Params params)
+{
+  auto id = params.value("id");
+  ways.insert(id, KGeoPolygon());
+}
+
+OsmParser::OsmParser()
+{
+  type_list << "bounds"
+            << "node"
+            << "way"
+            << "relation";
+}
+
+QString OsmParser::getLineType(QString line)
+{
+  for (auto type: type_list)
+  {
+    if (line.startsWith("<" + type))
+      return type;
+  }
+  return QString();
+}
+
+void OsmParser::parse(QString path, QVector<KShape> shapes)
 {
   QFile f(path);
   if (!f.open(QIODevice::ReadOnly))
@@ -58,40 +93,100 @@ void OsmParser::parse(QString path)
 
   QTextStream in(&f);
 
-  QString     curr_type;
-  QStringList type_list;
-  type_list << "bounds";
-  type_list << "node";
-  type_list << "way";
-  type_list << "relation";
-  int         line_count = 0;
-  QStringList curr_params;
-  QStringList curr_tags;
-  QPointF     curr_node;
+  QString         curr_type;
+  Params          curr_params;
+  int             line_count = 0;
+  QVector<Params> readtags;
+  KGeoPolygon     curr_way;
   while (!in.atEnd())
   {
     QString line = in.readLine().trimmed();
     line_count++;
 
-    for (auto type: type_list)
+    auto params = getParams(line);
+
+    auto type = getLineType(line);
+    if (type == "bounds")
     {
-      if (line.startsWith("<" + type))
-        curr_type = type;
+      setBounds(params);
+      continue;
+    }
+    if (type == "node" && line.endsWith("/>"))
+    {
+      addNode(params);
+      continue;
+    }
 
-      auto params = getParams(line);
-      if (curr_type == "bounds")
-        processBounds(params);
-      if (curr_type == "node")
-        processNode(params);
+    if (type.isEmpty() && curr_type.isEmpty())
+      continue;
 
-      if (line.endsWith("</" + type) || line.endsWith("/>"))
+    if (curr_type.isEmpty())
+    {
+      readtags.clear();
+      if (type == "node")
+        addNode(params);
+      if (type == "way")
+        addWay(params);
+      curr_type = type;
+      continue;
+    }
+
+    if (line == "</" + curr_type + ">")
+    {
+      KShape           curr_shape;
+      QVector<KOsmTag> usetags;
+      for (auto sh: shapes)
       {
-        if (!curr_type.isEmpty() && curr_type != type)
+        int match_count = 0;
+        for (auto keytag: sh.keytags)
         {
-          qDebug() << "ERROR: tag open/close mismatch at line"
-                   << line_count;
-          return;
+          bool tag_found = false;
+          for (auto readtag: readtags)
+          {
+            QMapIterator<QString, QString> it(readtag);
+            QString                        key, value;
+            while (it.hasNext())
+            {
+              it.next();
+              auto k = it.key();
+              if (k == "k")
+                key = it.value();
+              if (k == "v")
+              {
+                value = it.value();
+                if (sh.usetags.contains(key))
+                  usetags.append({key, value});
+              }
+            }
+            if (keytag.key == key && keytag.value == value)
+            {
+              tag_found = true;
+              break;
+            }
+          }
+          if (tag_found)
+            match_count++;
         }
+        if (match_count == sh.keytags.count())
+        {
+          auto obj = new KObject;
+          if (curr_type == "node")
+          {
+            auto poly = new KGeoPolygon;
+            poly->append(nodes.last());
+          }
+        }
+      }
+      curr_type.clear();
+      readtags.clear();
+    }
+    else
+    {
+      readtags += params;
+      if (curr_type == "way" && line.startsWith("<nd"))
+      {
+        auto ref = params.value("ref");
+        curr_way.append(nodes.value(ref));
       }
     }
   }
@@ -181,7 +276,8 @@ int main(int argc, char* argv[])
     OsmParser parser;
 
     qDebug() << "opening" << map_name;
-    parser.parse((QString(argv[3]) + "/" + map_name));
+    parser.parse((QString(argv[3]) + "/" + map_name),
+                 shape_man.getShapes());
     qDebug() << "  converting...";
 
     auto         path = output_dir + "/" + map_name + ".kmap";
