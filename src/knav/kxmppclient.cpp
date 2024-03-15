@@ -34,6 +34,7 @@ void KXmppClient::sendFile(const QString &jid,
                            const QString &filePath,
                            const QString &description)
 {
+    qDebug() << "The sendFile placeholder does not actually do nothing.";
     qDebug() << "Sending " << filePath << " to " << jid << " with description " << description;
 }
 
@@ -51,12 +52,12 @@ KXmppObjectReceiver::KXmppObjectReceiver(QXmppTransferJob *job, QString filePath
 {
     connect(job, SIGNAL(error(QXmppTransferJob::Error)),
             this, SLOT(slotError(QXmppTransferJob::Error)));
-    connect(job, SIGNAL(finished()),
-            this, SLOT(slotFinished()));
-    connect(job, SIGNAL(progress(qinit64 done, qint64 total)),
-            this, SLOT(slotProgress(qinit64 done, qint64 total)));
-    connect(job, SIGNAL(stateChanged()),
-            this, SLOT(slotState()));
+    connect(job, &QXmppTransferJob::finished,
+            this, &KXmppObjectReceiver::slotFinished);
+    connect(job, &QXmppTransferJob::progress,
+            this, &KXmppObjectReceiver::slotProgress);
+    connect(job, &QXmppTransferJob::stateChanged,
+            this, &KXmppObjectReceiver::slotState);
 
     qDebug() << "Transfer method" << job->method();
     job->accept(filePath);
@@ -69,7 +70,7 @@ KXmppObjectReceiver::~KXmppObjectReceiver()
 void KXmppObjectReceiver::slotError(QXmppTransferJob::Error error)
 {
     ///TODO: delete the file
-    qWarning() << "Transmission failed:" << error;
+    qWarning() << "Receiving failed:" << error;
 }
 
 void KXmppClient::slotFileReceived(QXmppTransferJob *job)
@@ -80,7 +81,7 @@ void KXmppClient::slotFileReceived(QXmppTransferJob *job)
     if (!filesWorthToReceive.match(job->fileName()).hasMatch())
     {
         qDebug() << "File name" << job->fileName() <<
-                    "does not match filesWorthToReceive. Aborting...";
+                    "does not match filesWorthToReceive regex. Aborting...";
         job->abort();
         return;
     }

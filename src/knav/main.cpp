@@ -15,8 +15,10 @@
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"
 #include "kxmppclient.h"
+#include "krosterwidget.h"
 #include <qxmpp/QXmppClient.h>
 #include <qxmpp/QXmppLogger.h>
+#include <qxmpp/QXmppRosterManager.h>
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -353,12 +355,34 @@ int main(int argc, char* argv[])
   mapw.show();
   mapw.setViewPoint(start_lat_lon, 1);
 
-  ///TODO: Improve setting up of objects dir and proxy
-  KXmppClient client("./objects", "proxy.macaw.me");
-  client.logger()->setLogFilePath("client.log");
-  client.logger()->setLoggingType(QXmppLogger::FileLogging);
+  ///TODO: Improve setting up
+  QString aliceJid 			= QString("knav.alice@macaw.me");
+  QString alicePassword 	= "very-secure-password-for-knav-alice";
+  QString aliceLog 			= "alice.log";
+  QString bobJid 			= QString("knav.bob@macaw.me");
+  QString bobPassword	 	= "very-secure-password-for-knav-bob";
+  QString bobLog 			= "bob.log";
+  //QString jidResource	 	= QString("QXmpp");
+  QString jidResource	 	= QString("flowerpot");
+  QString objects_dir	 	= QString("./objects");
+  QString proxy 			= QString("proxy.macaw.me");
+  QString fileToSendPath	= objects_dir + QString("/file-to-send.kpo");
 
-  client.connectToServer("knav.alice@macaw.me", "very-secure-password-for-knav-alice");
 
+  //KXmppClient alice(objects_dir, proxy);
+  //alice.logger()->setLogFilePath(aliceLog);
+  //alice.logger()->setLoggingType(QXmppLogger::FileLogging);
+  //alice.connectToServer(aliceJid, alicePassword);
+
+  KXmppClient bob(objects_dir, proxy);
+  bob.logger()->setLogFilePath(bobLog);
+  bob.logger()->setLoggingType(QXmppLogger::FileLogging);
+  bob.connectToServer(bobJid, bobPassword);
+  //bob.sendFile(aliceJid + "/" + jidResource, fileToSendPath,
+  //             "Alice, let's test if the file transfer works");
+
+
+  KRosterWidget *rosterWidget = new KRosterWidget(bob.findExtension<QXmppRosterManager>());
+  //rosterWidget->show();
   return a.exec();
 }

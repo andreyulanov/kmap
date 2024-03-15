@@ -19,6 +19,7 @@ kcontrols.cpp \
  kmapwidget.cpp \
  knewobjectwidget.cpp \
  kposgenerator.cpp \
+    krosterwidget.cpp \
  kswitch.cpp \
  ktrackmanager.cpp \
  kxmppclient.cpp \
@@ -38,6 +39,7 @@ kcontrols.h \
  kmapwidget.h \
  knewobjectwidget.h \
  kposgenerator.h \
+    krosterwidget.h \
  kswitch.h \
  ktrackmanager.h \
  kxmppclient.h
