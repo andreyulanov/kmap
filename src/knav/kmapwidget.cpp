@@ -184,7 +184,7 @@ bool KMapWidget::event(QEvent* e)
           }
           if (zoom_mode == Out)
             scale_factor = 1.0 / scale_factor;
-          zoom_speed = std::clamp(1 + scale_factor * 0.04, 1.0,
+          zoom_speed = std::clamp(1 + scale_factor * 0.02, 1.0,
                                   max_zoom_speed);
         }
         if (pg->state() == Qt::GestureFinished)

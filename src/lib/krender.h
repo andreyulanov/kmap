@@ -38,7 +38,7 @@ class KRender: public QThread
 
   int    min_object_size_pix     = 40;
   double mip                     = 1;
-  double render_window_size_coef = 1.5;
+  double render_window_size_coef = 2;
   QColor background_color        = Qt::white;
   int    update_interval_ms      = 100;
 
