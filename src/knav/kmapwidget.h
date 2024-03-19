@@ -25,8 +25,8 @@ class KMapWidget: public QWidget
   };
 
   ZoomMode      zoom_mode                            = None;
-  double        zoom_speed                           = 1.2;
-  double        max_zoom_speed                       = 1.2;
+  double        zoom_speed                           = 1.1;
+  double        max_zoom_speed                       = 1.1;
   const int     min_time_between_pinch_and_scroll_ms = 200;
   QElapsedTimer time_since_last_pinch;
   bool          is_pinching = false;
