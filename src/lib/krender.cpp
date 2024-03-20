@@ -619,45 +619,44 @@ void KRender::drawLineObject(QPainter* painter, const KObject* obj,
         }
       }
 
-    for (int point_idx = -1; auto p: pl)
-    {
-      point_idx++;
-      if (obj->name.isEmpty())
-        continue;
-      if (nh.point_count == 0)
+    if (!obj->name.isEmpty() && poly_idx == 0)
+      for (int point_idx = -1; auto p: pl)
       {
+        point_idx++;
+        if (nh.point_count == 0)
+        {
+          p0 = p;
+          nh.point_count++;
+          continue;
+        }
+        auto a = getAngle(p0, p);
+
+        if (nh.point_count == 1)
+          a0 = a;
+        auto da = a0 - a;
+        if (da > M_PI)
+          da -= 2 * M_PI;
+        else if (da < -M_PI)
+          da += 2 * M_PI;
+        da = fabs(da);
+        if (da > deg2rad(5) || point_idx == polygon->count() - 1)
+        {
+          if (nh.length_pix > obj_name_width)
+          {
+            nh.fix(obj, pl.at(nh.start_idx), pl.at(nh.end_idx));
+            name_holder_array[render_idx].append(nh);
+          }
+          nh           = NameHolder();
+          nh.start_idx = point_idx;
+          p0           = p;
+          continue;
+        }
+        auto length_pix = getLength(p0, p);
+        nh.length_pix += length_pix;
         p0 = p;
         nh.point_count++;
-        continue;
+        nh.end_idx = point_idx;
       }
-      auto a = getAngle(p0, p);
-
-      if (nh.point_count == 1)
-        a0 = a;
-      auto da = a0 - a;
-      if (da > M_PI)
-        da -= 2 * M_PI;
-      else if (da < -M_PI)
-        da += 2 * M_PI;
-      da = fabs(da);
-      if (da > deg2rad(5) || point_idx == polygon->count() - 1)
-      {
-        if (nh.length_pix > obj_name_width)
-        {
-          nh.fix(obj, pl.at(nh.start_idx), pl.at(nh.end_idx));
-          name_holder_array[render_idx].append(nh);
-        }
-        nh           = NameHolder();
-        nh.start_idx = point_idx;
-        p0           = p;
-        continue;
-      }
-      auto length_pix = getLength(p0, p);
-      nh.length_pix += length_pix;
-      p0 = p;
-      nh.point_count++;
-      nh.end_idx = point_idx;
-    }
     painter->drawPolyline(pl);
     if (sizeable_w > 7)
     {
