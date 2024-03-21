@@ -910,6 +910,8 @@ void KRender::run()
                        render_center_m.y() - size_m.height() / 2};
   render_frame_m    = {render_top_left_m, size_m};
 
+  started(render_frame_m);
+
   if (loading_enabled)
     checkLoad();
 

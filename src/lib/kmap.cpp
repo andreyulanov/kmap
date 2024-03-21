@@ -127,6 +127,11 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     return {w, h};
   }
 
+  QRectF KGeoRect::toRectM()
+  {
+    return {top_left.toMeters(), bottom_right.toMeters()};
+  }
+
   KGeoRect KGeoPolygon::getFrame()
   {
     using namespace std;
@@ -217,6 +222,14 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
         write(ba, (ushort)dlon);
       }
     }
+  }
+
+  QPolygonF KGeoPolygon::toPolygonM()
+  {
+    QPolygonF ret;
+    for (auto p: *this)
+      ret.append(p.toMeters());
+    return ret;
   }
 
   void KGeoPolygon::load(const QByteArray& ba, int& pos,

@@ -94,6 +94,7 @@ class KRender: public QThread
   void     onLoaded();
 
 signals:
+  void started(QRectF);
   void paintObjects(QPainter* p);
   void rendered(int ms_elapsed);
 

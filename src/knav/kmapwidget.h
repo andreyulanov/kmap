@@ -73,6 +73,7 @@ signals:
   void    movedCenterTo(const KGeoCoor&);
   void    paintObjects(QPainter*);
   void    tapped(KGeoCoor);
+  void    startedRender(QRectF);
 
 public:
   KMapWidget(QSize s);
@@ -81,6 +82,8 @@ public:
   void        setMaxZoomSpeed(double);
   const KMap* appendMap(QString path, double min_mip, double max_mip,
                         bool load_now);
+  void        addMap(QString path);
+  const KMap* getWorldMap();
   void        scroll(QPoint diff);
   void        scrollTo(const KGeoCoor& coor);
   void        zoomIn();

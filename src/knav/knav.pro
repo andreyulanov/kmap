@@ -16,6 +16,7 @@ kautoscroll.cpp \
 kcontrols.cpp \
  keditwidget.cpp \
  kfindwidget.cpp \
+ kmapfetcher.cpp \
  kmapwidget.cpp \
  knewobjectwidget.cpp \
  kposgenerator.cpp \
@@ -34,6 +35,7 @@ kautoscroll.h \
 kcontrols.h \
  keditwidget.h \
  kfindwidget.h \
+ kmapfetcher.h \
  kmapwidget.h \
  knewobjectwidget.h \
  kposgenerator.h \

@@ -14,6 +14,7 @@
 #include "kposgenerator.h"
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"
+#include "kmapfetcher.h"
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -24,43 +25,7 @@
 
 using namespace kmap;
 
-struct LocalMapEntry
-{
-  KGeoRect     rect;
-  KGeoPolygon* border;
-};
-
-class LocalMapDownloader
-{
-  QMap<QString, LocalMapEntry> iso_metrics_map;
-  QStringList                  name_list;
-
-public:
-  LocalMapDownloader(QString file_list_path);
-  void setMetricsForIsoCode(QString iso_code, LocalMapEntry entry);
-  QStringList getIsoCodesForArea(KGeoRect);
-};
-
-LocalMapDownloader::LocalMapDownloader(QString file_list_path)
-{
-  QFile f(file_list_path);
-  if (f.open(QIODevice::ReadOnly))
-  {
-    QTextStream in(&f);
-    while (!in.atEnd())
-      name_list.append(in.readLine());
-  }
-}
-
-void LocalMapDownloader::setMetricsForIsoCode(QString       iso_code,
-                                              LocalMapEntry entry)
-{
-  if (name_list.contains(iso_code))
-    iso_metrics_map[iso_code] = entry;
-}
-
-void scan(KMapWidget* w, LocalMapDownloader* loader,
-          const QString dir_path)
+void scan(KMapWidget* w, const QString dir_path)
 {
   qDebug() << "scanning" << dir_path;
 
@@ -70,16 +35,7 @@ void scan(KMapWidget* w, LocalMapDownloader* loader,
   QFileInfoList list = dir.entryInfoList();
 
   auto world_map_path = dir_path + "/world.kmap";
-  auto m              = w->appendMap(world_map_path, 0, 0, true);
-  for (auto obj: m->global_tile)
-  {
-    auto iso_code =
-        QString::fromUtf8(obj->attributes.value("iso_code"))
-            .toLower();
-    auto entry = LocalMapEntry{obj->frame, obj->polygons.first()};
-    loader->setMetricsForIsoCode(iso_code, entry);
-  }
-
+  w->appendMap(world_map_path, 0, 0, true);
   for (auto fi: list)
   {
     auto path = fi.absoluteFilePath();
@@ -146,8 +102,11 @@ int main(int argc, char* argv[])
   else
     mmc_path = "/home/user/kmap/data";
 
-  LocalMapDownloader loader(mmc_path + "/maplist.txt");
-  scan(&mapw, &loader, mmc_path + "/maps");
+  auto map_dir = mmc_path + "/maps";
+  scan(&mapw, map_dir);
+  KMapFetcher map_fetcher(map_dir, mapw.getWorldMap());
+  QObject::connect(&map_fetcher, &KMapFetcher::fetched, &mapw,
+                   &KMapWidget::addMap);
 
   KShapeManager kvo_shape_man;
 
@@ -191,6 +150,8 @@ int main(int argc, char* argv[])
                    &KAutoScroll::stop);
   QObject::connect(&mapw, &KMapWidget::getAutoScrollSpeed,
                    &auto_scroll, &KAutoScroll::getSpeed);
+  QObject::connect(&mapw, &KMapWidget::startedRender, &map_fetcher,
+                   &KMapFetcher::requestRect);
   QObject::connect(&auto_scroll, &KAutoScroll::scroll, &mapw,
                    &KMapWidget::scroll);
 

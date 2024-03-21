@@ -55,6 +55,7 @@ struct KGeoRect
   bool     isNull() const;
   QRectF   toMeters() const;
   QSizeF   getSizeMeters() const;
+  QRectF   toRectM();
 };
 
 struct KGeoPolygon: public QVector<KGeoCoor>
@@ -62,6 +63,7 @@ struct KGeoPolygon: public QVector<KGeoCoor>
   KGeoRect getFrame();
   void     save(QByteArray& ba, int coor_precision_coef);
   void load(const QByteArray& ba, int& pos, int coor_precision_coef);
+  QPolygonF toPolygonM();
 };
 
 struct KObject

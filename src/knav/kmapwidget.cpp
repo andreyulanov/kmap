@@ -26,13 +26,26 @@ KMapWidget::KMapWidget(QSize s):
 
   connect(&r, &KRender::paintObjects, this, &KMapWidget::paintObjects,
           Qt::DirectConnection);
+  connect(&r, &KRender::started, this, &KMapWidget::startedRender);
   connect(&r, &KRender::rendered, this, &KMapWidget::onRendered);
+}
+
+void KMapWidget::addMap(QString path)
+{
+  r.stopAndWait();
+  appendMap(path, 0, KMap::only_global_mip, true);
+  render();
 }
 
 const KMap* KMapWidget::appendMap(QString path, double min_mip,
                                   double max_mip, bool load_now)
 {
   return r.appendMap(path, min_mip, max_mip, load_now);
+}
+
+const KMap* KMapWidget::getWorldMap()
+{
+  return r.getMaps()->first();
 }
 
 void KMapWidget::render()
