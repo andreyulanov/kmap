@@ -229,6 +229,7 @@ int main(int argc, char* argv[])
       {
         WCHAR   str_utf16[1000];
         QString name;
+
         if (mapSemanticCodeValueNameUn(info, 9, str_utf16,
                                        sizeof(str_utf16), 1))
           name = QString::fromUtf16(str_utf16).simplified();
