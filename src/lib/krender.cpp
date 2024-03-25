@@ -171,10 +171,10 @@ bool KRender::needToLoadMap(const KMap*   map,
   auto top_left_pix = pix2deg({0, 0});
   auto bottom_right_pix =
       pix2deg({render_pixmap.width(), render_pixmap.height()});
-  auto top_left_deg =
-      QPointF{top_left_pix.longitude(), top_left_pix.latitude()};
-  auto bottom_right_deg = QPointF{bottom_right_pix.longitude(),
-                                  bottom_right_pix.latitude()};
+  auto top_left_deg     = QPointF{top_left_pix.longitude() - 1,
+                              top_left_pix.latitude() - 1};
+  auto bottom_right_deg = QPointF{bottom_right_pix.longitude() + 1,
+                                  bottom_right_pix.latitude() + 1};
   auto frame_deg =
       QRectF{top_left_deg, bottom_right_deg}.normalized();
 
@@ -935,18 +935,17 @@ void KRender::run()
   f.setBold(true);
   p0.setFont(f);
 
-  KMap* exclusive_map = nullptr;
-
   auto top_left_pix = pix2deg({0, 0});
   auto bottom_right_pix =
       pix2deg({render_pixmap.width(), render_pixmap.height()});
-  auto top_left_deg =
-      QPointF{top_left_pix.longitude(), top_left_pix.latitude()};
-  auto bottom_right_deg = QPointF{bottom_right_pix.longitude(),
-                                  bottom_right_pix.latitude()};
+  auto top_left_deg     = QPointF{top_left_pix.longitude() - 1,
+                              top_left_pix.latitude() - 1};
+  auto bottom_right_deg = QPointF{bottom_right_pix.longitude() + 1,
+                                  bottom_right_pix.latitude() + 1};
   auto frame_deg =
       QRectF{top_left_deg, bottom_right_deg}.normalized();
 
+  QVector<int> corner_map_idx;
   if (render_mip < KMap::only_global_mip)
   {
     QVector<QPointF> corners;
@@ -954,39 +953,40 @@ void KRender::run()
     corners << frame_deg.topRight();
     corners << frame_deg.bottomLeft();
     corners << frame_deg.bottomRight();
-    for (auto& map: maps)
+    for (int corner_idx = -1; auto corner: corners)
     {
-      bool all_corners_inside = true;
-      for (auto corner: corners)
-        if (!map->containsPoint(corner))
+      corner_idx++;
+      for (int map_idx = -1; auto& map: maps)
+      {
+        map_idx++;
+        if (map_idx == 0)
+          continue;
+        if (map->containsPoint(corner))
         {
-          all_corners_inside = false;
+          corner_map_idx.append(map_idx);
           break;
         }
-      if (all_corners_inside)
-      {
-        exclusive_map = map;
-        break;
       }
     }
   }
 
-  for (int i = -1; auto& map: maps)
+  for (int map_idx = -1; auto& map: maps)
   {
-    i++;
-    if (exclusive_map)
-      if (map != exclusive_map)
+    map_idx++;
+
+    if (corner_map_idx.count() == 4)
+      if (!corner_map_idx.contains(map_idx))
         continue;
 
     KLocker big_locker(&map->global_lock, KLocker::Read);
     if (!big_locker.hasLocked())
       continue;
 
-    if (i > 0 && !needToLoadMap(map, render_frame_m))
+    if (map_idx > 0 && !needToLoadMap(map, render_frame_m))
       continue;
 
     auto map_rect_m = map->frame.toMeters();
-    if (i > 0 && !render_frame_m.intersects(map_rect_m))
+    if (map_idx > 0 && !render_frame_m.intersects(map_rect_m))
       continue;
 
     KLocker small_locker(&map->local_lock, KLocker::Read);
