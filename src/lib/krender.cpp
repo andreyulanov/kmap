@@ -148,9 +148,9 @@ void KRender::checkUnload()
       continue;
     if (map->global_tile.status == KObjectCollection::Loaded)
     {
-      //      if (!needToLoadMap(map, draw_rect_m))
-      //        if (loaded_count > 1)
-      //          map->clear();
+      if (!needToLoadMap(map, draw_rect_m))
+        if (loaded_count > 1)
+          map->clear();
       loaded_count++;
     }
   }
