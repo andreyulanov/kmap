@@ -348,18 +348,22 @@ void KRender::drawPointObject(QPainter* p, const KObject* obj)
 
   point_object_text_rects.append(rect);
 
-  p->save();
-  p->translate(pos);
-  auto f = p->font();
-  f.setPixelSize(obj->shape->getWidthPix());
-  p->setFont(f);
-  p->translate(QPoint(0, obj->shape->getWidthPix() / 2 + 2));
-  for (auto str: str_list)
+  auto w = obj->shape->getWidthPix();
+  if (w > 0)
   {
-    p->translate(QPoint(0, text_shift));
-    drawOutlinedText(p, str, sh->tcolor);
+    p->save();
+    p->translate(pos);
+    auto f = p->font();
+    f.setPixelSize(w);
+    p->setFont(f);
+    p->translate(QPoint(0, obj->shape->getWidthPix() / 2 + 2));
+    for (auto str: str_list)
+    {
+      p->translate(QPoint(0, text_shift));
+      drawOutlinedText(p, str, sh->tcolor);
+    }
+    p->restore();
   }
-  p->restore();
   if (sh->image.isNull())
     p->drawEllipse(pos, 5, 5);
   else
@@ -654,7 +658,7 @@ void KRender::drawLineObject(QPainter* painter, const KObject* obj,
         nh.end_idx = point_idx;
       }
     painter->drawPolyline(pl);
-    if (sizeable_w > 7)
+    if (sizeable_w > 7 && w > 0)
     {
       painter->setPen(Qt::black);
       auto orig_f = painter->font();
@@ -939,7 +943,8 @@ void KRender::run()
   QPainter p0(&render_pixmap);
   QFont    f = p0.font();
 
-  double font_size = 2.0 / KShape::pixel_size_mm / mip;
+  double font_size =
+      std::min((int)std::round(2.0 / KShape::pixel_size_mm / mip), 1);
   font_size = std::clamp(font_size, 2.0 / KShape::pixel_size_mm,
                          3.0 / KShape::pixel_size_mm);
   f.setPixelSize(font_size);
