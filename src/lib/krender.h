@@ -102,7 +102,7 @@ signals:
 
 public:
   virtual ~KRender();
-  const KMap* appendMap(QString path, double min_mip, double max_mip,
+  const KMap* addMap(QString path, double min_mip, double max_mip,
                         bool load_now);
   const KMap* insertMap(int idx, QString path, double min_mip,
                         double max_mip, bool load_now);

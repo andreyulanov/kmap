@@ -30,17 +30,10 @@ KMapWidget::KMapWidget(QSize s):
   connect(&r, &KRender::rendered, this, &KMapWidget::onRendered);
 }
 
-void KMapWidget::addMap(QString path)
+const KMap* KMapWidget::addMap(QString path, double min_mip,
+                               double max_mip, bool load_now)
 {
-  r.stopAndWait();
-  appendMap(path, 0, KMap::only_global_mip, true);
-  render();
-}
-
-const KMap* KMapWidget::appendMap(QString path, double min_mip,
-                                  double max_mip, bool load_now)
-{
-  return r.appendMap(path, min_mip, max_mip, load_now);
+  return r.addMap(path, min_mip, max_mip, load_now);
 }
 
 const KMap* KMapWidget::getWorldMap()

@@ -34,7 +34,7 @@ void scan(KMapWidget* w, const QString dir_path)
   QFileInfoList list = dir.entryInfoList();
 
   auto world_map_path = dir_path + "/world.kmap";
-  w->appendMap(world_map_path, 0, 0, true);
+  w->addMap(world_map_path, 0, 0, true);
   for (auto fi: list)
   {
     auto path = fi.absoluteFilePath();
@@ -43,7 +43,7 @@ void scan(KMapWidget* w, const QString dir_path)
     if (path.endsWith(".kmap"))
     {
       qDebug() << "adding" << path;
-      w->appendMap(path, 0, KMap::only_global_mip, false);
+      w->addMap(path, 0, KMap::only_global_mip, false);
     }
   }
 }
@@ -104,8 +104,13 @@ int main(int argc, char* argv[])
   auto map_dir = mmc_path + "/maps";
   scan(&mapw, map_dir);
   KMapFetcher map_fetcher(map_dir, mapw.getWorldMap());
-  QObject::connect(&map_fetcher, &KMapFetcher::fetched, &mapw,
-                   &KMapWidget::addMap);
+  QObject::connect(&map_fetcher, &KMapFetcher::fetched,
+                   [&mapw, map_dir](QString map_path)
+                   {
+                     mapw.addMap(map_path, 0, KMap::only_global_mip,
+                                 true);
+                     mapw.render();
+                   });
 
   KShapeManager kvo_shape_man;
 

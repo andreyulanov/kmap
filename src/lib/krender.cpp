@@ -39,9 +39,10 @@ KRender::~KRender()
   stopAndWait();
 }
 
-const KMap* KRender::appendMap(QString path, double min_mip,
-                               double max_mip, bool load_now)
+const KMap* KRender::addMap(QString path, double min_mip,
+                            double max_mip, bool load_now)
 {
+  stopAndWait();
   return insertMap(maps.count(), path, min_mip, max_mip, load_now);
 }
 
