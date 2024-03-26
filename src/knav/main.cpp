@@ -24,7 +24,6 @@
 #endif
 
 using namespace kmap;
-
 void scan(KMapWidget* w, const QString dir_path)
 {
   qDebug() << "scanning" << dir_path;
@@ -308,6 +307,8 @@ int main(int argc, char* argv[])
 
 #endif
 
+  if (!is_device)
+    KShape::pixel_size_mm = physical_diag_mm / pixel_diag / 2;
   mapw.show();
   mapw.setViewPoint(start_lat_lon, 1);
 
