@@ -61,7 +61,8 @@
     "layer"  : 4,
     "pen"    : [37, 151, 194],
     "tcolor" : [37, 151, 194],
-    "max_mip": 5000
+    "max_mip": 5000,
+    "min_mip": 100
 },
 {
     "id"     : "lake",
@@ -70,7 +71,8 @@
     "layer"  : 5,
     "brush"  : [166, 220, 238],
     "tcolor" : [37, 151, 194],
-    "max_mip": 5000
+    "max_mip": 5000,
+    "min_mip": 100
 },
 {
     "id"     : "road",
@@ -78,7 +80,8 @@
     "code"   : 1000000001,
     "layer"  : 4,
     "pen"    : [255, 130, 70],
-    "max_mip": 5000
+    "max_mip": 5000,
+    "min_mip": 100
 },
 {
     "id"     : "boundary",
