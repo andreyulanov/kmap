@@ -421,10 +421,10 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     clear();
   }
 
-  bool KMap::containsPoint(QPointF deg) const
+  bool KMap::intersects(QPolygonF polygon) const
   {
     for (auto border_deg: borders_deg)
-      if (border_deg.containsPoint(deg, Qt::OddEvenFill))
+      if (border_deg.intersects(polygon))
         return true;
     return false;
   }

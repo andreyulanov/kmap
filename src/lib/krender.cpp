@@ -148,9 +148,9 @@ void KRender::checkUnload()
       continue;
     if (map->global_tile.status == KObjectCollection::Loaded)
     {
-      if (!needToLoadMap(map, draw_rect_m))
-        if (loaded_count > 1)
-          map->clear();
+      //      if (!needToLoadMap(map, draw_rect_m))
+      //        if (loaded_count > 1)
+      //          map->clear();
       loaded_count++;
     }
   }
@@ -171,21 +171,20 @@ bool KRender::needToLoadMap(const KMap*   map,
   auto top_left_pix = pix2deg({0, 0});
   auto bottom_right_pix =
       pix2deg({render_pixmap.width(), render_pixmap.height()});
-  auto top_left_deg     = QPointF{top_left_pix.longitude() - 1,
-                              top_left_pix.latitude() - 1};
-  auto bottom_right_deg = QPointF{bottom_right_pix.longitude() + 1,
-                                  bottom_right_pix.latitude() + 1};
+  auto top_left_deg =
+      QPointF{top_left_pix.longitude(), top_left_pix.latitude()};
+  auto bottom_right_deg = QPointF{bottom_right_pix.longitude(),
+                                  bottom_right_pix.latitude()};
   auto frame_deg =
       QRectF{top_left_deg, bottom_right_deg}.normalized();
 
-  QVector<QPointF> corners;
-  corners << frame_deg.topLeft();
-  corners << frame_deg.topRight();
-  corners << frame_deg.bottomLeft();
-  corners << frame_deg.bottomRight();
-  for (auto corner: corners)
-    if (map->containsPoint(corner))
-      return true;
+  QPolygonF rect;
+  rect << frame_deg.topLeft();
+  rect << frame_deg.topRight();
+  rect << frame_deg.bottomLeft();
+  rect << frame_deg.bottomRight();
+  if (map->intersects(rect))
+    return true;
   return false;
 }
 
@@ -815,7 +814,22 @@ bool KRender::drawPolygonNames(QPainter* p)
   return true;
 }
 
-void KRender::render(QPainter* p, KMap* map, int render_idx)
+void KRender::render(QPainter* p, QVector<KMap*> render_maps,
+                     int render_idx)
+{
+  for (auto map: render_maps)
+  {
+    KLocker big_locker(&map->global_lock, KLocker::Read);
+    if (!big_locker.hasLocked())
+      continue;
+    KLocker small_locker(&map->local_lock, KLocker::Read);
+    if (!small_locker.hasLocked())
+      continue;
+    renderMap(p, map, render_idx);
+  }
+}
+
+void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
 {
   if (!map || render_idx > map->render_start_list.count() - 1)
     return;
@@ -938,44 +952,38 @@ void KRender::run()
   auto top_left_pix = pix2deg({0, 0});
   auto bottom_right_pix =
       pix2deg({render_pixmap.width(), render_pixmap.height()});
-  auto top_left_deg     = QPointF{top_left_pix.longitude() - 1,
-                              top_left_pix.latitude() - 1};
-  auto bottom_right_deg = QPointF{bottom_right_pix.longitude() + 1,
-                                  bottom_right_pix.latitude() + 1};
+  auto top_left_deg =
+      QPointF{top_left_pix.longitude(), top_left_pix.latitude()};
+  auto bottom_right_deg = QPointF{bottom_right_pix.longitude(),
+                                  bottom_right_pix.latitude()};
   auto frame_deg =
       QRectF{top_left_deg, bottom_right_deg}.normalized();
 
-  QVector<int> corner_map_idx;
+  QVector<int> intersecting_maps;
   if (render_mip < KMap::only_global_mip)
   {
-    QVector<QPointF> corners;
-    corners << frame_deg.topLeft();
-    corners << frame_deg.topRight();
-    corners << frame_deg.bottomLeft();
-    corners << frame_deg.bottomRight();
-    for (int corner_idx = -1; auto corner: corners)
+    QPolygonF rect;
+    rect << frame_deg.topLeft();
+    rect << frame_deg.topRight();
+    rect << frame_deg.bottomLeft();
+    rect << frame_deg.bottomRight();
+    for (int map_idx = -1; auto& map: maps)
     {
-      corner_idx++;
-      for (int map_idx = -1; auto& map: maps)
-      {
-        map_idx++;
-        if (map_idx == 0)
-          continue;
-        if (map->containsPoint(corner))
-        {
-          corner_map_idx.append(map_idx);
-          break;
-        }
-      }
+      map_idx++;
+      if (map_idx == 0)
+        continue;
+      if (map->intersects(rect))
+        intersecting_maps.append(map_idx);
     }
   }
 
+  QVector<KMap*> render_maps;
   for (int map_idx = -1; auto& map: maps)
   {
     map_idx++;
 
-    if (corner_map_idx.count() == 4)
-      if (!corner_map_idx.contains(map_idx))
+    if (map_idx > 0)
+      if (!intersecting_maps.contains(map_idx))
         continue;
 
     KLocker big_locker(&map->global_lock, KLocker::Read);
@@ -996,29 +1004,31 @@ void KRender::run()
     if (map->render_start_list.isEmpty())
       continue;
 
-    QList<RenderEntry*> render_list;
-    for (int render_idx = 1; render_idx < KMap::render_count;
-         render_idx++)
-    {
-      auto render =
-          new RenderEntry(render_idx, render_pixmap.size(), &f);
-      *render->fut = QtConcurrent::run(this, &KRender::render,
-                                       render->p, map, render_idx);
-      render_list.append(render);
-    }
-
-    render(&p0, map, 0);
-
-    for (auto render: render_list)
-      render->fut->waitForFinished();
-
-    for (auto render: render_list)
-      p0.drawPixmap(0, 0, *render->pm);
-
-    qDeleteAll(render_list);
-
-    checkYieldResult();
+    render_maps.append(map);
   }
+
+  QList<RenderEntry*> render_list;
+  for (int render_idx = 1; render_idx < KMap::render_count;
+       render_idx++)
+  {
+    auto render =
+        new RenderEntry(render_idx, render_pixmap.size(), &f);
+    *render->fut = QtConcurrent::run(
+        this, &KRender::render, render->p, render_maps, render_idx);
+    render_list.append(render);
+  }
+
+  render(&p0, render_maps, 0);
+
+  for (auto render: render_list)
+    render->fut->waitForFinished();
+
+  for (auto render: render_list)
+    p0.drawPixmap(0, 0, *render->pm);
+
+  qDeleteAll(render_list);
+
+  checkYieldResult();
 
   QElapsedTimer t;
   t.start();

@@ -163,7 +163,7 @@ public:
   void loadAll();
   void clear();
   void add(KMap*);
-  bool containsPoint(QPointF deg) const;
+  bool intersects(QPolygonF polygon) const;
 signals:
   void loaded();
 };

@@ -65,7 +65,9 @@ class KRender: public QThread
   QVector<QRect>         point_object_text_rects;
 
   void run();
-  void render(QPainter* p, KMap* map, int render_idx);
+  void renderMap(QPainter* p, KMap* map, int render_idx);
+  void render(QPainter* p, QVector<KMap*> render_maps,
+              int render_idx);
 
   bool checkMipRange(const KObject* obj);
   bool canContinue();
