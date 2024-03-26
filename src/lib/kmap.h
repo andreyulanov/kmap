@@ -142,7 +142,7 @@ public:
   QVector<KShape*>            shapes;
   KGeoRect                    frame;
   QVector<KGeoPolygon>        borders;
-  QVector<QPolygonF>          borders_deg;
+  QVector<QPolygonF>          borders_m;
   QStringList                 find_names;
   QVector<KGeoCoor>           find_centers;
   QStringList                 find_names_en;

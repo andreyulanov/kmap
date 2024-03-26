@@ -421,10 +421,10 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     clear();
   }
 
-  bool KMap::intersects(QPolygonF polygon) const
+  bool KMap::intersects(QPolygonF polygon_m) const
   {
-    for (auto border_deg: borders_deg)
-      if (border_deg.intersects(polygon))
+    for (auto border_m: borders_m)
+      if (border_m.intersects(polygon_m))
         return true;
     return false;
   }
@@ -615,14 +615,12 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       borders.resize(borders_count);
       for (auto& border: borders)
         border.load(ba, pos, border_coor_precision_coef);
-      borders_deg.clear();
+      borders_m.clear();
       for (auto border: borders)
       {
-        QPolygonF border_deg;
-        for (auto point: border)
-          border_deg.append({point.longitude(), point.latitude()});
-        if (!border_deg.isEmpty())
-          borders_deg.append(border_deg);
+        QPolygonF border_m = border.toPolygonM();
+        if (!border_m.isEmpty())
+          borders_m.append(border_m);
       }
     }
 

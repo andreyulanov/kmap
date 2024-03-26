@@ -168,21 +168,17 @@ bool KRender::needToLoadMap(const KMap*   map,
   if (!frame_intersects)
     return false;
 
-  auto top_left_pix = pix2deg({0, 0});
-  auto bottom_right_pix =
-      pix2deg({render_pixmap.width(), render_pixmap.height()});
-  auto top_left_deg =
-      QPointF{top_left_pix.longitude(), top_left_pix.latitude()};
-  auto bottom_right_deg = QPointF{bottom_right_pix.longitude(),
-                                  bottom_right_pix.latitude()};
-  auto frame_deg =
-      QRectF{top_left_deg, bottom_right_deg}.normalized();
+  auto top_left_m     = pix2meters({0, 0});
+  auto bottom_right_m = pix2meters({(double)render_pixmap.width(),
+                                    (double)render_pixmap.height()});
+  auto frame_m = QRectF{top_left_m, bottom_right_m}.normalized();
+  frame_m.adjust(-10000, -10000, 10000, 10000);
 
   QPolygonF rect;
-  rect << frame_deg.topLeft();
-  rect << frame_deg.topRight();
-  rect << frame_deg.bottomLeft();
-  rect << frame_deg.bottomRight();
+  rect << frame_m.topLeft();
+  rect << frame_m.topRight();
+  rect << frame_m.bottomLeft();
+  rect << frame_m.bottomRight();
   if (map->intersects(rect))
     return true;
   return false;
@@ -949,30 +945,17 @@ void KRender::run()
   f.setBold(true);
   p0.setFont(f);
 
-  auto top_left_pix = pix2deg({0, 0});
-  auto bottom_right_pix =
-      pix2deg({render_pixmap.width(), render_pixmap.height()});
-  auto top_left_deg =
-      QPointF{top_left_pix.longitude(), top_left_pix.latitude()};
-  auto bottom_right_deg = QPointF{bottom_right_pix.longitude(),
-                                  bottom_right_pix.latitude()};
-  auto frame_deg =
-      QRectF{top_left_deg, bottom_right_deg}.normalized();
-
   QVector<int> intersecting_maps;
   if (render_mip < KMap::only_global_mip)
   {
-    QPolygonF rect;
-    rect << frame_deg.topLeft();
-    rect << frame_deg.topRight();
-    rect << frame_deg.bottomLeft();
-    rect << frame_deg.bottomRight();
+    auto draw_rect = getDrawRectM();
     for (int map_idx = -1; auto& map: maps)
     {
       map_idx++;
       if (map_idx == 0)
         continue;
-      if (map->intersects(rect))
+
+      if (needToLoadMap(map, draw_rect))
         intersecting_maps.append(map_idx);
     }
   }
