@@ -38,7 +38,7 @@ struct KPosition
   KDateTime dt;
 };
 
-namespace kmap
+namespace kmath
 {
 constexpr double earth_r = 6378137;
 double           deg2rad(double deg);

@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-namespace kmap
+namespace kmath
 {
 double deg2rad(double deg)
 {
@@ -27,7 +27,7 @@ double getAngle(QPoint p1, QPoint p2)
 }
 }
 
-using namespace kmap;
+using namespace kmath;
 
 double KGeoCoor::longitude() const
 {

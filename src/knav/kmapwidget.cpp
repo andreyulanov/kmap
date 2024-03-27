@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QApplication>
 
-using namespace kmap;
+using namespace kmath;
 
 KMapWidget::KMapWidget(QSize s):
     label(this), full_label(this), scaled_label(this)

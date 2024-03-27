@@ -23,7 +23,7 @@
   #include "kheading.h"
 #endif
 
-using namespace kmap;
+using namespace kmath;
 void scan(KMapWidget* w, const QString dir_path)
 {
   qDebug() << "scanning" << dir_path;

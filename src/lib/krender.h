@@ -64,10 +64,12 @@ class KRender: public QThread
   QElapsedTimer          yield_timer;
   QVector<QRect>         point_object_text_rects;
 
-  void run();
-  void renderMap(QPainter* p, KMap* map, int render_idx);
-  void render(QPainter* p, QVector<KMap*> render_maps,
-              int render_idx);
+  void        run();
+  const KMap* insertMap(int idx, QString path, double min_mip,
+                        double max_mip, bool load_now);
+  void        renderMap(QPainter* p, KMap* map, int render_idx);
+  void        render(QPainter* p, QVector<KMap*> render_maps,
+                     int render_idx);
 
   bool checkMipRange(const KObject* obj);
   bool canContinue();
@@ -102,23 +104,21 @@ signals:
 
 public:
   virtual ~KRender();
-  const KMap* addMap(QString path, double min_mip, double max_mip,
+  const KMap*    addMap(QString path, double min_mip, double max_mip,
                         bool load_now);
-  const KMap* insertMap(int idx, QString path, double min_mip,
-                        double max_mip, bool load_now);
-  void        setMip(double);
-  double      getMip() const;
-  void        setCenterM(QPointF);
-  QPointF     getCenterM() const;
-  QPointF     getRenderCenterM() const;
-  void        setPixmapSize(QSize);
-  void        setMinObjectSizePix(int);
-  void        setBackgroundColor(QColor);
-  double      getRenderWindowSizeCoef() const;
-  void        setRenderWindowSizeCoef(double);
-  static void drawOutlinedText(QPainter* p, const QString& text,
-                               const QColor& tcolor);
-  const QPixmap*        getPixmap() const;
+  void           setMip(double);
+  double         getMip() const;
+  void           setCenterM(QPointF);
+  QPointF        getCenterM() const;
+  QPointF        getRenderCenterM() const;
+  void           setPixmapSize(QSize);
+  void           setMinObjectSizePix(int);
+  void           setBackgroundColor(QColor);
+  double         getRenderWindowSizeCoef() const;
+  void           setRenderWindowSizeCoef(double);
+  static void    drawOutlinedText(QPainter* p, const QString& text,
+                                  const QColor& tcolor);
+  const QPixmap* getPixmap() const;
   const KMapCollection* getMaps() const;
   void                  selectCategory(const QString&);
   void                  start();

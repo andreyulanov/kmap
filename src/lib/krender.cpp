@@ -6,7 +6,7 @@
 #include <QPainterPath>
 #include <numeric>
 
-using namespace kmap;
+using namespace kmath;
 
 QPoint KRender::deg2pix(const KGeoCoor& deg) const
 {

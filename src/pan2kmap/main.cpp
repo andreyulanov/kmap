@@ -50,7 +50,7 @@ auto joinPolys(KObject* obj)
 
 int main(int argc, char* argv[])
 {
-  using namespace kmap;
+  using namespace kmath;
 
   QApplication a(argc, argv);
   QDMapView    qd;
