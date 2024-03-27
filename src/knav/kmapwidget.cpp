@@ -3,10 +3,11 @@
 #include <QLabel>
 #include <QDebug>
 #include <QApplication>
+#include <QDir>
 
 using namespace kmath;
 
-KMapWidget::KMapWidget(QSize s):
+KMapWidget::KMapWidget(QString map_dir, QSize s):
     label(this), full_label(this), scaled_label(this)
 {
   if (s.isEmpty())
@@ -28,6 +29,31 @@ KMapWidget::KMapWidget(QSize s):
           Qt::DirectConnection);
   connect(&r, &KRender::started, this, &KMapWidget::startedRender);
   connect(&r, &KRender::rendered, this, &KMapWidget::onRendered);
+  scan(map_dir);
+}
+
+void KMapWidget::scan(QString map_dir)
+{
+  qDebug() << "scanning" << map_dir;
+
+  QDir dir(map_dir);
+  dir.setFilter(QDir::Files | QDir::Dirs | QDir::Hidden |
+                QDir::NoSymLinks | QDir::NoDotAndDotDot);
+  QFileInfoList list = dir.entryInfoList();
+
+  auto world_map_path = map_dir + "/world.kmap";
+  addMap(world_map_path, 0, 0, true);
+  for (auto fi: list)
+  {
+    auto path = fi.absoluteFilePath();
+    if (path == world_map_path)
+      continue;
+    if (path.endsWith(".kmap"))
+    {
+      qDebug() << "adding" << path;
+      addMap(path, 0, KMap::only_global_mip, false);
+    }
+  }
 }
 
 const KMap* KMapWidget::addMap(QString path, double min_mip,

@@ -47,6 +47,7 @@ class KMapWidget: public QWidget
   QLabel  scaled_label;
   KRender r;
 
+  void scan(QString map_dir);
   void mousePressEvent(QMouseEvent*) override;
   void mouseMoveEvent(QMouseEvent*) override;
   void mouseReleaseEvent(QMouseEvent*) override;
@@ -76,7 +77,7 @@ signals:
   void    startedRender(QRectF);
 
 public:
-  KMapWidget(QSize s);
+  KMapWidget(QString map_dir, QSize s);
   void        render();
   void        setViewPoint(const KGeoCoor& deg, double mip);
   void        setMaxZoomSpeed(double);

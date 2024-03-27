@@ -2,8 +2,8 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QScreen>
-#include <QDebug>
 #include <QDir>
+#include <QDebug>
 #include <QProcess>
 #include "kmapwidget.h"
 #include "kautoscroll.h"
@@ -24,29 +24,6 @@
 #endif
 
 using namespace kmath;
-void scan(KMapWidget* w, const QString dir_path)
-{
-  qDebug() << "scanning" << dir_path;
-
-  QDir dir(dir_path);
-  dir.setFilter(QDir::Files | QDir::Dirs | QDir::Hidden |
-                QDir::NoSymLinks | QDir::NoDotAndDotDot);
-  QFileInfoList list = dir.entryInfoList();
-
-  auto world_map_path = dir_path + "/world.kmap";
-  w->addMap(world_map_path, 0, 0, true);
-  for (auto fi: list)
-  {
-    auto path = fi.absoluteFilePath();
-    if (path == world_map_path)
-      continue;
-    if (path.endsWith(".kmap"))
-    {
-      qDebug() << "adding" << path;
-      w->addMap(path, 0, KMap::only_global_mip, false);
-    }
-  }
-}
 
 int main(int argc, char* argv[])
 {
@@ -75,16 +52,16 @@ int main(int argc, char* argv[])
              screen_size_pix.height()};
   }
 
-  KMapWidget  mapw(screen_size_pix);
   KFindWidget findw;
   findw.setFixedSize(screen_size_pix);
+
   KEditWidget editw;
   editw.setFixedSize(screen_size_pix);
-  KNewObjectWidget newobjw;
-  newobjw.setFixedSize(screen_size_pix);
-
   editw.move((screen_size_pix.width() - editw.width()) / 2,
              (screen_size_pix.height() - editw.height()) / 2);
+
+  KNewObjectWidget newobjw;
+  newobjw.setFixedSize(screen_size_pix);
 
   QString     mmc_path;
   QStringList dir_list;
@@ -104,8 +81,8 @@ int main(int argc, char* argv[])
   else
     mmc_path = "/home/user/kmap/data";
 
-  auto map_dir = mmc_path + "/maps";
-  scan(&mapw, map_dir);
+  auto        map_dir = mmc_path + "/maps";
+  KMapWidget  mapw(map_dir, screen_size_pix);
   KMapFetcher map_fetcher(map_dir, mapw.getWorldMap());
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
                    [&mapw, map_dir](QString map_path)
