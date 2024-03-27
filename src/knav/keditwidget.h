@@ -21,7 +21,7 @@ signals:
   void saveTrack(QString);
 
 public:
-  KEditWidget(QSize s);
+  KEditWidget();
   void show(QString title, QString default_track_name);
 };
 

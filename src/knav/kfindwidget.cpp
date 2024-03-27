@@ -1,10 +1,7 @@
 #include "kfindwidget.h"
 
-KFindWidget::KFindWidget(QSize s)
+KFindWidget::KFindWidget()
 {
-  if (s.isEmpty())
-    s = QSize(480, 800);
-  setFixedSize(s);
   setLayout(&root_layout);
   root_layout.setAlignment(Qt::AlignCenter);
 

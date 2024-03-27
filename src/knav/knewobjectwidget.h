@@ -21,7 +21,7 @@ signals:
   void       selectedShape(KShape);
 
 public:
-  KNewObjectWidget(QSize s);
+  KNewObjectWidget();
   void show();
 };
 

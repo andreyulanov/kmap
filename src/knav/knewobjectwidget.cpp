@@ -2,11 +2,10 @@
 #include <QPushButton>
 #include <QIcon>
 
-KNewObjectWidget::KNewObjectWidget(QSize s)
+KNewObjectWidget::KNewObjectWidget()
 {
   setLayout(&root_layout);
   root_layout.setAlignment(Qt::AlignCenter);
-  setFixedSize(s);
 }
 
 void KNewObjectWidget::addItem(int& posy, QImage image, QString id)

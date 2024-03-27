@@ -1,10 +1,7 @@
 #include "keditwidget.h"
 
-KEditWidget::KEditWidget(QSize s)
+KEditWidget::KEditWidget()
 {
-  if (s.isEmpty())
-    s = QSize(480, 800);
-  setFixedSize(s);
   setLayout(&root_layout);
   root_layout.setAlignment(Qt::AlignCenter);
 

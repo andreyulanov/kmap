@@ -75,10 +75,13 @@ int main(int argc, char* argv[])
              screen_size_pix.height()};
   }
 
-  KMapWidget       mapw(screen_size_pix);
-  KFindWidget      findw(screen_size_pix);
-  KEditWidget      editw(screen_size_pix);
-  KNewObjectWidget newobjw(screen_size_pix);
+  KMapWidget  mapw(screen_size_pix);
+  KFindWidget findw;
+  findw.setFixedSize(screen_size_pix);
+  KEditWidget editw;
+  editw.setFixedSize(screen_size_pix);
+  KNewObjectWidget newobjw;
+  newobjw.setFixedSize(screen_size_pix);
 
   editw.move((screen_size_pix.width() - editw.width()) / 2,
              (screen_size_pix.height() - editw.height()) / 2);

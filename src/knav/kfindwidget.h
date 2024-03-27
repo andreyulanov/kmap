@@ -36,7 +36,7 @@ signals:
   KCategories getCategories();
 
 public:
-  KFindWidget(QSize s);
+  KFindWidget();
   void changedFindString(const QString&);
   void onItemClicked(QListWidgetItem*);
   void showHistory();
