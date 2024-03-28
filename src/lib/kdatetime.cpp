@@ -3,8 +3,6 @@
 #include <QStringList>
 #include <math.h>
 
-static const int time_zone_coef = 4;
-
 KDateTime::KDateTime()
 {
   year  = 0;

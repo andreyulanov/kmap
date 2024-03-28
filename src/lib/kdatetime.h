@@ -5,6 +5,8 @@
 
 class KDateTime
 {
+  static constexpr int time_zone_coef = 4;
+
   short       year;
   signed char month;
   signed char day;

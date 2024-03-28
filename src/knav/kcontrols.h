@@ -40,13 +40,13 @@ class KControls: public QObject
   KGeoCoor    curr_coor;
   QWidget*    findw = nullptr;
 
-  static void initButton(QPushButton* b, QPixmap image_path,
-                         QPoint pos, double size_mm);
-  void        setIcon(QPushButton* b, QPixmap pm);
-  void        onFind();
-  void        onZoomIn();
-  void        onZoomOut();
-  void        onZoomReleased();
+  void initButton(QPushButton* b, QPixmap image_path, QPoint pos,
+                  double size_mm);
+  void setIcon(QPushButton* b, QPixmap pm);
+  void onFind();
+  void onZoomIn();
+  void onZoomOut();
+  void onZoomReleased();
 
 signals:
   void zoomIn();
