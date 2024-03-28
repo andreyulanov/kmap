@@ -34,7 +34,7 @@ void KNewObjectWidget::onSelected()
 
 void KNewObjectWidget::show()
 {
-  auto list = getUserShapeList();
+  auto list = getUserShapeImageList();
   int  posy = 0;
   for (auto l: list)
   {

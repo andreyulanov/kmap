@@ -173,8 +173,8 @@ int main(int argc, char* argv[])
   QObject::connect(&controls, &KControls::selectShape, &newobjw,
                    &KNewObjectWidget::show);
 
-  QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeList,
-                   &kvo_shape_man, &KShapeManager::getShapeList);
+  QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
+                   &kvo_shape_man, &KShapeManager::getShapeImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
                    &object_man,
                    &KPortableObjectManager::createObject);

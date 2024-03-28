@@ -318,9 +318,9 @@ QVector<KShape> KShapeManager::getShapes()
   return ret;
 }
 
-KShapeList KShapeManager::getShapeList()
+KShapeImageList KShapeManager::getShapeImageList()
 {
-  QVector<KShapeListEntry> ret;
+  QVector<KShapeImage> ret;
   for (auto sh: shapes)
     ret.append({sh->id, sh->image});
   return ret;

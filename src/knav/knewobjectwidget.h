@@ -16,9 +16,9 @@ class KNewObjectWidget: public QWidget
   void onSelected();
 
 signals:
-  KShapeList getUserShapeList();
-  KShape     getShapeById(QString);
-  void       selectedShape(KShape);
+  KShapeImageList getUserShapeImageList();
+  KShape          getShapeById(QString);
+  void            selectedShape(KShape);
 
 public:
   KNewObjectWidget();

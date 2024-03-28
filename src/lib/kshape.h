@@ -69,13 +69,13 @@ public:
   int                 getWidthPix();
 };
 
-struct KShapeListEntry
+struct KShapeImage
 {
   QString id;
   QImage  image;
 };
 
-typedef QVector<KShapeListEntry> KShapeList;
+typedef QVector<KShapeImage> KShapeImageList;
 
 struct KShapeManager: public QObject
 {
@@ -89,11 +89,11 @@ public:
   QString          error_str;
   QString          images_dir;
   KShapeManager(QString image_dir = QString());
-  int        getShapeIdx(int code, QString key);
-  int        getShapeIdxById(QString id);
-  KShape     getShapeById(QString id);
-  void       loadShapes(QString path, QString images_dir = QString());
-  KShapeList getShapeList();
+  int    getShapeIdx(int code, QString key);
+  int    getShapeIdxById(QString id);
+  KShape getShapeById(QString id);
+  void   loadShapes(QString path, QString images_dir = QString());
+  KShapeImageList getShapeImageList();
   QVector<KShape> getShapes();
 };
 
