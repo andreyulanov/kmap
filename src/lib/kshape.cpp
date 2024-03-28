@@ -246,31 +246,6 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           }
         }
 
-        auto tags = obj.value("keytags");
-        if (tags.isArray())
-        {
-          auto tag_array = tags.toArray();
-          for (auto tag: tag_array)
-          {
-            auto tag_obj = tag.toObject();
-            if (obj.isEmpty())
-              continue;
-            KOsmTag osm_tag;
-            osm_tag.key   = tag_obj.value("key").toString();
-            osm_tag.value = tag_obj.value("value").toString();
-            sh->keytags.append(osm_tag);
-          }
-        }
-
-        tags = obj.value("usetags");
-        if (tags.isArray())
-        {
-          auto tag_array = tags.toArray();
-          for (auto tag: tag_array)
-          {
-            sh->usetags.append(tag.toString());
-          }
-        }
         sh->coor_precision_coef =
             obj.value("coor_precision_coef").toInt();
         if (sh->coor_precision_coef == 0)

@@ -63,8 +63,6 @@ public:
   int                 name_code = 0;
   QString             attrval;
   QVector<KAttribute> attributes;
-  QVector<KOsmTag>    keytags;
-  QStringList         usetags;
   void                save(QFile* f);
   void                load(QFile* f);
   bool                operator==(KShape) const;
