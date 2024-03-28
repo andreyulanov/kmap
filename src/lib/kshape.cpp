@@ -116,10 +116,16 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         auto obj = json_val.toObject();
         if (obj.isEmpty())
           continue;
-        auto _local_load_mip = obj.value("local_load_mip").toDouble();
-        if (_local_load_mip > 0)
+        auto _main_mip = obj.value("main_mip").toDouble();
+        if (_main_mip > 0)
         {
-          local_load_mip = _local_load_mip;
+          main_mip = _main_mip;
+          continue;
+        }
+        auto _tile_mip = obj.value("tile_mip").toDouble();
+        if (_tile_mip > 0)
+        {
+          tile_mip = _tile_mip;
           continue;
         }
         auto _reduction_precision_m =

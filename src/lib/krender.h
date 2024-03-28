@@ -65,8 +65,7 @@ class KRender: public QThread
   QVector<QRect>         point_object_text_rects;
 
   void        run();
-  const KMap* insertMap(int idx, QString path, double min_mip,
-                        double max_mip, bool load_now);
+  const KMap* insertMap(int idx, QString path, bool load_now);
   void        renderMap(QPainter* p, KMap* map, int render_idx);
   void        render(QPainter* p, QVector<KMap*> render_maps,
                      int render_idx);
@@ -94,7 +93,6 @@ class KRender: public QThread
   bool     needToLoadMap(const KMap*, const QRectF& draw_rect);
   void     checkLoad();
   void     checkUnload();
-  bool     needToLoadSmall(const KMap* map);
   void     onLoaded();
 
 signals:
@@ -104,8 +102,7 @@ signals:
 
 public:
   virtual ~KRender();
-  const KMap*    addMap(QString path, double min_mip, double max_mip,
-                        bool load_now);
+  const KMap*    addMap(QString path, bool load_now);
   void           setMip(double);
   double         getMip() const;
   void           setCenterM(QPointF);

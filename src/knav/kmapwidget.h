@@ -81,7 +81,7 @@ public:
   void        render();
   void        setViewPoint(const KGeoCoor& deg, double mip);
   void        setMaxZoomSpeed(double);
-  const KMap* addMap(QString path, double min_mip, double max_mip,
+  const KMap* addMap(QString path,
                      bool load_now);
   const KMap* getWorldMap();
   void        scroll(QPoint diff);

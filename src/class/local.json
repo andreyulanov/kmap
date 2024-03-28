@@ -1,6 +1,6 @@
 [
 {
-  "local_load_mip" : 100
+  "tile_mip" : 50
 },
 {
   "default_coor_precision_coef" : 100

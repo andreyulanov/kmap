@@ -83,8 +83,7 @@ int main(int argc, char* argv[])
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
                    [&mapw, map_dir](QString map_path)
                    {
-                     mapw.addMap(map_path, 0, KMap::only_global_mip,
-                                 true);
+                     mapw.addMap(map_path, true);
                      mapw.render();
                    });
 

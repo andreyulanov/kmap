@@ -149,8 +149,9 @@ int main(int argc, char* argv[])
                     "borders!";
     }
 
-    map.shapes         = *shape_list;
-    map.local_load_mip = shape_man.local_load_mip;
+    map.shapes   = *shape_list;
+    map.main_mip = shape_man.main_mip;
+    map.tile_mip = shape_man.tile_mip;
     QVector<KObject*> obj_list;
     DFRAME            df;
     mapGetTotalBorder(hMap, &df, PP_GEO);

@@ -39,17 +39,15 @@ KRender::~KRender()
   stopAndWait();
 }
 
-const KMap* KRender::addMap(QString path, double min_mip,
-                            double max_mip, bool load_now)
+const KMap* KRender::addMap(QString path, bool load_now)
 {
   stopAndWait();
-  return insertMap(maps.count(), path, min_mip, max_mip, load_now);
+  return insertMap(maps.count(), path, load_now);
 }
 
-const KMap* KRender::insertMap(int idx, QString path, double min_mip,
-                               double max_mip, bool load_now)
+const KMap* KRender::insertMap(int idx, QString path, bool load_now)
 {
-  auto map = new KMap(path, min_mip, max_mip);
+  auto map = new KMap(path);
   connect(map, &KMap::loaded, this, &KRender::onLoaded,
           Qt::UniqueConnection);
   map->loadMain(load_now);
@@ -128,11 +126,6 @@ void KRender::onLoaded()
     start();
 }
 
-bool KRender::needToLoadSmall(const KMap* map)
-{
-  return mip < map->local_load_mip;
-}
-
 void KRender::checkUnload()
 {
   auto draw_rect_m  = getDrawRectM();
@@ -155,9 +148,7 @@ void KRender::checkUnload()
 bool KRender::needToLoadMap(const KMap*   map,
                             const QRectF& draw_rect_m)
 {
-  if (map->min_mip > 0 && render_mip < map->min_mip)
-    return false;
-  if (map->max_mip > 0 && render_mip > map->max_mip)
+  if (map->main_mip > 0 && render_mip > map->main_mip)
     return false;
   auto map_rect_m       = map->frame.toMeters();
   bool frame_intersects = draw_rect_m.intersects(map_rect_m);
@@ -216,7 +207,7 @@ void KRender::checkLoad()
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (!tile && tile_rect_m.intersects(draw_rect_m) &&
-              render_mip < map->local_load_mip)
+              render_mip < map->tile_mip)
             QtConcurrent::run(map, &KMap::loadTile, tile_idx,
                               tile_rect_m);
           tile_idx++;

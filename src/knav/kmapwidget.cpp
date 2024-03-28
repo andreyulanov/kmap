@@ -41,7 +41,7 @@ void KMapWidget::scan(QString map_dir)
   QFileInfoList list = dir.entryInfoList();
 
   auto world_map_path = map_dir + "/world.kmap";
-  addMap(world_map_path, 0, 0, true);
+  addMap(world_map_path, true);
   for (auto fi: list)
   {
     auto path = fi.absoluteFilePath();
@@ -50,15 +50,14 @@ void KMapWidget::scan(QString map_dir)
     if (path.endsWith(".kmap"))
     {
       qDebug() << "adding" << path;
-      addMap(path, 0, KMap::only_global_mip, false);
+      addMap(path, false);
     }
   }
 }
 
-const KMap* KMapWidget::addMap(QString path, double min_mip,
-                               double max_mip, bool load_now)
+const KMap* KMapWidget::addMap(QString path, bool load_now)
 {
-  return r.addMap(path, min_mip, max_mip, load_now);
+  return r.addMap(path, load_now);
 }
 
 const KMap* KMapWidget::getWorldMap()

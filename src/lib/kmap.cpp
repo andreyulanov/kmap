@@ -409,11 +409,9 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     polygons.clear();
   }
 
-  KMap::KMap(const QString& v, double _min_mip, double _max_mip)
+  KMap::KMap(const QString& v)
   {
-    path    = v;
-    min_mip = _min_mip;
-    max_mip = _max_mip;
+    path = v;
   }
 
   KMap::~KMap()
@@ -523,7 +521,8 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       f.write(ba.data(), ba.count());
     }
 
-    write(&f, local_load_mip);
+    write(&f, main_mip);
+    write(&f, tile_mip);
     write(&f, shapes.count());
     for (auto& shape: shapes)
       shape->save(&f);
@@ -624,7 +623,8 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       }
     }
 
-    read(&f, local_load_mip);
+    read(&f, main_mip);
+    read(&f, tile_mip);
 
     if (!load_objects)
       return;
@@ -779,8 +779,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     auto map_top_left_m = frame.top_left.toMeters();
     for (auto& obj: obj_list)
     {
-      if (obj->shape->max_mip == 0 ||
-          obj->shape->max_mip > local_load_mip)
+      if (obj->shape->max_mip == 0 || obj->shape->max_mip > tile_mip)
         main.append(obj);
       else
       {

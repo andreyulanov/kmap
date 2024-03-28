@@ -82,7 +82,8 @@ struct KShapeManager: public QObject
   Q_OBJECT
 
 public:
-  double           local_load_mip              = 0;
+  double           main_mip                    = 0;
+  double           tile_mip                    = 0;
   double           reduction_precision_m       = 0;
   int              default_coor_precision_coef = 1;
   QVector<KShape*> shapes;

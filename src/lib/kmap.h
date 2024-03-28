@@ -136,9 +136,8 @@ public:
 
   QString                     path;
   int                         compression_level;
-  double                      min_mip        = 0;
-  double                      max_mip        = 0;
-  double                      local_load_mip = 0;
+  double                      main_mip = 0;
+  double                      tile_mip = 0;
   QVector<KShape*>            shapes;
   KGeoRect                    frame;
   QVector<KGeoPolygon>        borders;
@@ -155,7 +154,7 @@ public:
   QList<PartBorder>           render_start_list;
   int                         render_object_count;
 
-  KMap(const QString& path, double min_mip = 0, double max_mip = 0);
+  KMap(const QString& path);
   virtual ~KMap();
   void save(Compression compression, QString new_path = "");
   void loadMain(bool load_objects);
