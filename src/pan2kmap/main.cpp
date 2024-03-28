@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
       int percentage = 100 * in_obj_idx / object_count;
       if (percentage != curr_percentage)
       {
-        qDebug() << "percentage" << percentage;
+        fprintf(stderr, "%d%% done\r", percentage);
         curr_percentage = percentage;
       }
       mapClearObject(info);
