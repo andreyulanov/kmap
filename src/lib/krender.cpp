@@ -52,7 +52,7 @@ const KMap* KRender::insertMap(int idx, QString path, double min_mip,
   auto map = new KMap(path, min_mip, max_mip);
   connect(map, &KMap::loaded, this, &KRender::onLoaded,
           Qt::UniqueConnection);
-  map->loadGlobal(load_now);
+  map->loadMain(load_now);
   maps.insert(idx, map);
   return map;
 }
@@ -142,7 +142,7 @@ void KRender::checkUnload()
     i++;
     if (i == 0)
       continue;
-    if (map->global_tile.status == KObjectCollection::Loaded)
+    if (map->main.status == KObjectCollection::Loaded)
     {
       if (!needToLoadMap(map, draw_rect_m))
         if (loaded_count > 1)
@@ -190,23 +190,23 @@ void KRender::checkLoad()
     if (!needToLoadMap(map, draw_rect_m))
       continue;
 
-    if (map->global_tile.status == KObjectCollection::Null)
+    if (map->main.status == KObjectCollection::Null)
     {
       QtConcurrent::run(
           [&map]()
           {
-            map->loadGlobal(true);
+            map->loadMain(true);
           });
       continue;
     }
-    if (map->global_tile.status == KObjectCollection::Loaded)
+    if (map->main.status == KObjectCollection::Loaded)
     {
       if (needToLoadMap(map, draw_rect_m))
       {
-        int    tile_side_count = sqrt(map->local_tiles.count());
+        int    tile_side_count = sqrt(map->tiles.count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
                               map_rect_m.height() / tile_side_count};
-        for (int tile_idx = 0; auto& tile: map->local_tiles)
+        for (int tile_idx = 0; auto& tile: map->tiles)
         {
           int    tile_idx_y = tile_idx / tile_side_count;
           int    tile_idx_x = tile_idx - tile_idx_y * tile_side_count;
@@ -217,7 +217,7 @@ void KRender::checkLoad()
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (!tile && tile_rect_m.intersects(draw_rect_m) &&
               render_mip < map->local_load_mip)
-            QtConcurrent::run(map, &KMap::loadLocal, tile_idx,
+            QtConcurrent::run(map, &KMap::loadTile, tile_idx,
                               tile_rect_m);
           tile_idx++;
         }
@@ -815,11 +815,11 @@ void KRender::render(QPainter* p, QVector<KMap*> render_maps,
 {
   for (auto map: render_maps)
   {
-    KLocker big_locker(&map->global_lock, KLocker::Read);
-    if (!big_locker.hasLocked())
+    KLocker main_locker(&map->main_lock, KLocker::Read);
+    if (!main_locker.hasLocked())
       continue;
-    KLocker small_locker(&map->local_lock, KLocker::Read);
-    if (!small_locker.hasLocked())
+    KLocker tile_locker(&map->tile_lock, KLocker::Read);
+    if (!tile_locker.hasLocked())
       continue;
     renderMap(p, map, render_idx);
   }
@@ -970,7 +970,7 @@ void KRender::run()
       if (!intersecting_maps.contains(map_idx))
         continue;
 
-    KLocker big_locker(&map->global_lock, KLocker::Read);
+    KLocker big_locker(&map->main_lock, KLocker::Read);
     if (!big_locker.hasLocked())
       continue;
 
@@ -981,7 +981,7 @@ void KRender::run()
     if (map_idx > 0 && !render_frame_m.intersects(map_rect_m))
       continue;
 
-    KLocker small_locker(&map->local_lock, KLocker::Read);
+    KLocker small_locker(&map->tile_lock, KLocker::Read);
     if (!small_locker.hasLocked())
       continue;
 

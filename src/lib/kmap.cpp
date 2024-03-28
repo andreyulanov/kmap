@@ -432,7 +432,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   void KMap::add(KMap * m)
   {
     frame = frame.united(m->frame);
-    for (auto new_obj: m->global_tile)
+    for (auto new_obj: m->main)
     {
       auto new_sh = new_obj->shape;
       bool found  = false;
@@ -446,40 +446,40 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       if (!found)
         qDebug() << "ERROR: shape" << new_sh->id
                  << "not found in primary classifier!";
-      global_tile.append(new_obj);
+      main.append(new_obj);
     }
   }
 
   void KMap::clear()
   {
-    KLocker big_locker(&global_lock, KLocker::Write);
+    KLocker big_locker(&main_lock, KLocker::Write);
     if (!big_locker.hasLocked())
       return;
-    KLocker small_locker(&local_lock, KLocker::Write);
+    KLocker small_locker(&tile_lock, KLocker::Write);
     if (!small_locker.hasLocked())
       return;
 
-    if (global_tile.status != KObjectCollection::Loaded)
+    if (main.status != KObjectCollection::Loaded)
       return;
-    if (global_tile.status == KObjectCollection::Loading)
+    if (main.status == KObjectCollection::Loading)
       return;
 
-    qDeleteAll(global_tile);
-    global_tile.clear();
-    for (auto& part: local_tiles)
+    qDeleteAll(main);
+    main.clear();
+    for (auto& tile: tiles)
     {
-      if (part)
+      if (tile)
       {
-        qDeleteAll(*part);
-        delete part;
+        qDeleteAll(*tile);
+        delete tile;
       }
     }
-    local_tiles.clear();
+    tiles.clear();
     shapes.clear();
     qDeleteAll(shapes);
     for (int i = 0; i < max_layer_count; i++)
       render_data[i].clear();
-    global_tile.status  = KObjectCollection::Null;
+    main.status         = KObjectCollection::Null;
     render_object_count = 0;
     render_start_list.clear();
   }
@@ -504,7 +504,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       return;
     }
 
-    QReadLocker locker(&global_lock);
+    QReadLocker locker(&main_lock);
     write(&f, QString("kmap"));
     write(&f, compression_level);
     write(&f, frame);
@@ -538,19 +538,19 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     write(&f, ba.count());
     f.write(ba.data(), ba.count());
 
-    write(&f, global_tile.count());
+    write(&f, main.count());
     ba.clear();
 
-    for (auto& obj: global_tile)
+    for (auto& obj: main)
       obj->save(&shapes, ba);
     if (compression_level > 0)
       ba = qCompress(ba, compression_level);
     write(&f, ba.count());
     f.write(ba.data(), ba.count());
-    write(&f, local_tiles.count());
+    write(&f, tiles.count());
     QList<qint64> small_part_pos_list;
 
-    for (int part_idx = 0; auto& part: local_tiles)
+    for (int part_idx = 0; auto& part: tiles)
     {
       small_part_pos_list.append(f.pos());
       if (part)
@@ -574,9 +574,9 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     write(&f, small_idx_start_pos);
   }
 
-  void KMap::loadGlobal(bool load_objects)
+  void KMap::loadMain(bool load_objects)
   {
-    if (global_tile.status == KObjectCollection::Loading)
+    if (main.status == KObjectCollection::Loading)
       return;
 
     QElapsedTimer t;
@@ -590,7 +590,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       return;
     }
 
-    if (global_tile.status != KObjectCollection::Null)
+    if (main.status != KObjectCollection::Null)
       return;
 
     QString format_id;
@@ -629,8 +629,8 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     if (!load_objects)
       return;
 
-    qDebug() << "loading global from" << path;
-    global_tile.status = KObjectCollection::Loading;
+    qDebug() << "loading main from" << path;
+    main.status = KObjectCollection::Loading;
     int shape_count;
     read(&f, shape_count);
     shapes.resize(shape_count);
@@ -656,7 +656,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
 
     int big_obj_count;
     read(&f, big_obj_count);
-    global_tile.resize(big_obj_count);
+    main.resize(big_obj_count);
 
     ba.clear();
     ba_count = 0;
@@ -666,38 +666,38 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     if (compression_level > 0)
       ba = qUncompress(ba);
     pos = 0;
-    for (auto& obj: global_tile)
+    for (auto& obj: main)
     {
       obj = new KObject;
       obj->load(&shapes, pos, ba);
     }
     int small_count;
     read(&f, small_count);
-    local_tiles.resize(small_count);
-    for (auto& part: local_tiles)
+    tiles.resize(small_count);
+    for (auto& part: tiles)
       part = nullptr;
-    QWriteLocker big_locker(&global_lock);
-    addCollectionToIndex(&global_tile);
-    global_tile.status = KObjectCollection::Loaded;
+    QWriteLocker big_locker(&main_lock);
+    addCollectionToIndex(&main);
+    main.status = KObjectCollection::Loaded;
     loaded();
   }
 
   void KMap::loadAll()
   {
-    loadGlobal(true);
-    for (int i = 0; i < local_tiles.count(); i++)
-      loadLocal(i, QRect());
+    loadMain(true);
+    for (int i = 0; i < tiles.count(); i++)
+      loadTile(i, QRect());
   }
 
-  void KMap::loadLocal(int part_idx, QRectF tile_rect_m)
+  void KMap::loadTile(int tile_idx, QRectF tile_rect_m)
   {
-    if (global_tile.status != KObjectCollection::Loaded)
+    if (main.status != KObjectCollection::Loaded)
       return;
-    if (local_tiles[part_idx] &&
-        local_tiles[part_idx]->status == KObjectCollection::Loading)
+    if (tiles[tile_idx] &&
+        tiles[tile_idx]->status == KObjectCollection::Loading)
       return;
 
-    qDebug() << "loading local" << part_idx << "from" << path;
+    qDebug() << "loading tile" << tile_idx << "from" << path;
     QElapsedTimer t;
     t.start();
     using namespace KSerialize;
@@ -715,13 +715,13 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     int calc_small_part_count =
         (f.size() - sizeof(qint64) - small_idx_start_pos) /
         sizeof(qint64);
-    if (calc_small_part_count != local_tiles.count())
+    if (calc_small_part_count != tiles.count())
       return;
 
-    if (part_idx > local_tiles.count() - 1)
+    if (tile_idx > tiles.count() - 1)
       return;
 
-    f.seek(small_idx_start_pos + part_idx * sizeof(qint64));
+    f.seek(small_idx_start_pos + tile_idx * sizeof(qint64));
     qint64 part_pos;
     read(&f, part_pos);
     f.seek(part_pos);
@@ -731,14 +731,14 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
 
     if (part_obj_count == 0)
     {
-      if (!local_tiles[part_idx])
-        local_tiles[part_idx] = new KObjectCollection;
+      if (!tiles[tile_idx])
+        tiles[tile_idx] = new KObjectCollection;
       return;
     }
 
-    if (!local_tiles[part_idx])
-      local_tiles[part_idx] = new KObjectCollection;
-    local_tiles[part_idx]->resize(part_obj_count);
+    if (!tiles[tile_idx])
+      tiles[tile_idx] = new KObjectCollection;
+    tiles[tile_idx]->resize(part_obj_count);
 
     int ba_count = 0;
     read(&f, ba_count);
@@ -748,17 +748,17 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     if (compression_level > 0)
       ba = qUncompress(ba);
 
-    local_tiles[part_idx]->status = KObjectCollection::Loading;
-    int pos                       = 0;
-    for (auto& obj: *local_tiles[part_idx])
+    tiles[tile_idx]->status = KObjectCollection::Loading;
+    int pos                 = 0;
+    for (auto& obj: *tiles[tile_idx])
     {
       obj = new KObject;
       obj->load(&shapes, pos, ba);
       obj->tile_frame_m = tile_rect_m;
     }
-    QWriteLocker small_locker(&local_lock);
-    addCollectionToIndex(local_tiles[part_idx]);
-    local_tiles[part_idx]->status = KObjectCollection::Loaded;
+    QWriteLocker small_locker(&tile_lock);
+    addCollectionToIndex(tiles[tile_idx]);
+    tiles[tile_idx]->status = KObjectCollection::Loaded;
     loaded();
   }
 
@@ -769,32 +769,32 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   void KEditableMap::addObjects(const QVector<KObject*>& obj_list,
                                 int max_objects_per_tile)
   {
-    int part_side_num =
+    int tile_side_num =
         std::ceil(1.0 * obj_list.count() / max_objects_per_tile);
-    int part_num = pow(part_side_num, 2);
-    local_tiles.resize(part_num);
-    for (auto& part: local_tiles)
-      part = nullptr;
+    int tile_num = pow(tile_side_num, 2);
+    tiles.resize(tile_num);
+    for (auto& tile: tiles)
+      tile = nullptr;
     auto map_size_m     = frame.getSizeMeters();
     auto map_top_left_m = frame.top_left.toMeters();
     for (auto& obj: obj_list)
     {
       if (obj->shape->max_mip == 0 ||
           obj->shape->max_mip > local_load_mip)
-        global_tile.append(obj);
+        main.append(obj);
       else
       {
         auto   obj_top_left_m = obj->frame.top_left.toMeters();
         double shift_x_m = obj_top_left_m.x() - map_top_left_m.x();
         int    part_idx_x =
-            1.0 * shift_x_m / map_size_m.width() * part_side_num;
+            1.0 * shift_x_m / map_size_m.width() * tile_side_num;
         int shift_y = obj_top_left_m.y() - map_top_left_m.y();
         int part_idx_y =
-            1.0 * shift_y / map_size_m.height() * part_side_num;
-        int part_idx = part_idx_y * part_side_num + part_idx_x;
-        if (!local_tiles[part_idx])
-          local_tiles[part_idx] = new KObjectCollection;
-        local_tiles[part_idx]->append(obj);
+            1.0 * shift_y / map_size_m.height() * tile_side_num;
+        int part_idx = part_idx_y * tile_side_num + part_idx_x;
+        if (!tiles[part_idx])
+          tiles[part_idx] = new KObjectCollection;
+        tiles[part_idx]->append(obj);
       }
     }
   }

@@ -147,10 +147,10 @@ public:
   QVector<KGeoCoor>           find_centers;
   QStringList                 find_names_en;
   QVector<KGeoCoor>           find_centers_en;
-  KObjectCollection           global_tile;
-  QReadWriteLock              global_lock;
-  QVector<KObjectCollection*> local_tiles;
-  QReadWriteLock              local_lock;
+  KObjectCollection           main;
+  QReadWriteLock              main_lock;
+  QVector<KObjectCollection*> tiles;
+  QReadWriteLock              tile_lock;
   QVector<KObject*>           render_data[max_layer_count];
   QList<PartBorder>           render_start_list;
   int                         render_object_count;
@@ -158,8 +158,8 @@ public:
   KMap(const QString& path, double min_mip = 0, double max_mip = 0);
   virtual ~KMap();
   void save(Compression compression, QString new_path = "");
-  void loadGlobal(bool load_objects);
-  void loadLocal(int part_idx, QRectF tile_rect_m);
+  void loadMain(bool load_objects);
+  void loadTile(int tile_idx, QRectF tile_rect_m);
   void loadAll();
   void clear();
   void add(KMap*);
