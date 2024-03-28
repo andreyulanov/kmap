@@ -39,7 +39,7 @@ class KRender: public QThread
   int    min_object_size_pix     = 40;
   double mip                     = 1;
   double render_window_size_coef = 2;
-  QColor background_color        = Qt::white;
+  QColor background_color        = QColor(166, 220, 238);
   int    update_interval_ms      = 100;
 
   QPointF render_center_m;
@@ -113,7 +113,6 @@ public:
   QPointF        getRenderCenterM() const;
   void           setPixmapSize(QSize);
   void           setMinObjectSizePix(int);
-  void           setBackgroundColor(QColor);
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);
   static void    drawOutlinedText(QPainter* p, const QString& text,

@@ -23,7 +23,6 @@ KMapWidget::KMapWidget(QString map_dir, QSize s):
   connect(&zoom_timer, &QTimer::timeout, this, &KMapWidget::stepZoom);
 
   r.setPixmapSize(size());
-  r.setBackgroundColor(QColor(166, 220, 238));
 
   connect(&r, &KRender::paintObjects, this, &KMapWidget::paintObjects,
           Qt::DirectConnection);
