@@ -42,16 +42,6 @@ int main(int argc, char* argv[])
                                pow(screen_size_pix.height(), 2));
   KShape::pixel_size_mm = physical_diag_mm / pixel_diag;
 
-  if (!is_device)
-  {
-    screen_size_pix = {720, 1000};
-    screen_size_mm  = {
-         screen_size_mm.width() * screen_size_pix.width() /
-             screen_size_pix.width(),
-         screen_size_mm.height() * screen_size_pix.height() /
-             screen_size_pix.height()};
-  }
-
   KFindWidget findw;
   findw.setFixedSize(screen_size_pix);
 
@@ -79,11 +69,17 @@ int main(int argc, char* argv[])
     }
   }
   else
-    mmc_path = "/home/user/kmap/data";
+    mmc_path = argv[1];
 
-  auto        map_dir = mmc_path + "/maps";
-  KMapWidget  mapw(map_dir, screen_size_pix);
-  KMapFetcher map_fetcher(map_dir, mapw.getWorldMap());
+  auto map_dir = mmc_path + "/maps";
+
+  KMapWidget             mapw(map_dir, screen_size_pix);
+  KMapFetcher            map_fetcher(map_dir, mapw.getWorldMap());
+  KShapeManager          kvo_shape_man(mmc_path + "/class");
+  KTrackManager          track_man(mmc_path + "/tracks");
+  KPortableObjectManager object_man(mmc_path + "/objects");
+  KAutoScroll            auto_scroll;
+
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
                    [&mapw, map_dir](QString map_path)
                    {
@@ -91,8 +87,6 @@ int main(int argc, char* argv[])
                                  true);
                      mapw.render();
                    });
-
-  KShapeManager kvo_shape_man;
 
   QDir        dir(mmc_path + "/class");
   QStringList filters;
@@ -104,14 +98,10 @@ int main(int argc, char* argv[])
     kvo_shape_man.loadShapes(mmc_path + "/class/" + path,
                              mmc_path + "/class");
 
-  KTrackManager          track_man(mmc_path + "/tracks");
-  KPortableObjectManager object_man(mmc_path + "/objects");
   QObject::connect(&editw, &KEditWidget::saveTrack, &track_man,
                    &KTrackManager::saveTrack);
 
   KGeoCoor start_lat_lon = KGeoCoor::fromDegs(59.9769195, 30.3642851);
-
-  KAutoScroll auto_scroll;
 
   QObject::connect(&findw, &KFindWidget::find, &mapw,
                    &KMapWidget::find);
