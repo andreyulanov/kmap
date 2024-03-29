@@ -938,18 +938,17 @@ void KRender::run()
   p0.setFont(f);
 
   QVector<int> intersecting_maps;
-  if (render_mip < KMap::only_global_mip)
+  auto         draw_rect = getDrawRectM();
+  for (int map_idx = -1; auto& map: maps)
   {
-    auto draw_rect = getDrawRectM();
-    for (int map_idx = -1; auto& map: maps)
-    {
-      map_idx++;
-      if (map_idx == 0)
-        continue;
+    if (map->main_mip > 0 && render_mip > map->main_mip)
+      continue;
+    map_idx++;
+    if (map_idx == 0)
+      continue;
 
-      if (needToLoadMap(map, draw_rect))
-        intersecting_maps.append(map_idx);
-    }
+    if (needToLoadMap(map, draw_rect))
+      intersecting_maps.append(map_idx);
   }
 
   QVector<KMap*> render_maps;

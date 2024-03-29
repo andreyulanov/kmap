@@ -37,12 +37,12 @@ class KRender: public QThread
   Q_OBJECT
 
   int    min_object_size_pix     = 40;
-  double mip                     = 1;
   double render_window_size_coef = 2;
   QColor background_color        = QColor(166, 220, 238);
   int    update_interval_ms      = 100;
 
   QPointF render_center_m;
+  double  mip        = 1;
   double  render_mip = 1;
   QPixmap render_pixmap;
   bool    rendering_enabled      = false;

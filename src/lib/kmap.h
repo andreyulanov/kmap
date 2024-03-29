@@ -118,7 +118,6 @@ public:
   static constexpr int    render_count               = 6;
   static constexpr int    border_coor_precision_coef = 10000;
   static constexpr double wrap_longitude             = -168.5;
-  static constexpr double only_global_mip            = 100;
 
   enum class Compression
   {
