@@ -47,11 +47,11 @@ public:
   QString             id;
   int                 pan_code = 0;
   QString             pan_key;
-  Type                type     = None;
-  Style               style    = Solid;
-  uchar               layer    = 0;
-  float               width_mm = 0.2;
-  static float        pixel_size_mm;
+  Type                type                = None;
+  Style               style               = Solid;
+  uchar               layer               = 0;
+  float               width_mm            = 0.2;
+  float               pixel_size_mm       = 0.1;
   float               min_mip             = 0;
   float               max_mip             = 100;
   int                 coor_precision_coef = 1;

@@ -50,7 +50,7 @@ void KPortableObject::save(QString path)
   write(&f, file_attr);
 }
 
-void KPortableObject::load(QString path)
+void KPortableObject::load(QString path, double pixel_size_mm)
 {
   QFile f(path);
   if (!f.open(QIODevice::ReadOnly))
@@ -87,8 +87,8 @@ void KPortableObject::load(QString path)
   read(&f, img);
   if (!img.isNull())
   {
-    image =
-        img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
+    image = img.scaledToWidth(getWidthPix(pixel_size_mm),
+                              Qt::SmoothTransformation);
   }
   read(&f, name);
   int n;
@@ -117,12 +117,13 @@ bool KPortableObject::isEmpty()
   return polygons.isEmpty();
 }
 
-int KPortableObject::getWidthPix()
+int KPortableObject::getWidthPix(double pixel_size_mm)
 {
-  return round(pen_width_mm / KShape::pixel_size_mm);
+  return round(pen_width_mm / pixel_size_mm);
 }
 
-KPortableObjectManager::KPortableObjectManager(QString _objects_dir)
+KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
+                                               double  _pixel_size_mm)
 {
   QDir dir(_objects_dir);
   if (!dir.exists())
@@ -131,10 +132,11 @@ KPortableObjectManager::KPortableObjectManager(QString _objects_dir)
   for (auto fi: fi_list)
   {
     KPortableObject obj;
-    obj.load(fi.absoluteFilePath());
+    obj.load(fi.absoluteFilePath(), pixel_size_mm);
     objects.append(obj);
   }
-  objects_dir = _objects_dir;
+  objects_dir   = _objects_dir;
+  pixel_size_mm = _pixel_size_mm;
 }
 
 QString KPortableObjectManager::generateObjectFileName()
@@ -179,7 +181,7 @@ void KPortableObjectManager::paintObject(QPainter*       p,
 
   if (obj.type == KShape::Line)
   {
-    QPen pen = QPen(obj.pen, obj.getWidthPix());
+    QPen pen = QPen(obj.pen, obj.getWidthPix(pixel_size_mm));
     p->setPen(pen);
     QPoint prev_pix;
     QPoint pix;
@@ -194,7 +196,7 @@ void KPortableObjectManager::paintObject(QPainter*       p,
   }
   if (obj.type == KShape::Polygon)
   {
-    QPen   pen   = QPen(obj.pen, obj.getWidthPix());
+    QPen   pen   = QPen(obj.pen, obj.getWidthPix(pixel_size_mm));
     QBrush brush = QBrush(obj.brush);
     p->setPen(pen);
     p->setBrush(brush);
@@ -212,7 +214,7 @@ void KPortableObjectManager::paintObject(QPainter*       p,
     p->setBrush(Qt::black);
     for (auto point: polygon_pix)
     {
-      int w = 1.0 / KShape::pixel_size_mm;
+      int w = 1.0 / pixel_size_mm;
       p->drawEllipse(point, w, w);
     }
   }

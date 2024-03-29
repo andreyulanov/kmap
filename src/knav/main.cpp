@@ -36,12 +36,11 @@ int main(int argc, char* argv[])
   QSize  screen_size_pix = screen->availableSize();
   QSizeF screen_size_mm  = screen->physicalSize();
 
-  auto physical_diag_mm = sqrt(pow(screen_size_mm.width(), 2) +
-                               pow(screen_size_mm.height(), 2));
-  auto pixel_diag       = sqrt(pow(screen_size_pix.width(), 2) +
-                               pow(screen_size_pix.height(), 2));
-  KShape::pixel_size_mm = physical_diag_mm / pixel_diag;
-  double pixel_size_mm  = physical_diag_mm / pixel_diag / 2;
+  auto   physical_diag_mm = sqrt(pow(screen_size_mm.width(), 2) +
+                                 pow(screen_size_mm.height(), 2));
+  auto   pixel_diag       = sqrt(pow(screen_size_pix.width(), 2) +
+                                 pow(screen_size_pix.height(), 2));
+  double pixel_size_mm    = physical_diag_mm / pixel_diag / 2;
 
   KFindWidget findw;
   findw.setFixedSize(screen_size_pix);
@@ -81,7 +80,8 @@ int main(int argc, char* argv[])
   KMapFetcher map_fetcher(mapw_settings.map_dir, mapw.getWorldMap());
   KShapeManager          kvo_shape_man(mmc_path + "/class");
   KTrackManager          track_man(mmc_path + "/tracks");
-  KPortableObjectManager object_man(mmc_path + "/objects");
+  KPortableObjectManager object_man(mmc_path + "/objects",
+                                    pixel_size_mm);
   KAutoScroll            auto_scroll;
 
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
@@ -272,8 +272,6 @@ int main(int argc, char* argv[])
 
 #endif
 
-  if (!is_device)
-    KShape::pixel_size_mm = physical_diag_mm / pixel_diag / 2;
   mapw.show();
   mapw.setViewPoint(start_lat_lon, 1);
 

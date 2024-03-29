@@ -7,8 +7,6 @@
 #include <QJsonObject>
 #include <QMetaEnum>
 
-float KShape::pixel_size_mm = 0.1;
-
 void KShape::save(QFile* f)
 {
   using namespace KSerialize;

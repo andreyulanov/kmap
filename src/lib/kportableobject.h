@@ -19,15 +19,16 @@ struct KPortableObject
   QMap<QString, QString>    text_attr;
   QMap<QString, QByteArray> file_attr;
   void                      save(QString path);
-  void                      load(QString path);
+  void                      load(QString path, double pixel_size_mm);
   bool                      isEmpty();
-  int                       getWidthPix();
+  int                       getWidthPix(double pixel_size_mm);
 };
 
 class KPortableObjectManager: public QObject
 {
   Q_OBJECT
 
+  double                   pixel_size_mm = 0;
   QString                  objects_dir;
   QVector<KPortableObject> objects;
   KPortableObject          active_object;
@@ -39,7 +40,7 @@ signals:
   void   finishEdit();
 
 public:
-  KPortableObjectManager(QString objects_dir);
+  KPortableObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
   void paintObject(QPainter* p, KPortableObject obj);
   void addPoint(KGeoCoor coor);
