@@ -71,17 +71,20 @@ int main(int argc, char* argv[])
   else
     mmc_path = argv[1];
 
-  auto map_dir = mmc_path + "/maps";
+  KMapWidget::Settings mapw_settings;
+  mapw_settings.map_dir       = mmc_path + "/maps";
+  mapw_settings.pixel_size_mm = KShape::pixel_size_mm;
+  mapw_settings.window_size   = screen_size_pix;
 
-  KMapWidget             mapw(map_dir, screen_size_pix);
-  KMapFetcher            map_fetcher(map_dir, mapw.getWorldMap());
+  KMapWidget  mapw(mapw_settings);
+  KMapFetcher map_fetcher(mapw_settings.map_dir, mapw.getWorldMap());
   KShapeManager          kvo_shape_man(mmc_path + "/class");
   KTrackManager          track_man(mmc_path + "/tracks");
   KPortableObjectManager object_man(mmc_path + "/objects");
   KAutoScroll            auto_scroll;
 
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
-                   [&mapw, map_dir](QString map_path)
+                   [&mapw](QString map_path)
                    {
                      mapw.addMap(map_path, true);
                      mapw.render();
@@ -271,15 +274,6 @@ int main(int argc, char* argv[])
     KShape::pixel_size_mm = physical_diag_mm / pixel_diag / 2;
   mapw.show();
   mapw.setViewPoint(start_lat_lon, 1000);
-
-  //  сделать KRenderSettings;
-  //  map_dir;
-  //  pixel_size_mm;
-  //  window_size;
-  //  int    min_object_size_pix     = 40;
-  //  double render_window_size_coef = 2;
-  //  QColor background_color        = QColor(166, 220, 238);
-  //  int    update_interval_ms      = 100;
 
   return a.exec();
 }

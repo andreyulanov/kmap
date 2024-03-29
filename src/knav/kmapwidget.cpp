@@ -7,12 +7,10 @@
 
 using namespace kmath;
 
-KMapWidget::KMapWidget(QString map_dir, QSize s):
+KMapWidget::KMapWidget(Settings settings):
     label(this), full_label(this), scaled_label(this)
 {
-  if (s.isEmpty())
-    s = QSize(480, 800);
-  setFixedSize(s);
+  setFixedSize(settings.window_size);
   setAttribute(Qt::WA_AcceptTouchEvents);
   QApplication::setAttribute(
       Qt::AA_SynthesizeMouseForUnhandledTouchEvents, true);
@@ -28,7 +26,7 @@ KMapWidget::KMapWidget(QString map_dir, QSize s):
           Qt::DirectConnection);
   connect(&r, &KRender::started, this, &KMapWidget::startedRender);
   connect(&r, &KRender::rendered, this, &KMapWidget::onRendered);
-  scan(map_dir);
+  scan(settings.map_dir);
 }
 
 void KMapWidget::scan(QString map_dir)
