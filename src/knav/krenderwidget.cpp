@@ -1,5 +1,5 @@
 #include "math.h"
-#include "kmapwidget.h"
+#include "krenderwidget.h"
 #include <QLabel>
 #include <QDebug>
 #include <QApplication>
@@ -7,7 +7,7 @@
 
 using namespace kmath;
 
-KMapWidget::KMapWidget(Settings settings):
+KRenderWidget::KRenderWidget(Settings settings):
     label(this), full_label(this), scaled_label(this)
 {
   setFixedSize(settings.window_size);
@@ -18,19 +18,19 @@ KMapWidget::KMapWidget(Settings settings):
   grabGesture(Qt::PinchGesture);
 
   zoom_timer.setInterval(50);
-  connect(&zoom_timer, &QTimer::timeout, this, &KMapWidget::stepZoom);
+  connect(&zoom_timer, &QTimer::timeout, this, &KRenderWidget::stepZoom);
 
   r.setPixmapSize(size());
   r.setPixelSizeMM(settings.pixel_size_mm);
 
-  connect(&r, &KRender::paintObjects, this, &KMapWidget::paintObjects,
+  connect(&r, &KRender::paintObjects, this, &KRenderWidget::paintObjects,
           Qt::DirectConnection);
-  connect(&r, &KRender::started, this, &KMapWidget::startedRender);
-  connect(&r, &KRender::rendered, this, &KMapWidget::onRendered);
+  connect(&r, &KRender::started, this, &KRenderWidget::startedRender);
+  connect(&r, &KRender::rendered, this, &KRenderWidget::onRendered);
   scan(settings.map_dir);
 }
 
-void KMapWidget::scan(QString map_dir)
+void KRenderWidget::scan(QString map_dir)
 {
   qDebug() << "scanning" << map_dir;
 
@@ -54,22 +54,22 @@ void KMapWidget::scan(QString map_dir)
   }
 }
 
-const KMap* KMapWidget::addMap(QString path, bool load_now)
+const KMap* KRenderWidget::addMap(QString path, bool load_now)
 {
   return r.addMap(path, load_now);
 }
 
-const KMap* KMapWidget::getWorldMap()
+const KMap* KRenderWidget::getWorldMap()
 {
   return r.getMaps()->first();
 }
 
-void KMapWidget::render()
+void KRenderWidget::render()
 {
   r.start();
 }
 
-void KMapWidget::setViewPoint(const KGeoCoor& deg, double mip)
+void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
 {
   shifted_after_zoom = true;
   total_pan_pos      = QPoint();
@@ -79,12 +79,12 @@ void KMapWidget::setViewPoint(const KGeoCoor& deg, double mip)
   r.start();
 }
 
-void KMapWidget::setMaxZoomSpeed(double v)
+void KRenderWidget::setMaxZoomSpeed(double v)
 {
   max_zoom_speed = v;
 }
 
-void KMapWidget::onRendered(int ms_elapsed)
+void KRenderWidget::onRendered(int ms_elapsed)
 {
   if (zoom_mode == None)
   {
@@ -98,7 +98,7 @@ void KMapWidget::onRendered(int ms_elapsed)
   modified();
 }
 
-void KMapWidget::mousePressEvent(QMouseEvent* e)
+void KRenderWidget::mousePressEvent(QMouseEvent* e)
 {
   if (!canScroll())
     return;
@@ -107,7 +107,7 @@ void KMapWidget::mousePressEvent(QMouseEvent* e)
   zoom_focus_shift = QPoint();
 }
 
-void KMapWidget::scroll(QPoint diff)
+void KRenderWidget::scroll(QPoint diff)
 {
   shifted_after_zoom = true;
   total_pan_pos += diff;
@@ -134,7 +134,7 @@ void KMapWidget::scroll(QPoint diff)
     scaled_label.move(scaled_label.pos() - diff);
 }
 
-void KMapWidget::scrollTo(const KGeoCoor& coor)
+void KRenderWidget::scrollTo(const KGeoCoor& coor)
 {
   auto new_pos_pix = deg2pix(coor);
   auto diff        = new_pos_pix - QPoint(width() / 2, height() / 2);
@@ -144,7 +144,7 @@ void KMapWidget::scrollTo(const KGeoCoor& coor)
     setViewPoint(coor, r.getMip());
 }
 
-void KMapWidget::mouseMoveEvent(QMouseEvent* e)
+void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
 {
   if (!canScroll())
     return;
@@ -155,7 +155,7 @@ void KMapWidget::mouseMoveEvent(QMouseEvent* e)
   mouse_pos = e->pos();
 }
 
-void KMapWidget::mouseReleaseEvent(QMouseEvent* e)
+void KRenderWidget::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!canScroll())
     return;
@@ -164,7 +164,7 @@ void KMapWidget::mouseReleaseEvent(QMouseEvent* e)
     tapped(pix2deg(e->pos()));
 }
 
-void KMapWidget::wheelEvent(QWheelEvent* e)
+void KRenderWidget::wheelEvent(QWheelEvent* e)
 {
   if (zoom_mode == ZoomMode::None)
   {
@@ -178,7 +178,7 @@ void KMapWidget::wheelEvent(QWheelEvent* e)
   }
 }
 
-bool KMapWidget::event(QEvent* e)
+bool KRenderWidget::event(QEvent* e)
 {
   if (e->type() == QEvent::Gesture)
   {
@@ -229,7 +229,7 @@ bool KMapWidget::event(QEvent* e)
   return QWidget::event(e);
 }
 
-void KMapWidget::updateLabel(const QPixmap* pm, int ms_elapsed)
+void KRenderWidget::updateLabel(const QPixmap* pm, int ms_elapsed)
 {
   if (!pm)
     return;
@@ -267,7 +267,7 @@ void KMapWidget::updateLabel(const QPixmap* pm, int ms_elapsed)
     r.start();
 }
 
-void KMapWidget::checkZoomFinished()
+void KRenderWidget::checkZoomFinished()
 {
   if ((zoom_mode == In &&
        intermediate_zoom_coef < 1.0 / r.getRenderWindowSizeCoef()) ||
@@ -289,7 +289,7 @@ void KMapWidget::checkZoomFinished()
   }
 }
 
-void KMapWidget::stepZoom()
+void KRenderWidget::stepZoom()
 {
   double coef = 1;
   if (zoom_mode == In)
@@ -302,7 +302,7 @@ void KMapWidget::stepZoom()
   modified();
 }
 
-void KMapWidget::startZoom(KMapWidget::ZoomMode mode,
+void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
                            QPoint               focus_shift)
 {
   if (zoom_mode != ZoomMode::None)
@@ -341,17 +341,17 @@ void KMapWidget::startZoom(KMapWidget::ZoomMode mode,
   zoom_timer.start();
 }
 
-void KMapWidget::zoomIn()
+void KRenderWidget::zoomIn()
 {
   startZoom(ZoomMode::In);
 }
 
-void KMapWidget::zoomOut()
+void KRenderWidget::zoomOut()
 {
   startZoom(ZoomMode::Out);
 }
 
-bool KMapWidget::canScroll()
+bool KRenderWidget::canScroll()
 {
   if (is_pinching)
     return false;
@@ -360,7 +360,7 @@ bool KMapWidget::canScroll()
              min_time_between_pinch_and_scroll_ms;
 }
 
-void KMapWidget::scaleLabel()
+void KRenderWidget::scaleLabel()
 {
   auto   screen_size = label.size() / r.getRenderWindowSizeCoef();
   double max_shift_x = screen_size.width() / 2;
@@ -412,35 +412,35 @@ void KMapWidget::scaleLabel()
   scaled_label.show();
 }
 
-void KMapWidget::setScrollingEnabled(bool v)
+void KRenderWidget::setScrollingEnabled(bool v)
 {
   scrolling_enabled = v;
 }
 
-KCategories KMapWidget::getCategories() const
+KCategories KRenderWidget::getCategories() const
 {
   return r.getMaps()->getCategories();
 }
 
-void KMapWidget::showCategory(const QString& v)
+void KRenderWidget::showCategory(const QString& v)
 {
   r.selectCategory(v);
   r.start();
 }
 
-void KMapWidget::showObject(const QString& object_name)
+void KRenderWidget::showObject(const QString& object_name)
 {
   auto coor = r.getMaps()->getCoorByName(object_name);
   if (coor.isValid())
     scrollTo(coor);
 }
 
-QStringList KMapWidget::find(const QString& str)
+QStringList KRenderWidget::find(const QString& str)
 {
   return r.getMaps()->find(str);
 }
 
-QPoint KMapWidget::getTotalShift() const
+QPoint KRenderWidget::getTotalShift() const
 {
   auto   coef = r.getRenderWindowSizeCoef();
   QPoint pos{int((width() * (1 - coef)) / 2),
@@ -454,12 +454,12 @@ QPoint KMapWidget::getTotalShift() const
   return total_shift;
 }
 
-QPoint KMapWidget::kcoor2pix(const KGeoCoor& deg) const
+QPoint KRenderWidget::kcoor2pix(const KGeoCoor& deg) const
 {
   return r.kcoor2pix(deg);
 }
 
-QPoint KMapWidget::deg2pix(const KGeoCoor& deg) const
+QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
 {
   auto coef          = r.getRenderWindowSizeCoef();
   auto total_shift   = getTotalShift();
@@ -481,7 +481,7 @@ QPoint KMapWidget::deg2pix(const KGeoCoor& deg) const
   return pos_on_screen;
 }
 
-KGeoCoor KMapWidget::pix2deg(const QPoint& pix) const
+KGeoCoor KRenderWidget::pix2deg(const QPoint& pix) const
 {
   return r.pix2deg(pix - getTotalShift());
 }

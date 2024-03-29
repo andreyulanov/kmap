@@ -17,9 +17,9 @@ kcontrols.cpp \
  keditwidget.cpp \
  kfindwidget.cpp \
  kmapfetcher.cpp \
- kmapwidget.cpp \
  knewobjectwidget.cpp \
  kposgenerator.cpp \
+ krenderwidget.cpp \
  kswitch.cpp \
  ktrackmanager.cpp \
 main.cpp
@@ -36,9 +36,9 @@ kcontrols.h \
  keditwidget.h \
  kfindwidget.h \
  kmapfetcher.h \
- kmapwidget.h \
  knewobjectwidget.h \
  kposgenerator.h \
+ krenderwidget.h \
  kswitch.h \
  ktrackmanager.h
 

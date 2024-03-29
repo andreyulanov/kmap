@@ -5,7 +5,7 @@
 void KControls::initButton(QPushButton* b, QPixmap pm, QPoint pos,
                            double size_mm)
 {
-  int  size_pix = size_mm / pixel_size_mm;
+  int  size_pix = size_mm / settings.pixel_size_mm;
   auto scaled_pm =
       pm.scaledToWidth(size_pix, Qt::SmoothTransformation);
   b->setFixedSize(size_pix, size_pix);
@@ -25,7 +25,7 @@ void KControls::setIcon(QPushButton* b, QPixmap pm)
 
 void KControls::onFind()
 {
-  findw->show();
+  settings.find_widget->show();
 }
 
 void KControls::onZoomIn()
@@ -90,22 +90,22 @@ void KControls::update()
     scrollTo(curr_coor);
 }
 
-KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
-                     double step_mm, double button_size_mm,
-                     double _pixel_size_mm):
-    find(mapw),
-    zoom_in(mapw), zoom_out(mapw), center_position(mapw),
-    record(mapw), add(mapw), ok(mapw)
+KControls::KControls(Settings v):
+    find(v.map_widget), zoom_in(v.map_widget), zoom_out(v.map_widget),
+    center_position(v.map_widget), record(v.map_widget),
+    add(v.map_widget), ok(v.map_widget)
 {
-  findw         = _findw;
-  pixel_size_mm = _pixel_size_mm;
+  settings           = v;
+  auto findw         = settings.find_widget;
+  auto mapw          = settings.map_widget;
+  auto pixel_size_mm = settings.pixel_size_mm;
 
-  int edge = edge_mm / pixel_size_mm;
-  int step = step_mm / pixel_size_mm;
+  int edge = settings.edge_mm / pixel_size_mm;
+  int step = settings.step_mm / pixel_size_mm;
 
   initButton(&find, QPixmap(":/labels/find.png"),
              {mapw->width() - edge, mapw->height() / 2 - step},
-             button_size_mm);
+             settings.button_size_mm);
   connect(&find, &QPushButton::pressed, findw, &QWidget::show);
 
   auto       pm = QPixmap(":/labels/compass.png");
@@ -116,38 +116,39 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
 
   initButton(&zoom_in, QPixmap(":/labels/plus.png"),
              {mapw->width() - edge, mapw->height() / 2},
-             button_size_mm);
+             settings.button_size_mm);
   connect(&zoom_in, &QPushButton::pressed, this,
           &KControls::onZoomIn);
   connect(&zoom_in, &QPushButton::released, this,
           &KControls::onZoomReleased);
   initButton(&zoom_out, QPixmap(":/labels/minus.png"),
              {mapw->width() - edge, mapw->height() / 2 + step},
-             button_size_mm);
+             settings.button_size_mm);
   connect(&zoom_out, &QPushButton::pressed, this,
           &KControls::onZoomOut);
   connect(&zoom_out, &QPushButton::released, this,
           &KControls::onZoomReleased);
   initButton(&center_position, QPixmap(":/labels/center.png"),
              {mapw->width() - edge, mapw->height() / 2 + step * 2},
-             button_size_mm);
+             settings.button_size_mm);
   connect(&center_position, &QPushButton::pressed, this,
           &KControls::enableCentering);
 
   initButton(&record, QPixmap(":/labels/recordoff.png"),
-             {edge, mapw->height() / 2 + step * 2}, button_size_mm);
+             {edge, mapw->height() / 2 + step * 2},
+             settings.button_size_mm);
   connect(&record, &QPushButton::pressed, this,
           &KControls::onSwitchRecording);
 
   initButton(&add, QPixmap(":/labels/plus.png"),
              {mapw->width() / 2, mapw->height() / 2 + step * 2},
-             button_size_mm);
+             settings.button_size_mm);
   connect(&add, &QPushButton::pressed, this, &KControls::selectShape);
   connect(&add, &QPushButton::pressed, &record, &QWidget::hide);
   connect(&add, &QPushButton::pressed, &ok, &QWidget::show);
   initButton(&ok, QPixmap(":/labels/ok.png"),
              {mapw->width() / 2, mapw->height() / 2 + step * 2},
-             button_size_mm);
+             settings.button_size_mm);
   connect(&ok, &QPushButton::pressed, &record, &QWidget::show);
   connect(&ok, &QPushButton::pressed, &ok, &QWidget::hide);
   connect(&ok, &QPushButton::pressed, this, &KControls::acceptObject);

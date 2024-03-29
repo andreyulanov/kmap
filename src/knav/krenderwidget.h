@@ -1,5 +1,5 @@
-#ifndef KMAPWIDGET_H
-#define KMAPWIDGET_H
+#ifndef KRENDERWIDGET_H
+#define KRENDERWIDGET_H
 
 #include <QLabel>
 #include <QPushButton>
@@ -11,7 +11,7 @@
 #include "kportableobject.h"
 #include <QOpenGLWidget>
 
-class KMapWidget: public QWidget
+class KRenderWidget: public QWidget
 {
   Q_OBJECT
 
@@ -89,7 +89,7 @@ signals:
   void    startedRender(QRectF);
 
 public:
-  KMapWidget(Settings settings);
+  KRenderWidget(Settings settings);
   void        render();
   void        setViewPoint(const KGeoCoor& deg, double mip);
   void        setMaxZoomSpeed(double);
@@ -108,4 +108,4 @@ public:
   KCategories getCategories() const;
   void        setScrollingEnabled(bool);
 };
-#endif  // KMAPWIDGET_H
+#endif  // KRENDERWIDGET_H

@@ -11,6 +11,18 @@ class KControls: public QObject
 {
   Q_OBJECT
 
+public:
+  struct Settings
+  {
+    QWidget* map_widget     = nullptr;
+    QWidget* find_widget    = nullptr;
+    double   edge_mm        = 0;
+    double   step_mm        = 0;
+    double   button_size_mm = 0;
+    double   pixel_size_mm  = 0;
+  };
+
+private:
   enum ZoomMode
   {
     None,
@@ -24,7 +36,6 @@ class KControls: public QObject
     Heading
   };
 
-  double      pixel_size_mm     = 0;
   bool        centering_enabled = false;
   ZoomMode    zoom_mode         = None;
   QPushButton find;
@@ -35,7 +46,7 @@ class KControls: public QObject
   QPushButton add;
   QPushButton ok;
   KGeoCoor    curr_coor;
-  QWidget*    findw = nullptr;
+  Settings    settings;
 
   void initButton(QPushButton* b, QPixmap image_path, QPoint pos,
                   double size_mm);
@@ -58,9 +69,7 @@ signals:
   void acceptObject();
 
 public:
-  KControls(QWidget* w, QWidget* _findw, double edge_mm,
-            double step_mm, double button_size_mm,
-            double pixel_size_mm);
+  KControls(Settings settings);
   void setCurrCoor(const KGeoCoor&);
   void update();
   void updatePosition(const KGeoCoor&);
