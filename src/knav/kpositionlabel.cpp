@@ -46,8 +46,7 @@ void KPositionLabel::update()
   pm.fill(Qt::transparent);
   QPainter p(&pm);
   p.translate(pm.width() / 2, pm.height() / 2);
-  if (hasNorthOrientation())
-    p.rotate(heading);
+  p.rotate(heading);
   p.setPen(QPen(Qt::black, 5));
   p.setBrush(Qt::white);
   p.drawConvexPolygon(pos_poly);

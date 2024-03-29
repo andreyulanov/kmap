@@ -148,12 +148,6 @@ int main(int argc, char* argv[])
                    &KMapWidget::zoomOut);
   QObject::connect(&controls, &KControls::scrollTo, &mapw,
                    &KMapWidget::scrollTo);
-  QObject::connect(&controls, &KControls::setRotation, &mapw,
-                   &KMapWidget::setRotation);
-  QObject::connect(&controls, &KControls::enableRotation, &mapw,
-                   &KMapWidget::enableRotation);
-  QObject::connect(&controls, &KControls::disableRotation, &mapw,
-                   &KMapWidget::disableRotation);
   QObject::connect(&controls, &KControls::switchRecording, &track_man,
                    &KTrackManager::onSwitchRecording);
   QObject::connect(&controls, &KControls::acceptObject, &object_man,
@@ -207,11 +201,6 @@ int main(int argc, char* argv[])
   QObject::connect(&position_label, &KPositionLabel::deg2pix, &mapw,
                    &KMapWidget::deg2pix, Qt::DirectConnection);
 
-  QObject::connect(&position_label,
-                   &KPositionLabel::hasNorthOrientation, &controls,
-                   &KControls::hasNorthOrientation,
-                   Qt::DirectConnection);
-
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
                    &KMapWidget::render);
   QObject::connect(&object_man, &KPortableObjectManager::updated,
@@ -257,9 +246,6 @@ int main(int argc, char* argv[])
   QObject::connect(&heading_provider,
                    &KHeadingProvider::headingChanged, &position_label,
                    &KPositionLabel::updateHeading);
-  QObject::connect(&heading_provider,
-                   &KHeadingProvider::headingChanged, &controls,
-                   &KControls::updateHeading);
   magnetometer.setReturnGeoValues(true);
   magnetometer.start();
 
@@ -285,6 +271,15 @@ int main(int argc, char* argv[])
     KShape::pixel_size_mm = physical_diag_mm / pixel_diag / 2;
   mapw.show();
   mapw.setViewPoint(start_lat_lon, 1);
+
+  //  сделать KRenderSettings;
+  //  map_dir;
+  //  pixel_size_mm;
+  //  window_size;
+  //  int    min_object_size_pix     = 40;
+  //  double render_window_size_coef = 2;
+  //  QColor background_color        = QColor(166, 220, 238);
+  //  int    update_interval_ms      = 100;
 
   return a.exec();
 }

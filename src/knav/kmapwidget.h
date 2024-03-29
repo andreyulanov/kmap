@@ -38,7 +38,6 @@ class KMapWidget: public QWidget
   QPoint total_pan_pos;
   double intermediate_zoom_coef = 1;
   QPoint zoom_focus_shift;
-  double rotation = 0;
 
   bool    zoom_pixmap_rendered = false;
   bool    scrolling_enabled    = true;
@@ -81,8 +80,7 @@ public:
   void        render();
   void        setViewPoint(const KGeoCoor& deg, double mip);
   void        setMaxZoomSpeed(double);
-  const KMap* addMap(QString path,
-                     bool load_now);
+  const KMap* addMap(QString path, bool load_now);
   const KMap* getWorldMap();
   void        scroll(QPoint diff);
   void        scrollTo(const KGeoCoor& coor);
@@ -91,9 +89,6 @@ public:
   QPoint      deg2pix(const KGeoCoor&) const;
   QPoint      kcoor2pix(const KGeoCoor&) const;
   KGeoCoor    pix2deg(const QPoint&) const;
-  void        setRotation(double);
-  void        enableRotation();
-  void        disableRotation();
   QStringList find(const QString&);
   void        showObject(const QString&);
   void        showCategory(const QString&);

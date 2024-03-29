@@ -65,39 +65,11 @@ void KControls::onSwitchRecording()
 void KControls::onMouseMoved()
 {
   centering_enabled = false;
-  if (orient_mode != North)
-  {
-    disableRotation();
-    scrollTo(curr_coor);
-    orient_mode = North;
-    setRotation(0);
-  }
 }
 
 void KControls::setCurrCoor(const KGeoCoor& v)
 {
   curr_coor = v;
-}
-
-void KControls::switchOrient()
-{
-  if (orient_mode == North)
-  {
-    enableRotation();
-    orient_mode = Heading;
-    enableCentering();
-  }
-  else
-  {
-    disableRotation();
-    orient_mode = North;
-    setRotation(0);
-  }
-}
-
-bool KControls::hasNorthOrientation()
-{
-  return orient_mode == North;
 }
 
 void KControls::finishEdit()
@@ -112,37 +84,17 @@ void KControls::updatePosition(const KGeoCoor& v)
   update();
 }
 
-void KControls::updateHeading(double v)
-{
-  heading = v;
-  update();
-}
-
 void KControls::update()
 {
   if (centering_enabled)
     scrollTo(curr_coor);
-
-  if (orient_mode == Heading)
-    setRotation(-heading);
-
-  auto angle = 0;
-  if (orient_mode == Heading)
-    angle = -heading;
-  QTransform tr;
-  tr.translate(orient_pixmap.width() / 2, orient_pixmap.height() / 2);
-  tr.rotate(angle);
-  tr.translate(-orient_pixmap.width() / 2,
-               -orient_pixmap.height() / 2);
-  auto pm = orient_pixmap.transformed(tr);
-  orient.setIcon(pm);
 }
 
 KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
                      double step_mm, double button_size_mm):
     find(mapw),
     zoom_in(mapw), zoom_out(mapw), center_position(mapw),
-    orient(mapw), record(mapw), add(mapw), ok(mapw)
+    record(mapw), add(mapw), ok(mapw)
 {
   findw = _findw;
 
@@ -154,17 +106,11 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
              button_size_mm);
   connect(&find, &QPushButton::pressed, findw, &QWidget::show);
 
-  initButton(&orient, orient_pixmap,
-             {mapw->width() - edge, mapw->height() / 2 - step},
-             button_size_mm);
   auto       pm = QPixmap(":/labels/compass.png");
   QTransform tr;
   tr.translate(pm.width() / 2, pm.height() / 2);
   tr.rotate(-90);
   tr.translate(-pm.width() / 2, -pm.height() / 2);
-  orient_pixmap = pm.transformed(tr);
-  connect(&orient, &QPushButton::pressed, this,
-          &KControls::switchOrient);
 
   initButton(&zoom_in, QPixmap(":/labels/plus.png"),
              {mapw->width() - edge, mapw->height() / 2},

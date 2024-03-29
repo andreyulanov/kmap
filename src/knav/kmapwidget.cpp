@@ -249,25 +249,10 @@ void KMapWidget::updateLabel(const QPixmap* pm, int ms_elapsed)
   total_shift += pan_diff_pix.toPoint();
   total_shift -= total_pan_pos;
 
-  auto updateLabelPixmap = [=, this](auto l)
+  auto updateLabelPixmap = [=](auto l)
   {
     l->setFixedSize(pm->size());
-
-    if (rotation == 0)
-      l->setPixmap(*pm);
-    else
-    {
-      QPixmap rpm(pm->size());
-      rpm.fill(Qt::transparent);
-      QPainter p(&rpm);
-      auto     center = QPoint{pm->width() / 2, pm->height() / 2};
-      center += total_pan_pos;
-      p.translate(center);
-      p.rotate(rotation);
-      p.translate(-center);
-      p.drawPixmap(0, 0, *pm);
-      l->setPixmap(rpm);
-    }
+    l->setPixmap(*pm);
     l->move(pos + total_shift);
     l->show();
   };
@@ -454,42 +439,6 @@ void KMapWidget::showObject(const QString& object_name)
 QStringList KMapWidget::find(const QString& str)
 {
   return r.getMaps()->find(str);
-}
-
-void KMapWidget::setRotation(double v)
-{
-  if (!r.getPixmap() || r.isRunning())
-    return;
-  QPixmap pm(r.getPixmap()->size());
-  pm.fill(Qt::transparent);
-  QPainter p(&pm);
-  auto     center = QPoint{pm.width() / 2, pm.height() / 2};
-  center += total_pan_pos;
-  p.translate(center);
-  p.rotate(v);
-  p.translate(-center);
-  p.drawPixmap(0, 0, *r.getPixmap());
-  label.setPixmap(pm);
-  full_label.setPixmap(pm);
-  rotation = v;
-}
-
-void KMapWidget::enableRotation()
-{
-  r.stopAndWait();
-  r.setRenderWindowSizeCoef(2);
-  r.setPixmapSize(size());
-  render();
-  r.wait();
-}
-
-void KMapWidget::disableRotation()
-{
-  r.stopAndWait();
-  r.setRenderWindowSizeCoef(1.5);
-  r.setPixmapSize(size());
-  render();
-  r.wait();
 }
 
 QPoint KMapWidget::getTotalShift() const

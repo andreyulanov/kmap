@@ -25,18 +25,14 @@ class KControls: public QObject
   };
 
   bool        centering_enabled = false;
-  OrientMode  orient_mode       = North;
-  double      heading           = 0;
   ZoomMode    zoom_mode         = None;
   QPushButton find;
   QPushButton zoom_in;
   QPushButton zoom_out;
   QPushButton center_position;
-  QPushButton orient;
   QPushButton record;
   QPushButton add;
   QPushButton ok;
-  QPixmap     orient_pixmap;
   KGeoCoor    curr_coor;
   QWidget*    findw = nullptr;
 
@@ -59,8 +55,6 @@ signals:
   bool isRecording();
   void selectShape();
   void acceptObject();
-  void enableRotation();
-  void disableRotation();
 
 public:
   KControls(QWidget* w, QWidget* _findw, double edge_mm,
@@ -68,13 +62,10 @@ public:
   void setCurrCoor(const KGeoCoor&);
   void update();
   void updatePosition(const KGeoCoor&);
-  void updateHeading(double);
   void checkZoomRepeat();
   void enableCentering();
   void onSwitchRecording();
   void onMouseMoved();
-  void switchOrient();
-  bool hasNorthOrientation();
   void finishEdit();
 };
 

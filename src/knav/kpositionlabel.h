@@ -10,11 +10,10 @@ class KPositionLabel: public QLabel
   Q_OBJECT
 
   KGeoCoor pos_info;
-  double    heading = 0;
+  double   heading = 0;
 
 signals:
   QPoint deg2pix(const KGeoCoor& deg);
-  bool   hasNorthOrientation();
 
 public:
   KPositionLabel(QWidget* parent);
