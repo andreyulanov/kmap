@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
   auto pixel_diag       = sqrt(pow(screen_size_pix.width(), 2) +
                                pow(screen_size_pix.height(), 2));
   KShape::pixel_size_mm = physical_diag_mm / pixel_diag;
-  double pixel_size_mm  = physical_diag_mm / pixel_diag;
+  double pixel_size_mm  = physical_diag_mm / pixel_diag / 2;
 
   KFindWidget findw;
   findw.setFixedSize(screen_size_pix);
@@ -132,9 +132,9 @@ int main(int argc, char* argv[])
   QObject::connect(&auto_scroll, &KAutoScroll::scroll, &mapw,
                    &KMapWidget::scroll);
 
-  double edge_mm        = 30;
-  double step_mm        = 60;
-  double button_size_mm = 30;
+  double edge_mm        = 15;
+  double step_mm        = 30;
+  double button_size_mm = 15;
   if (is_device)
   {
     edge_mm        = 7;
@@ -275,7 +275,7 @@ int main(int argc, char* argv[])
   if (!is_device)
     KShape::pixel_size_mm = physical_diag_mm / pixel_diag / 2;
   mapw.show();
-  mapw.setViewPoint(start_lat_lon, 1000);
+  mapw.setViewPoint(start_lat_lon, 1);
 
   return a.exec();
 }

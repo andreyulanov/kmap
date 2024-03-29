@@ -85,6 +85,11 @@ void KRender::setPixmapSize(QSize v)
   pixmap_size = v * render_window_size_coef;
 }
 
+void KRender::setPixelSizeMM(double v)
+{
+  pixel_size_mm = v;
+}
+
 void KRender::setMinObjectSizePix(int v)
 {
   min_object_size_pix = v;
@@ -930,9 +935,9 @@ void KRender::run()
   QFont    f = p0.font();
 
   double font_size =
-      std::min((int)std::round(2.0 / KShape::pixel_size_mm / mip), 1);
-  font_size = std::clamp(font_size, 2.0 / KShape::pixel_size_mm,
-                         3.0 / KShape::pixel_size_mm);
+      std::min((int)std::round(2.0 / pixel_size_mm / mip), 1);
+  font_size =
+      std::clamp(font_size, 2.0 / pixel_size_mm, 3.0 / pixel_size_mm);
   f.setPixelSize(font_size);
   f.setBold(true);
   p0.setFont(f);

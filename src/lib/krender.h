@@ -51,7 +51,8 @@ class KRender: public QThread
   QString selected_category_name;
 
   QPointF        center_m;
-  QSize          pixmap_size = {100, 100};
+  QSize          pixmap_size   = {100, 100};
+  double         pixel_size_mm = 0.1;
   KMapCollection maps;
   QFont          font;
 
@@ -109,6 +110,7 @@ public:
   QPointF        getCenterM() const;
   QPointF        getRenderCenterM() const;
   void           setPixmapSize(QSize);
+  void           setPixelSizeMM(double);
   void           setMinObjectSizePix(int);
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);

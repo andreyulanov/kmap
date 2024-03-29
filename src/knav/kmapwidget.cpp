@@ -21,6 +21,7 @@ KMapWidget::KMapWidget(Settings settings):
   connect(&zoom_timer, &QTimer::timeout, this, &KMapWidget::stepZoom);
 
   r.setPixmapSize(size());
+  r.setPixelSizeMM(settings.pixel_size_mm);
 
   connect(&r, &KRender::paintObjects, this, &KMapWidget::paintObjects,
           Qt::DirectConnection);
