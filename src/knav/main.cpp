@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
   auto pixel_diag       = sqrt(pow(screen_size_pix.width(), 2) +
                                pow(screen_size_pix.height(), 2));
   KShape::pixel_size_mm = physical_diag_mm / pixel_diag;
+  double pixel_size_mm  = physical_diag_mm / pixel_diag;
 
   KFindWidget findw;
   findw.setFixedSize(screen_size_pix);
@@ -73,7 +74,7 @@ int main(int argc, char* argv[])
 
   KMapWidget::Settings mapw_settings;
   mapw_settings.map_dir       = mmc_path + "/maps";
-  mapw_settings.pixel_size_mm = KShape::pixel_size_mm;
+  mapw_settings.pixel_size_mm = pixel_size_mm;
   mapw_settings.window_size   = screen_size_pix;
 
   KMapWidget  mapw(mapw_settings);
@@ -140,7 +141,8 @@ int main(int argc, char* argv[])
     step_mm        = 20;
     button_size_mm = 7;
   }
-  KControls controls(&mapw, &findw, edge_mm, step_mm, button_size_mm);
+  KControls controls(&mapw, &findw, edge_mm, step_mm, button_size_mm,
+                     pixel_size_mm);
   QObject::connect(&controls, &KControls::zoomIn, &auto_scroll,
                    &KAutoScroll::stop);
   QObject::connect(&controls, &KControls::zoomIn, &mapw,

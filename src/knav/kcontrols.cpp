@@ -5,7 +5,7 @@
 void KControls::initButton(QPushButton* b, QPixmap pm, QPoint pos,
                            double size_mm)
 {
-  int  size_pix = size_mm / KShape::pixel_size_mm;
+  int  size_pix = size_mm / pixel_size_mm;
   auto scaled_pm =
       pm.scaledToWidth(size_pix, Qt::SmoothTransformation);
   b->setFixedSize(size_pix, size_pix);
@@ -91,15 +91,17 @@ void KControls::update()
 }
 
 KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
-                     double step_mm, double button_size_mm):
+                     double step_mm, double button_size_mm,
+                     double _pixel_size_mm):
     find(mapw),
     zoom_in(mapw), zoom_out(mapw), center_position(mapw),
     record(mapw), add(mapw), ok(mapw)
 {
-  findw = _findw;
+  findw         = _findw;
+  pixel_size_mm = _pixel_size_mm;
 
-  int edge = edge_mm / KShape::pixel_size_mm;
-  int step = step_mm / KShape::pixel_size_mm;
+  int edge = edge_mm / pixel_size_mm;
+  int step = step_mm / pixel_size_mm;
 
   initButton(&find, QPixmap(":/labels/find.png"),
              {mapw->width() - edge, mapw->height() / 2 - step},

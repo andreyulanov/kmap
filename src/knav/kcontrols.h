@@ -24,6 +24,7 @@ class KControls: public QObject
     Heading
   };
 
+  double      pixel_size_mm     = 0;
   bool        centering_enabled = false;
   ZoomMode    zoom_mode         = None;
   QPushButton find;
@@ -58,7 +59,8 @@ signals:
 
 public:
   KControls(QWidget* w, QWidget* _findw, double edge_mm,
-            double step_mm, double button_size_mm);
+            double step_mm, double button_size_mm,
+            double pixel_size_mm);
   void setCurrCoor(const KGeoCoor&);
   void update();
   void updatePosition(const KGeoCoor&);
