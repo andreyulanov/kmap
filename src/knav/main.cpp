@@ -270,7 +270,7 @@ int main(int argc, char* argv[])
   if (!is_device)
     KShape::pixel_size_mm = physical_diag_mm / pixel_diag / 2;
   mapw.show();
-  mapw.setViewPoint(start_lat_lon, 1);
+  mapw.setViewPoint(start_lat_lon, 1000);
 
   //  сделать KRenderSettings;
   //  map_dir;

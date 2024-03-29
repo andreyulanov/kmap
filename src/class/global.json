@@ -6,14 +6,18 @@
   "default_coor_precision_coef" : 10000
 },
 {
+    "id"     : "land",
+    "type"   : "Polygon",
+    "code"   : 1000000002,
+    "layer"  : 1,
+    "coor_precision_coef" : 100
+},
+{
     "id"     : "admin0",
     "type"   : "Polygon",
     "code"   : 1000000002,
     "key"    : "S1000000002",
     "layer"  : 1,
-    "width_mm" : 2,
-    "pen"    : [1, 1, 1],
-    "brush"  : [255, 255, 255],
     "coor_precision_coef" : 100,
     "attributes":
     [
@@ -29,12 +33,10 @@
     "type"   : "Line",
     "code"   : 1000000002,
     "key"    : "S1000000002",
-    "layer"  : 4,
-    "pen"    : [1, 1, 1],
-    "style"  : "Dash",
+    "layer"  : 0,
     "name_code": 1,
-    "max_mip": 5000,
-    "min_mip": 100,
+    "max_mip": 0.001,
+    "min_mip": 0.001,
     "coor_precision_coef" : 100,
     "attributes":
     [
