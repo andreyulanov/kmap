@@ -102,7 +102,7 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
   int step = step_mm / KShape::pixel_size_mm;
 
   initButton(&find, QPixmap(":/labels/find.png"),
-             {mapw->width() - edge, mapw->height() / 2 - step * 2},
+             {mapw->width() - edge, mapw->height() / 2 - step},
              button_size_mm);
   connect(&find, &QPushButton::pressed, findw, &QWidget::show);
 
