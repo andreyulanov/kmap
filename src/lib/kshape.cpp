@@ -20,6 +20,7 @@ void KShape::save(QFile* f)
   write(f, min_mip);
   write(f, max_mip);
   write(f, coor_precision_coef);
+  write(f, reductible);
   write(f, (uchar)pen.red());
   write(f, (uchar)pen.green());
   write(f, (uchar)pen.blue());
@@ -59,6 +60,7 @@ void KShape::load(QFile* f)
   read(f, min_mip);
   read(f, max_mip);
   read(f, coor_precision_coef);
+  read(f, reductible);
   uchar red, green, blue, alpha;
   read(f, red);
   read(f, green);
@@ -256,6 +258,9 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
             obj.value("coor_precision_coef").toInt();
         if (sh->coor_precision_coef == 0)
           sh->coor_precision_coef = default_coor_precision_coef;
+
+        if (!obj.value("reductible").isNull())
+          sh->reductible = obj.value("reductible").toBool();
 
         shapes.append(sh);
       }

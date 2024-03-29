@@ -10,7 +10,8 @@
     "type"   : "Polygon",
     "code"   : 1000000002,
     "layer"  : 1,
-    "coor_precision_coef" : 100
+    "coor_precision_coef" : 100,
+    "reductible": false
 },
 {
     "id"     : "admin0",
@@ -26,7 +27,8 @@
       "name"   : "iso_code",
       "visible": false
     }
-    ]
+    ],
+    "reductible": false
 },
 {
     "id"     : "admin1",
@@ -45,7 +47,8 @@
       "name"   : "iso_code",
       "visible": false
     }
-    ]
+    ],
+    "reductible": false
 },
 {
     "id"     : "place",
@@ -64,7 +67,8 @@
     "pen"    : [37, 151, 194],
     "tcolor" : [37, 151, 194],
     "max_mip": 5000,
-    "min_mip": 100
+    "min_mip": 100,
+    "reductible": false
 },
 {
     "id"     : "lake",
@@ -74,7 +78,8 @@
     "brush"  : [166, 220, 238],
     "tcolor" : [37, 151, 194],
     "max_mip": 5000,
-    "min_mip": 100
+    "min_mip": 100,
+    "reductible": false
 },
 {
     "id"     : "road",
@@ -83,7 +88,8 @@
     "layer"  : 4,
     "pen"    : [255, 130, 70],
     "max_mip": 5000,
-    "min_mip": 100
+    "min_mip": 100,
+    "reductible": false
 },
 {
     "id"     : "boundary",
@@ -91,7 +97,8 @@
     "code"   : 1000000001,
     "layer"  : 7,
     "width_mm"  : 0.8,
-    "pen"    : [252, 0, 84]
+    "pen"    : [252, 0, 84],
+    "reductible": false
 },
 {
     "id"     : "океан, море",

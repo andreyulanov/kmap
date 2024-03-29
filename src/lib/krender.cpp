@@ -399,7 +399,7 @@ void KRender::drawPolygonObject(QPainter* p, const KObject* obj,
   int    obj_span_pix = obj_span_m / render_mip;
   auto   size_pix     = frame.getSizeMeters() / render_mip;
   if (obj->shape->id != selected_category_name &&
-      !obj->shape->id.contains("admin"))
+      obj->shape->reductible)
     if (size_pix.width() < min_object_size_pix ||
         size_pix.height() < min_object_size_pix)
       return;
@@ -430,7 +430,7 @@ void KRender::drawPolygonObject(QPainter* p, const KObject* obj,
     if (polygon_idx == 0)
     {
       auto polygon_size_m = polygon->getFrame().getSizeMeters();
-      if (!obj->shape->id.contains("admin"))
+      if (obj->shape->reductible)
         if (obj->shape->id != selected_category_name)
           if (polygon_size_m.width() / mip < min_object_size_pix &&
               polygon_size_m.height() / mip < min_object_size_pix)
@@ -556,7 +556,7 @@ void KRender::drawLineObject(QPainter* painter, const KObject* obj,
 
     auto polygon_size_m   = polygon->getFrame().getSizeMeters();
     auto polygon_size_pix = polygon_size_m / mip;
-    if (!obj->shape->id.contains("admin"))
+    if (obj->shape->reductible)
     {
       if (polygon_size_pix.width() < 2 &&
           polygon_size_pix.height() < 2)
