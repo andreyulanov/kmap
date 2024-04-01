@@ -125,6 +125,7 @@ int KPortableObject::getWidthPix(double pixel_size_mm)
 KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
                                                double  _pixel_size_mm)
 {
+  pixel_size_mm = _pixel_size_mm;
   QDir dir(_objects_dir);
   if (!dir.exists())
     dir.mkdir(_objects_dir);
