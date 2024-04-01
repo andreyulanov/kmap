@@ -20,6 +20,8 @@
     "key"    : "S1000000002",
     "layer"  : 1,
     "coor_precision_coef" : 100,
+    "pen"    : [1, 1, 1],
+    "brush"  : [255, 255, 255],
     "attributes":
     [
     {
