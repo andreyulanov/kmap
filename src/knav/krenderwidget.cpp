@@ -11,6 +11,13 @@ KRenderWidget::KRenderWidget(Settings settings):
     label(this), full_label(this), scaled_label(this)
 {
   setFixedSize(settings.window_size);
+  r.setPixelSizeMM(settings.pixel_size_mm);
+  r.setUpdateIntervalMs(settings.update_interval_ms);
+  r.setBackgroundColor(settings.background_color);
+  r.setRenderWindowSizeCoef(settings.render_window_size_coef);
+  r.setMinObjectSizePix(settings.min_object_size_pix);
+  r.setPixmapSize(size());
+
   setAttribute(Qt::WA_AcceptTouchEvents);
   QApplication::setAttribute(
       Qt::AA_SynthesizeMouseForUnhandledTouchEvents, true);
@@ -18,13 +25,11 @@ KRenderWidget::KRenderWidget(Settings settings):
   grabGesture(Qt::PinchGesture);
 
   zoom_timer.setInterval(50);
-  connect(&zoom_timer, &QTimer::timeout, this, &KRenderWidget::stepZoom);
+  connect(&zoom_timer, &QTimer::timeout, this,
+          &KRenderWidget::stepZoom);
 
-  r.setPixmapSize(size());
-  r.setPixelSizeMM(settings.pixel_size_mm);
-
-  connect(&r, &KRender::paintObjects, this, &KRenderWidget::paintObjects,
-          Qt::DirectConnection);
+  connect(&r, &KRender::paintObjects, this,
+          &KRenderWidget::paintObjects, Qt::DirectConnection);
   connect(&r, &KRender::started, this, &KRenderWidget::startedRender);
   connect(&r, &KRender::rendered, this, &KRenderWidget::onRendered);
   scan(settings.map_dir);
@@ -303,7 +308,7 @@ void KRenderWidget::stepZoom()
 }
 
 void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
-                           QPoint               focus_shift)
+                              QPoint                  focus_shift)
 {
   if (zoom_mode != ZoomMode::None)
     return;

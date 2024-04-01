@@ -95,6 +95,16 @@ void KRender::setMinObjectSizePix(int v)
   min_object_size_pix = v;
 }
 
+void KRender::setUpdateIntervalMs(int v)
+{
+  update_interval_ms = v;
+}
+
+void KRender::setBackgroundColor(QColor v)
+{
+  background_color = v;
+}
+
 double KRender::getRenderWindowSizeCoef() const
 {
   return render_window_size_coef;
