@@ -72,9 +72,12 @@ int main(int argc, char* argv[])
     mmc_path = argv[1];
 
   KRenderWidget::Settings mapw_settings;
-  mapw_settings.map_dir       = mmc_path + "/maps";
-  mapw_settings.pixel_size_mm = pixel_size_mm;
-  mapw_settings.window_size   = screen_size_pix;
+  mapw_settings.map_dir                 = mmc_path + "/maps";
+  mapw_settings.pixel_size_mm           = pixel_size_mm;
+  mapw_settings.window_size             = screen_size_pix;
+  mapw_settings.min_object_size_pix     = 40;
+  mapw_settings.render_window_size_coef = 2;
+  mapw_settings.update_interval_ms      = 100;
 
   KRenderWidget mapw(mapw_settings);
   KMapFetcher map_fetcher(mapw_settings.map_dir, mapw.getWorldMap());
