@@ -128,8 +128,6 @@ int main(int argc, char* argv[])
                    &KPortableObjectManager::addPoint);
   QObject::connect(&mapw, &KRenderWidget::pinchStarted, &auto_scroll,
                    &KAutoScroll::stop);
-  QObject::connect(&mapw, &KRenderWidget::getAutoScrollSpeed,
-                   &auto_scroll, &KAutoScroll::getSpeed);
   QObject::connect(&mapw, &KRenderWidget::startedRender, &map_fetcher,
                    &KMapFetcher::requestRect);
   QObject::connect(&auto_scroll, &KAutoScroll::scroll, &mapw,

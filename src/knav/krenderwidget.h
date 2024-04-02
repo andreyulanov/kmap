@@ -76,17 +76,16 @@ private:
   QPoint getTotalShift() const;
 
 signals:
-  void    modified();
-  void    mousePressed(QPoint);
-  void    mouseMoved(QPoint);
-  void    mouseReleased();
-  void    pinchStarted();
-  QPointF getAutoScrollSpeed();
-  void    zoomFinished();
-  void    movedCenterTo(const KGeoCoor&);
-  void    paintObjects(QPainter*);
-  void    tapped(KGeoCoor);
-  void    startedRender(QRectF);
+  void modified();
+  void mousePressed(QPoint);
+  void mouseMoved(QPoint);
+  void mouseReleased();
+  void pinchStarted();
+  void zoomFinished();
+  void movedCenterTo(const KGeoCoor&);
+  void paintObjects(QPainter*);
+  void tapped(KGeoCoor);
+  void startedRender(QRectF);
 
 public:
   KRenderWidget(Settings settings);

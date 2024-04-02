@@ -123,17 +123,15 @@ void KRenderWidget::scroll(QPoint diff)
   auto dx = abs(total_pan_pos.x());
   auto dy = abs(total_pan_pos.y());
 
-  auto coef       = (r.getRenderWindowSizeCoef() - 1) / 4;
-  auto speed_coef = std::clamp(
-      getAutoScrollSpeed().manhattanLength() / 10, 1.0, 4.0);
-  coef *= speed_coef;
-
-  if (dx > width() * coef || dy > height() * coef)
+  if (dx > width() / 2 || dy > height() / 2)
   {
-    r.pan(total_pan_pos);
-    r.stopAndWait();
-    r.start();
-    total_pan_pos = QPoint();
+    if (!r.isRunning())
+    {
+      r.pan(total_pan_pos);
+      r.stopAndWait();
+      r.start();
+      total_pan_pos = QPoint();
+    }
   }
   if (scaled_label.isVisible())
     scaled_label.move(scaled_label.pos() - diff);
@@ -264,12 +262,6 @@ void KRenderWidget::updateLabel(const QPixmap* pm, int ms_elapsed)
 
   if (ms_elapsed == 0 || !shifted_after_zoom)
     updateLabelPixmap(&full_label);
-
-  auto coef = (r.getRenderWindowSizeCoef() - 1) / 2;
-
-  if (fabs(total_shift.x()) > window_size.width() * coef ||
-      fabs(total_shift.y()) > window_size.height() * coef)
-    r.start();
 }
 
 void KRenderWidget::checkZoomFinished()
