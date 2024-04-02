@@ -28,8 +28,8 @@ KRenderWidget::KRenderWidget(Settings settings):
   connect(&zoom_timer, &QTimer::timeout, this,
           &KRenderWidget::stepZoom);
 
-  connect(&r, &KRender::paintObjects, this,
-          &KRenderWidget::paintObjects, Qt::DirectConnection);
+  connect(&r, &KRender::paintUserObjects, this,
+          &KRenderWidget::paintUserObjects, Qt::DirectConnection);
   connect(&r, &KRender::started, this, &KRenderWidget::startedRender);
   connect(&r, &KRender::rendered, this, &KRenderWidget::onRendered);
   scan(settings.map_dir);
@@ -69,9 +69,14 @@ const KMap* KRenderWidget::getWorldMap()
   return r.getMaps()->first();
 }
 
-void KRenderWidget::render()
+void KRenderWidget::renderUserObjects()
 {
-  r.start();
+  r.renderUserObjects();
+}
+
+void KRenderWidget::renderMap()
+{
+  r.renderMap();
 }
 
 void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
@@ -81,7 +86,7 @@ void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
   movedCenterTo(deg);
   r.setCenterM(deg.toMeters());
   r.setMip(mip);
-  r.start();
+  r.renderMap();
 }
 
 void KRenderWidget::setMaxZoomSpeed(double v)
@@ -129,7 +134,7 @@ void KRenderWidget::scroll(QPoint diff)
     {
       r.pan(total_pan_pos);
       r.stopAndWait();
-      r.start();
+      r.renderMap();
       total_pan_pos = QPoint();
     }
   }
@@ -274,7 +279,7 @@ void KRenderWidget::checkZoomFinished()
     if (r.isRunning())
     {
       r.stopAndWait();
-      r.start();
+      r.renderMap();
     }
     updateLabel(r.getPixmap(), 0);
     zoom_pixmap_rendered = false;
@@ -334,7 +339,7 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
   r.zoom(coef);
   if (mode == Out)
     r.enableLoading(false);
-  r.start();
+  r.renderMap();
   zoom_timer.start();
 }
 
@@ -422,7 +427,7 @@ KCategories KRenderWidget::getCategories() const
 void KRenderWidget::showCategory(const QString& v)
 {
   r.selectCategory(v);
-  r.start();
+  r.renderMap();
 }
 
 void KRenderWidget::showObject(const QString& object_name)

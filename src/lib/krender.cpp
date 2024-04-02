@@ -138,7 +138,7 @@ QRectF KRender::getDrawRectM() const
 void KRender::onLoaded()
 {
   if (rendering_enabled)
-    start();
+    renderMap();
 }
 
 void KRender::checkUnload()
@@ -856,7 +856,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
       if (object_count == map->render_object_count)
       {
         if (render_idx == KMap::render_count - 1)
-          paintObjects(p);
+          paintUserObjects(p);
         return;
       }
       if (!obj)
@@ -871,7 +871,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
       if (!drawObject(p, obj, render_idx))
       {
         if (render_idx == KMap::render_count - 1)
-          paintObjects(p);
+          paintUserObjects(p);
         emit rendered(0);
         return;
       }
@@ -1036,6 +1036,7 @@ void KRender::run()
            << total_render_time.elapsed();
 
   getting_pixmap_enabled = true;
+  main_pixmap            = render_pixmap;
   emit rendered(0);
   if (loading_enabled)
     checkLoad();
@@ -1046,7 +1047,15 @@ void KRender::selectCategory(const QString& v)
   selected_category_name = v;
 }
 
-void KRender::start()
+void KRender::renderUserObjects()
+{
+  render_pixmap = main_pixmap;
+  QPainter p(&render_pixmap);
+  paintUserObjects(&p);
+  rendered(0);
+}
+
+void KRender::renderMap()
 {
   if (isRunning())
     return;

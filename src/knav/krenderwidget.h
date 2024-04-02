@@ -83,13 +83,14 @@ signals:
   void pinchStarted();
   void zoomFinished();
   void movedCenterTo(const KGeoCoor&);
-  void paintObjects(QPainter*);
+  void paintUserObjects(QPainter*);
   void tapped(KGeoCoor);
   void startedRender(QRectF);
 
 public:
   KRenderWidget(Settings settings);
-  void        render();
+  void        renderMap();
+  void        renderUserObjects();
   void        setViewPoint(const KGeoCoor& deg, double mip);
   void        setMaxZoomSpeed(double);
   const KMap* addMap(QString path, bool load_now);

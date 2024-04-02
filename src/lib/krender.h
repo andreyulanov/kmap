@@ -44,6 +44,7 @@ class KRender: public QThread
   QPointF render_center_m;
   double  mip        = 1;
   double  render_mip = 1;
+  QPixmap main_pixmap;
   QPixmap render_pixmap;
   bool    rendering_enabled      = false;
   bool    loading_enabled        = true;
@@ -66,6 +67,7 @@ class KRender: public QThread
   QVector<QRect>         point_object_text_rects;
 
   void        run();
+  void        start() = delete;
   const KMap* insertMap(int idx, QString path, bool load_now);
   void        renderMap(QPainter* p, KMap* map, int render_idx);
   void        render(QPainter* p, QVector<KMap*> render_maps,
@@ -98,7 +100,7 @@ class KRender: public QThread
 
 signals:
   void started(QRectF);
-  void paintObjects(QPainter* p);
+  void paintUserObjects(QPainter* p);
   void rendered(int ms_elapsed);
 
 public:
@@ -121,7 +123,8 @@ public:
   const QPixmap* getPixmap() const;
   const KMapCollection* getMaps() const;
   void                  selectCategory(const QString&);
-  void                  start();
+  void                  renderMap();
+  void                  renderUserObjects();
   void                  stopAndWait();
   void                  enableLoading(bool);
 

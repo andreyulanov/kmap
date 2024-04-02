@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
                    [&mapw](QString map_path)
                    {
                      mapw.addMap(map_path, true);
-                     mapw.render();
+                     mapw.renderMap();
                    });
 
   QDir        dir(mmc_path + "/class");
@@ -202,10 +202,11 @@ int main(int argc, char* argv[])
   position_label.updateGeoPosition(info);
   QObject::connect(&mapw, &KRenderWidget::modified, &position_label,
                    &KPositionLabel::update);
-  QObject::connect(&mapw, &KRenderWidget::paintObjects, &track_man,
-                   &KTrackManager::paint, Qt::DirectConnection);
-  QObject::connect(&mapw, &KRenderWidget::paintObjects, &object_man,
-                   &KPortableObjectManager::paint,
+  QObject::connect(&mapw, &KRenderWidget::paintUserObjects,
+                   &track_man, &KTrackManager::paint,
+                   Qt::DirectConnection);
+  QObject::connect(&mapw, &KRenderWidget::paintUserObjects,
+                   &object_man, &KPortableObjectManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::kcoor2pix, &mapw,
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
@@ -216,9 +217,9 @@ int main(int argc, char* argv[])
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
 
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
-                   &KRenderWidget::render);
+                   &KRenderWidget::renderMap);
   QObject::connect(&object_man, &KPortableObjectManager::updated,
-                   &mapw, &KRenderWidget::render);
+                   &mapw, &KRenderWidget::renderUserObjects);
   QObject::connect(&object_man, &KPortableObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 
