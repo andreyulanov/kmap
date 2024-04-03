@@ -144,7 +144,7 @@ QString KPortableObjectManager::generateObjectFileName()
 {
   return objects_dir + "/" +
          QDateTime::currentDateTime().toString("yyyyMMd-hhmmss") +
-         ".kpo";
+         ".kp";
 }
 
 void KPortableObjectManager::createObject(KShape sh)
