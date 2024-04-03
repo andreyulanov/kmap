@@ -19,7 +19,7 @@ bool isVectorMap(QString path)
       .contains(ext);
 }
 
-auto joinPolys(KObject* obj)
+auto joinPolys(KMapObject* obj)
 {
   double join_tolerance_m = 1.0;
   for (int i = -1; auto& polygon1: obj->polygons)
@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
     map.shapes   = *shape_list;
     map.main_mip = shape_man.main_mip;
     map.tile_mip = shape_man.tile_mip;
-    QVector<KObject*> obj_list;
+    QVector<KMapObject*> obj_list;
     DFRAME            df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
     auto top_left =
@@ -277,7 +277,7 @@ int main(int argc, char* argv[])
       name    = name.remove("\"");
       name_en = name_en.remove("\"");
 
-      KObject* obj = new KObject;
+      KMapObject* obj = new KMapObject;
       obj->name    = name;
       obj->name_en = name_en;
 

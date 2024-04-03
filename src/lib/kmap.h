@@ -66,7 +66,7 @@ struct KGeoPolygon: public QVector<KGeoCoor>
   QPolygonF toPolygonM();
 };
 
-struct KObject
+struct KMapObject
 {
   QString                   name;
   QString                   name_en;
@@ -80,10 +80,10 @@ struct KObject
   void save(const QVector<KShape*>* shape_list, QByteArray& ba);
   void load(QVector<KShape*>* shape_list, int& pos,
             const QByteArray& ba);
-  virtual ~KObject();
+  virtual ~KMapObject();
 };
 
-struct KObjectCollection: public QVector<KObject*>
+struct KObjectCollection: public QVector<KMapObject*>
 {
   enum Status
   {
@@ -149,7 +149,7 @@ public:
   QReadWriteLock              main_lock;
   QVector<KObjectCollection*> tiles;
   QReadWriteLock              tile_lock;
-  QVector<KObject*>           render_data[max_layer_count];
+  QVector<KMapObject*>           render_data[max_layer_count];
   QList<PartBorder>           render_start_list;
   int                         render_object_count;
 
@@ -170,7 +170,7 @@ class KEditableMap: public KMap
 {
 public:
   KEditableMap(const QString& path);
-  void addObjects(const QVector<KObject*>& obj_list,
+  void addObjects(const QVector<KMapObject*>& obj_list,
                   int                      max_objects_per_tile);
 };
 

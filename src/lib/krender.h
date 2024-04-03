@@ -29,8 +29,8 @@ class KRender: public QThread
     int            point_count = 0;
     double         angle_deg   = 0;
     QPoint         mid_point;
-    const KObject* obj = nullptr;
-    void           fix(const KObject* obj, const QPoint& start,
+    const KMapObject* obj = nullptr;
+    void           fix(const KMapObject* obj, const QPoint& start,
                        const QPoint& end);
   };
 
@@ -73,11 +73,11 @@ class KRender: public QThread
   void        render(QPainter* p, QVector<KMap*> render_maps,
                      int render_idx);
 
-  bool checkMipRange(const KObject* obj);
+  bool checkMipRange(const KMapObject* obj);
   bool canContinue();
   void checkYieldResult();
 
-  bool drawObject(QPainter* p, const KObject* obj, int render_idx);
+  bool drawObject(QPainter* p, const KMapObject* obj, int render_idx);
   bool drawLineNames(QPainter* p);
   bool drawPolygonNames(QPainter* p);
 
@@ -87,10 +87,10 @@ class KRender: public QThread
                         DrawTextEntry           new_dte);
 
   QPolygon poly2pix(const KGeoPolygon& polygon);
-  void     drawPointObject(QPainter* p, const KObject* obj);
-  void     drawPolygonObject(QPainter* p, const KObject* obj,
+  void     drawPointObject(QPainter* p, const KMapObject* obj);
+  void     drawPolygonObject(QPainter* p, const KMapObject* obj,
                              int render_idx);
-  void     drawLineObject(QPainter* painter, const KObject* obj,
+  void     drawLineObject(QPainter* painter, const KMapObject* obj,
                           int render_idx);
   QRectF   getDrawRectM() const;
   bool     needToLoadMap(const KMap*, const QRectF& draw_rect);

@@ -298,7 +298,7 @@ QPoint KRender::kcoor2pix(KGeoCoor kp) const
           int((m.y() - render_top_left_m.y()) / render_mip)};
 }
 
-void KRender::drawPointObject(QPainter* p, const KObject* obj)
+void KRender::drawPointObject(QPainter* p, const KMapObject* obj)
 {
   auto& frame = obj->frame;
 
@@ -396,7 +396,7 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
   return pl;
 }
 
-void KRender::drawPolygonObject(QPainter* p, const KObject* obj,
+void KRender::drawPolygonObject(QPainter* p, const KMapObject* obj,
                                 int render_idx)
 {
   auto& frame = obj->frame;
@@ -518,7 +518,7 @@ void KRender::drawPolygonObject(QPainter* p, const KObject* obj,
   }
 }
 
-void KRender::drawLineObject(QPainter* painter, const KObject* obj,
+void KRender::drawLineObject(QPainter* painter, const KMapObject* obj,
                              int render_idx)
 {
   auto& frame = obj->frame;
@@ -687,7 +687,7 @@ void KRender::drawLineObject(QPainter* painter, const KObject* obj,
   }
 }
 
-void KRender::NameHolder::fix(const KObject* _obj,
+void KRender::NameHolder::fix(const KMapObject* _obj,
                               const QPoint& start, const QPoint& end)
 {
   obj       = _obj;
@@ -711,7 +711,7 @@ bool KRender::isCluttering(const QRect& rect)
   return clutter_flag;
 }
 
-bool KRender::checkMipRange(const KObject* obj)
+bool KRender::checkMipRange(const KMapObject* obj)
 {
   return (obj->shape->min_mip == 0 ||
           render_mip >= obj->shape->min_mip) &&
@@ -719,7 +719,7 @@ bool KRender::checkMipRange(const KObject* obj)
           render_mip <= obj->shape->max_mip);
 }
 
-bool KRender::drawObject(QPainter* p, const KObject* obj,
+bool KRender::drawObject(QPainter* p, const KMapObject* obj,
                          int render_idx)
 {
   switch (obj->shape->type)

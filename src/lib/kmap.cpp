@@ -290,7 +290,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     }
   }
 
-  void KObject::load(QVector<KShape*> * shape_list, int& pos,
+  void KMapObject::load(QVector<KShape*> * shape_list, int& pos,
                      const QByteArray& ba)
   {
     using namespace KSerialize;
@@ -354,7 +354,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     }
   }
 
-  KGeoCoor KObject::getCenter()
+  KGeoCoor KMapObject::getCenter()
   {
     if (polygons.isEmpty())
       return KGeoCoor();
@@ -369,7 +369,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     return KGeoCoor().fromDegs(lat, lon);
   }
 
-  void KObject::save(const QVector<KShape*>* shape_list,
+  void KMapObject::save(const QVector<KShape*>* shape_list,
                      QByteArray&             ba)
   {
     using namespace KSerialize;
@@ -403,7 +403,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     }
   }
 
-  KObject::~KObject()
+  KMapObject::~KMapObject()
   {
     qDeleteAll(polygons);
     polygons.clear();
@@ -668,7 +668,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     pos = 0;
     for (auto& obj: main)
     {
-      obj = new KObject;
+      obj = new KMapObject;
       obj->load(&shapes, pos, ba);
     }
     int small_count;
@@ -752,7 +752,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     int pos                 = 0;
     for (auto& obj: *tiles[tile_idx])
     {
-      obj = new KObject;
+      obj = new KMapObject;
       obj->load(&shapes, pos, ba);
       obj->tile_frame_m = tile_rect_m;
     }
@@ -766,7 +766,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   {
   }
 
-  void KEditableMap::addObjects(const QVector<KObject*>& obj_list,
+  void KEditableMap::addObjects(const QVector<KMapObject*>& obj_list,
                                 int max_objects_per_tile)
   {
     int tile_side_num =
