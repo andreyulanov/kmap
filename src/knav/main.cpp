@@ -42,6 +42,9 @@ int main(int argc, char* argv[])
                                  pow(screen_size_pix.height(), 2));
   double pixel_size_mm    = physical_diag_mm / pixel_diag;
 
+  if (!is_device)
+    pixel_size_mm /= 2;
+
   KFindWidget findw;
   findw.setFixedSize(screen_size_pix);
 
