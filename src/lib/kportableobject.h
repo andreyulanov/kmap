@@ -3,7 +3,7 @@
 
 #include "kmap.h"
 
-struct KPortableObject
+struct KPortableObject: public KObject
 {
   KShape::Type              type         = KShape::None;
   KShape::Style             style        = KShape::Solid;
@@ -13,9 +13,7 @@ struct KPortableObject
   QColor                    text_color   = Qt::black;
   float                     text_size_mm = 2;
   QImage                    image;
-  QString                   name;
   QVector<KGeoPolygon>      polygons;
-  QVector<int>              inner_polygon_idx_list;
   QMap<QString, QString>    text_attr;
   QMap<QString, QByteArray> file_attr;
   void                      save(QString path);

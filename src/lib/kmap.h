@@ -66,16 +66,20 @@ struct KGeoPolygon: public QVector<KGeoCoor>
   QPolygonF toPolygonM();
 };
 
-struct KMapObject
+struct KObject
 {
-  QString                   name;
+  QString      name;
+  QVector<int> inner_polygon_idx_list;
+};
+
+struct KMapObject: public KObject
+{
   QString                   name_en;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
   QVector<KGeoPolygon*>     polygons;
   KShape*                   shape;
   QRectF                    tile_frame_m;
-  QVector<int>              inner_polygon_idx_list;
   KGeoCoor                  getCenter();
   void save(const QVector<KShape*>* shape_list, QByteArray& ba);
   void load(QVector<KShape*>* shape_list, int& pos,
@@ -149,7 +153,7 @@ public:
   QReadWriteLock              main_lock;
   QVector<KObjectCollection*> tiles;
   QReadWriteLock              tile_lock;
-  QVector<KMapObject*>           render_data[max_layer_count];
+  QVector<KMapObject*>        render_data[max_layer_count];
   QList<PartBorder>           render_start_list;
   int                         render_object_count;
 
@@ -171,7 +175,7 @@ class KEditableMap: public KMap
 public:
   KEditableMap(const QString& path);
   void addObjects(const QVector<KMapObject*>& obj_list,
-                  int                      max_objects_per_tile);
+                  int                         max_objects_per_tile);
 };
 
 struct KMapCollection: public QVector<KMap*>
