@@ -233,7 +233,7 @@ void KRender::checkLoad()
 }
 
 void KRender::paintOutlinedText(QPainter* p, const QString& text,
-                               const QColor& tcolor)
+                                const QColor& tcolor)
 {
   p->setPen(Qt::white);
   auto shifts = {-2, 0, 2};
@@ -397,7 +397,7 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
 }
 
 void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
-                                int render_idx)
+                                 int render_idx)
 {
   auto& frame = obj->frame;
   QRect obj_frame_pix;
@@ -518,8 +518,8 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
   }
 }
 
-void KRender::paintLineObject(QPainter* painter, const KMapObject* obj,
-                             int render_idx)
+void KRender::paintLineObject(QPainter*         painter,
+                              const KMapObject* obj, int render_idx)
 {
   auto& frame = obj->frame;
 
@@ -720,7 +720,7 @@ bool KRender::checkMipRange(const KMapObject* obj)
 }
 
 bool KRender::paintObject(QPainter* p, const KMapObject* obj,
-                         int render_idx)
+                          int render_idx)
 {
   switch (obj->shape->type)
   {
@@ -875,6 +875,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
         emit rendered(0);
         return;
       }
+      rendered_objects[render_idx].append(obj);
     }
   }
 }
@@ -914,6 +915,8 @@ void KRender::run()
   render_center_m = center_m;
   render_mip      = mip;
   point_object_text_rects.clear();
+  for (auto r: rendered_objects)
+    r.clear();
 
   for (int i = 0; i < KMap::render_count; i++)
   {

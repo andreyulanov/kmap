@@ -23,15 +23,15 @@ class KRender: public QThread
 
   struct NameHolder
   {
-    int            length_pix  = 0;
-    int            start_idx   = 0;
-    int            end_idx     = 0;
-    int            point_count = 0;
-    double         angle_deg   = 0;
-    QPoint         mid_point;
+    int               length_pix  = 0;
+    int               start_idx   = 0;
+    int               end_idx     = 0;
+    int               point_count = 0;
+    double            angle_deg   = 0;
+    QPoint            mid_point;
     const KMapObject* obj = nullptr;
-    void           fix(const KMapObject* obj, const QPoint& start,
-                       const QPoint& end);
+    void              fix(const KMapObject* obj, const QPoint& start,
+                          const QPoint& end);
   };
 
   Q_OBJECT
@@ -65,6 +65,7 @@ class KRender: public QThread
   QRectF                 render_frame_m;
   QElapsedTimer          yield_timer;
   QVector<QRect>         point_object_text_rects;
+  QVector<KMapObject*>   rendered_objects[KMap::render_count];
 
   void        run();
   void        start() = delete;
@@ -77,7 +78,8 @@ class KRender: public QThread
   bool canContinue();
   void checkYieldResult();
 
-  bool paintObject(QPainter* p, const KMapObject* obj, int render_idx);
+  bool paintObject(QPainter* p, const KMapObject* obj,
+                   int render_idx);
   bool paintLineNames(QPainter* p);
   bool paintPolygonNames(QPainter* p);
 
@@ -89,9 +91,9 @@ class KRender: public QThread
   QPolygon poly2pix(const KGeoPolygon& polygon);
   void     paintPointObject(QPainter* p, const KMapObject* obj);
   void     paintPolygonObject(QPainter* p, const KMapObject* obj,
-                             int render_idx);
+                              int render_idx);
   void     paintLineObject(QPainter* painter, const KMapObject* obj,
-                          int render_idx);
+                           int render_idx);
   QRectF   getDrawRectM() const;
   bool     needToLoadMap(const KMap*, const QRectF& draw_rect);
   void     checkLoad();
@@ -119,7 +121,7 @@ public:
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);
   static void    paintOutlinedText(QPainter* p, const QString& text,
-                                  const QColor& tcolor);
+                                   const QColor& tcolor);
   const QPixmap* getPixmap() const;
   const KMapCollection* getMaps() const;
   void                  selectCategory(const QString&);
