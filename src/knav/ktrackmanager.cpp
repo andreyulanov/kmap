@@ -88,13 +88,13 @@ void KTrackManager::paintTrack(QPainter* p, const QString& name,
     {
       auto pos = pix + QPoint(10, 10);
       p->translate(pos);
-      KRender::drawOutlinedText(p, name + " (start)", Qt::black);
+      KRender::paintOutlinedText(p, name + " (start)", Qt::black);
       p->translate(-pos);
     }
   }
   auto pos = pix + QPoint(10, 10);
   p->translate(pos);
-  KRender::drawOutlinedText(p, name + " (finish)", Qt::red);
+  KRender::paintOutlinedText(p, name + " (finish)", Qt::red);
   p->translate(-pos);
   p->restore();
 }

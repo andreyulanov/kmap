@@ -232,7 +232,7 @@ void KRender::checkLoad()
   }
 }
 
-void KRender::drawOutlinedText(QPainter* p, const QString& text,
+void KRender::paintOutlinedText(QPainter* p, const QString& text,
                                const QColor& tcolor)
 {
   p->setPen(Qt::white);
@@ -245,7 +245,7 @@ void KRender::drawOutlinedText(QPainter* p, const QString& text,
   p->drawText(0, 0, text);
 }
 
-void KRender::drawOutlinedText(QPainter* p, const DrawTextEntry& dte)
+void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
 {
   p->setPen(Qt::white);
   auto shifts = {-2, 0, 2};
@@ -298,7 +298,7 @@ QPoint KRender::kcoor2pix(KGeoCoor kp) const
           int((m.y() - render_top_left_m.y()) / render_mip)};
 }
 
-void KRender::drawPointObject(QPainter* p, const KMapObject* obj)
+void KRender::paintPointObject(QPainter* p, const KMapObject* obj)
 {
   auto& frame = obj->frame;
 
@@ -361,7 +361,7 @@ void KRender::drawPointObject(QPainter* p, const KMapObject* obj)
     for (auto str: str_list)
     {
       p->translate(QPoint(0, text_shift));
-      drawOutlinedText(p, str, sh->tcolor);
+      paintOutlinedText(p, str, sh->tcolor);
     }
     p->restore();
   }
@@ -396,7 +396,7 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
   return pl;
 }
 
-void KRender::drawPolygonObject(QPainter* p, const KMapObject* obj,
+void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
                                 int render_idx)
 {
   auto& frame = obj->frame;
@@ -518,7 +518,7 @@ void KRender::drawPolygonObject(QPainter* p, const KMapObject* obj,
   }
 }
 
-void KRender::drawLineObject(QPainter* painter, const KMapObject* obj,
+void KRender::paintLineObject(QPainter* painter, const KMapObject* obj,
                              int render_idx)
 {
   auto& frame = obj->frame;
@@ -719,19 +719,19 @@ bool KRender::checkMipRange(const KMapObject* obj)
           render_mip <= obj->shape->max_mip);
 }
 
-bool KRender::drawObject(QPainter* p, const KMapObject* obj,
+bool KRender::paintObject(QPainter* p, const KMapObject* obj,
                          int render_idx)
 {
   switch (obj->shape->type)
   {
   case KShape::Point:
-    drawPointObject(p, obj);
+    paintPointObject(p, obj);
     break;
   case KShape::Line:
-    drawLineObject(p, obj, render_idx);
+    paintLineObject(p, obj, render_idx);
     break;
   case KShape::Polygon:
-    drawPolygonObject(p, obj, render_idx);
+    paintPolygonObject(p, obj, render_idx);
     break;
   default:
     break;
@@ -756,7 +756,7 @@ void KRender::checkYieldResult()
   }
 }
 
-bool KRender::drawLineNames(QPainter* p)
+bool KRender::paintLineNames(QPainter* p)
 {
   text_rect_array.clear();
   for (int render_idx = 0; render_idx < KMap::render_count;
@@ -783,7 +783,7 @@ bool KRender::drawLineNames(QPainter* p)
 
       p->setTransform(tr);
       text_rect_array.append(mapped_rect);
-      drawOutlinedText(p, nh.obj->name, nh.obj->shape->tcolor);
+      paintOutlinedText(p, nh.obj->name, nh.obj->shape->tcolor);
       p->restore();
       if (!canContinue())
         return false;
@@ -791,7 +791,7 @@ bool KRender::drawLineNames(QPainter* p)
   return true;
 }
 
-bool KRender::drawPolygonNames(QPainter* p)
+bool KRender::paintPolygonNames(QPainter* p)
 {
   for (int render_idx = 0; render_idx < KMap::render_count;
        render_idx++)
@@ -808,7 +808,7 @@ bool KRender::drawPolygonNames(QPainter* p)
 
       if (isCluttering(actual_rect))
         continue;
-      drawOutlinedText(p, dte);
+      paintOutlinedText(p, dte);
       text_rect_array.append(dte.rect);
       if (!canContinue())
         return false;
@@ -868,7 +868,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
         if (!obj->tile_frame_m.intersects(render_frame_m))
           continue;
 
-      if (!drawObject(p, obj, render_idx))
+      if (!paintObject(p, obj, render_idx))
       {
         if (render_idx == KMap::render_count - 1)
           paintUserObjects(p);
@@ -1022,12 +1022,12 @@ void KRender::run()
   QElapsedTimer t;
   t.start();
 
-  if (!drawLineNames(&p0))
+  if (!paintLineNames(&p0))
   {
     emit rendered(0);
     return;
   }
-  if (!drawPolygonNames(&p0))
+  if (!paintPolygonNames(&p0))
   {
     emit rendered(0);
     return;

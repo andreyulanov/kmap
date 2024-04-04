@@ -77,20 +77,20 @@ class KRender: public QThread
   bool canContinue();
   void checkYieldResult();
 
-  bool drawObject(QPainter* p, const KMapObject* obj, int render_idx);
-  bool drawLineNames(QPainter* p);
-  bool drawPolygonNames(QPainter* p);
+  bool paintObject(QPainter* p, const KMapObject* obj, int render_idx);
+  bool paintLineNames(QPainter* p);
+  bool paintPolygonNames(QPainter* p);
 
   bool isCluttering(const QRect&);
-  void drawOutlinedText(QPainter* p, const DrawTextEntry& dte);
+  void paintOutlinedText(QPainter* p, const DrawTextEntry& dte);
   void addDrawTextEntry(QVector<DrawTextEntry>& draw_text_array,
                         DrawTextEntry           new_dte);
 
   QPolygon poly2pix(const KGeoPolygon& polygon);
-  void     drawPointObject(QPainter* p, const KMapObject* obj);
-  void     drawPolygonObject(QPainter* p, const KMapObject* obj,
+  void     paintPointObject(QPainter* p, const KMapObject* obj);
+  void     paintPolygonObject(QPainter* p, const KMapObject* obj,
                              int render_idx);
-  void     drawLineObject(QPainter* painter, const KMapObject* obj,
+  void     paintLineObject(QPainter* painter, const KMapObject* obj,
                           int render_idx);
   QRectF   getDrawRectM() const;
   bool     needToLoadMap(const KMap*, const QRectF& draw_rect);
@@ -118,7 +118,7 @@ public:
   void           setBackgroundColor(QColor);
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);
-  static void    drawOutlinedText(QPainter* p, const QString& text,
+  static void    paintOutlinedText(QPainter* p, const QString& text,
                                   const QColor& tcolor);
   const QPixmap* getPixmap() const;
   const KMapCollection* getMaps() const;
