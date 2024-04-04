@@ -112,6 +112,14 @@
     "name_code": 1
 },
 {
+    "id"     : "complex_water",
+    "type"   : "Polygon",
+    "layer"  : 10,
+    "brush"  : [166, 220, 238],
+    "tcolor" : [37, 151, 194],
+    "max_mip": 300
+},
+{
     "id"     : "Столицы государств",
     "type"   : "Point",
     "code"   : 41000001,

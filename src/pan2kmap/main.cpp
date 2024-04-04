@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
     map.main_mip = shape_man.main_mip;
     map.tile_mip = shape_man.tile_mip;
     QVector<KMapObject*> obj_list;
-    DFRAME            df;
+    DFRAME               df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
     auto top_left =
         KGeoCoor::fromDegs(rad2deg(df.X2), rad2deg(df.Y1));
@@ -190,7 +190,19 @@ int main(int argc, char* argv[])
       mapObjectRscKeyUn(info, key_wchar, sizeof(key_wchar));
       auto key = QString::fromUtf16(key_wchar);
 
-      int shape_idx = shape_man.getShapeIdx(code, key);
+      QStringList attr_values;
+      auto        semantic_count = mapSemanticAmount(info);
+      for (int sematic_idx = 1; sematic_idx <= semantic_count;
+           sematic_idx++)
+      {
+        WCHAR str_utf16[1000];
+        if (mapSemanticValueUnicode(info, sematic_idx, str_utf16,
+                                    sizeof(str_utf16)))
+          attr_values.append(
+              QString::fromUtf16(str_utf16).simplified());
+      }
+
+      int shape_idx = shape_man.getShapeIdx(code, key, attr_values);
 
       int local_shape_idx = 0;
       int attr_shape_idx  = -1;
@@ -278,8 +290,8 @@ int main(int argc, char* argv[])
       name_en = name_en.remove("\"");
 
       KMapObject* obj = new KMapObject;
-      obj->name    = name;
-      obj->name_en = name_en;
+      obj->name       = name;
+      obj->name_en    = name_en;
 
       obj->shape = (*shape_list)[shape_idx];
 
@@ -382,6 +394,17 @@ int main(int argc, char* argv[])
       {
         delete obj;
         continue;
+      }
+
+      if (obj->shape->id == "океан, море" ||
+          obj->shape->id == "водоём" ||
+          obj->shape->id == "река (площадной)")
+      {
+        if (obj->polygons.count() > 20)
+        {
+          auto idx   = shape_man.getShapeIdxById("complex_water");
+          obj->shape = (*shape_list)[idx];
+        }
       }
 
       obj_list.append(obj);

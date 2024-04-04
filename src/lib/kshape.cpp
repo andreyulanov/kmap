@@ -291,13 +291,15 @@ KShape KShapeManager::getShapeById(QString id)
     return KShape();
 }
 
-int KShapeManager::getShapeIdx(int code, QString key)
+int KShapeManager::getShapeIdx(int code, QString key,
+                               QStringList attr_values)
 {
-  int idx = 0;
-  for (auto& sh: shapes)
+  for (int idx = -1; auto& sh: shapes)
   {
+    idx++;
     bool code_match = true;
     bool key_match  = true;
+    bool attr_match = true;
 
     if (sh->pan_code == 0 && sh->pan_key.isEmpty() &&
         sh->attrval.isEmpty())
@@ -307,11 +309,11 @@ int KShapeManager::getShapeIdx(int code, QString key)
       code_match = false;
     if (!sh->pan_key.isEmpty() && sh->pan_key != key)
       key_match = false;
+    if (!sh->attrval.isEmpty() && !attr_values.contains(sh->attrval))
+      attr_match = false;
 
-    if (code_match && key_match)
+    if (code_match && key_match && attr_match)
       return idx;
-
-    idx++;
   }
   return -1;
 }
