@@ -66,20 +66,16 @@ struct KGeoPolygon: public QVector<KGeoCoor>
   QPolygonF toPolygonM();
 };
 
-struct KObject
+struct KMapObject
 {
-  QString      name;
-  QVector<int> inner_polygon_idx_list;
-};
-
-struct KMapObject: public KObject
-{
+  QString                   name;
   QString                   name_en;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
   QVector<KGeoPolygon*>     polygons;
   KShape*                   shape;
   QRectF                    tile_frame_m;
+  QVector<int>              inner_polygon_idx_list;
   KGeoCoor                  getCenter();
   void save(const QVector<KShape*>* shape_list, QByteArray& ba);
   void load(QVector<KShape*>* shape_list, int& pos,
