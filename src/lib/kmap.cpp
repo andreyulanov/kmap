@@ -291,7 +291,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   }
 
   void KMapObject::load(QVector<KShape*> * shape_list, int& pos,
-                     const QByteArray& ba)
+                        const QByteArray& ba)
   {
     using namespace KSerialize;
 
@@ -370,7 +370,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   }
 
   void KMapObject::save(const QVector<KShape*>* shape_list,
-                     QByteArray&             ba)
+                        QByteArray&             ba)
   {
     using namespace KSerialize;
     write(ba, (uchar)(name.count() > 0));
@@ -528,10 +528,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       shape->save(&f);
 
     QByteArray ba;
-    write(ba, find_names);
-    write(ba, find_centers);
-    write(ba, find_names_en);
-    write(ba, find_centers_en);
     if (compression_level > 0)
       ba = qCompress(ba, compression_level);
     write(&f, ba.count());
@@ -649,10 +645,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       ba = qUncompress(ba);
 
     int pos = 0;
-    read(ba, pos, find_names);
-    read(ba, pos, find_centers);
-    read(ba, pos, find_names_en);
-    read(ba, pos, find_centers_en);
 
     int big_obj_count;
     read(&f, big_obj_count);
@@ -835,33 +827,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     for (auto map: *this)
       for (auto shape: map->shapes)
         ret.append({shape->id, shape->image});
-    return ret;
-  }
-
-  KGeoCoor KMapCollection::getCoorByName(const QString& object_name)
-      const
-  {
-    for (auto map: *this)
-    {
-      auto idx = map->find_names.indexOf(object_name);
-      if (idx >= 0)
-      {
-        auto ret = map->find_centers.at(idx);
-        return ret;
-      }
-    }
-    return KGeoCoor();
-  }
-
-  QStringList KMapCollection::find(const QString& str) const
-  {
-    QStringList ret;
-    auto        pattern = "^" + str + ".*";
-    auto        regexp  = QRegularExpression(pattern);
-    regexp.setPatternOptions(
-        QRegularExpression::CaseInsensitiveOption);
-    for (auto map: *this)
-      ret += map->find_names.filter(regexp);
     return ret;
   }
 

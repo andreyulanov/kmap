@@ -430,18 +430,6 @@ void KRenderWidget::showCategory(const QString& v)
   r.renderMap();
 }
 
-void KRenderWidget::showObject(const QString& object_name)
-{
-  auto coor = r.getMaps()->getCoorByName(object_name);
-  if (coor.isValid())
-    scrollTo(coor);
-}
-
-QStringList KRenderWidget::find(const QString& str)
-{
-  return r.getMaps()->find(str);
-}
-
 QPoint KRenderWidget::getTotalShift() const
 {
   auto   coef = r.getRenderWindowSizeCoef();

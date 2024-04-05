@@ -112,10 +112,6 @@ int main(int argc, char* argv[])
 
   KGeoCoor start_lat_lon = KGeoCoor::fromDegs(59.9769195, 30.3642851);
 
-  QObject::connect(&findw, &KFindWidget::find, &mapw,
-                   &KRenderWidget::find);
-  QObject::connect(&findw, &KFindWidget::showObject, &mapw,
-                   &KRenderWidget::showObject);
   QObject::connect(&findw, &KFindWidget::showCategory, &mapw,
                    &KRenderWidget::showCategory);
   QObject::connect(&findw, &KFindWidget::getCategories, &mapw,

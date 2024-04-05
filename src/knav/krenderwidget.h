@@ -102,8 +102,6 @@ public:
   QPoint      deg2pix(const KGeoCoor&) const;
   QPoint      kcoor2pix(const KGeoCoor&) const;
   KGeoCoor    pix2deg(const QPoint&) const;
-  QStringList find(const QString&);
-  void        showObject(const QString&);
   void        showCategory(const QString&);
   KCategories getCategories() const;
   void        setScrollingEnabled(bool);

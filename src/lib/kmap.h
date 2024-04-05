@@ -141,10 +141,6 @@ public:
   KGeoRect                    frame;
   QVector<KGeoPolygon>        borders;
   QVector<QPolygonF>          borders_m;
-  QStringList                 find_names;
-  QVector<KGeoCoor>           find_centers;
-  QStringList                 find_names_en;
-  QVector<KGeoCoor>           find_centers_en;
   KObjectCollection           main;
   QReadWriteLock              main_lock;
   QVector<KObjectCollection*> tiles;
@@ -177,8 +173,6 @@ public:
 struct KMapCollection: public QVector<KMap*>
 {
   virtual ~KMapCollection();
-  QStringList find(const QString&) const;
-  KGeoCoor    getCoorByName(const QString&) const;
   KCategories getCategories() const;
 };
 

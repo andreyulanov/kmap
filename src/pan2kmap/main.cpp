@@ -168,9 +168,6 @@ int main(int argc, char* argv[])
 
     int curr_percentage = 0;
 
-    QHash<QString, KGeoCoor> find_names_hash;
-    QHash<QString, KGeoCoor> find_names_hash_en;
-
     for (int in_obj_idx = 0; in_obj_idx < object_count; in_obj_idx++)
     {
       QString name, name_en;
@@ -295,14 +292,6 @@ int main(int argc, char* argv[])
 
       obj->shape = (*shape_list)[shape_idx];
 
-      if (!obj->name.isEmpty() &&
-          !find_names_hash.contains(obj->name))
-        find_names_hash.insert(obj->name, obj->getCenter());
-
-      if (!obj->name_en.isEmpty() &&
-          !find_names_hash_en.contains(obj->name_en))
-        find_names_hash_en.insert(obj->name_en, obj->getCenter());
-
       for (auto attr: shape->attributes)
       {
         WCHAR   str_utf16[1000];
@@ -313,14 +302,6 @@ int main(int argc, char* argv[])
         {
           value = QString::fromUtf16(str_utf16).simplified();
           obj->attributes.insert(attr.name, value.toUtf8());
-          if (attr.name == "street")
-          {
-            auto address_str = value + " " + obj->name;
-            address_str      = address_str.simplified();
-            address_str      = address_str.remove("\"");
-            if (!find_names_hash.contains(address_str))
-              find_names_hash.insert(obj->name, obj->getCenter());
-          }
         }
       }
 
@@ -409,25 +390,6 @@ int main(int argc, char* argv[])
 
       obj_list.append(obj);
     }
-
-    qDebug() << "processing find names hash...";
-    qDebug() << "local_count=" << find_names_hash.count();
-    qDebug() << "en_count=" << find_names_hash_en.count();
-    QHashIterator<QString, KGeoCoor> it(find_names_hash);
-    while (it.hasNext())
-    {
-      it.next();
-      map.find_names.append(it.key());
-      map.find_centers.append(it.value());
-    }
-    QHashIterator<QString, KGeoCoor> it_en(find_names_hash_en);
-    while (it_en.hasNext())
-    {
-      it_en.next();
-      map.find_names_en.append(it_en.key());
-      map.find_centers_en.append(it_en.value());
-    }
-    qDebug() << "done";
 
     qDebug() << "poi_count" << poi_count;
 
