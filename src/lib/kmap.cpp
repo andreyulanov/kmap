@@ -44,9 +44,14 @@ bool KGeoCoor::isValid()
   return !(lat == 0 && lon == 0);
 }
 
+bool KGeoCoor::needToWrap()
+{
+  return longitude() < wrap_longitude;
+}
+
 KGeoCoor KGeoCoor::wrapped() const
 {
-  if (lon > KMap::wrap_longitude * 1E+7)
+  if (lon > wrap_longitude * 1E+7)
     return {lat, lon};
   else
     return {lat, int(lon + 3'600'000'000)};

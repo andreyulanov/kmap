@@ -15,8 +15,9 @@ class KGeoCoor
 {
   friend struct KGeoRect;
   friend struct KGeoPolygon;
-  int lat = 0;
-  int lon = 0;
+  int                     lat            = 0;
+  int                     lon            = 0;
+  static constexpr double wrap_longitude = -168.5;
 
 public:
   KGeoCoor();
@@ -29,6 +30,7 @@ public:
   bool            isValid();
   KGeoCoor        inc(KGeoCoor step) const;
   KGeoCoor        wrapped() const;
+  bool            needToWrap();
 };
 
 struct KPosition
@@ -107,10 +109,9 @@ class KMap: public QObject
   void addCollectionToIndex(const KObjectCollection* collection);
 
 public:
-  static constexpr int    max_layer_count            = 24;
-  static constexpr int    render_count               = 6;
-  static constexpr int    border_coor_precision_coef = 10000;
-  static constexpr double wrap_longitude             = -168.5;
+  static constexpr int max_layer_count            = 24;
+  static constexpr int render_count               = 6;
+  static constexpr int border_coor_precision_coef = 10000;
 
   QString                     path;
   double                      main_mip = 0;

@@ -356,8 +356,7 @@ int main(int argc, char* argv[])
         if (need_to_wrap)
         {
           auto polygon_frame = polygon->getFrame();
-          if (polygon_frame.bottom_right.longitude() <
-              KMap::wrap_longitude)
+          if (polygon_frame.bottom_right.needToWrap())
             for (auto& p: *polygon)
               p = p.wrapped();
         }
