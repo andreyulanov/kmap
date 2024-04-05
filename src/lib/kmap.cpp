@@ -486,8 +486,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   {
     using namespace KSerialize;
 
-    compression_level = 9;
-
     auto _path = path;
     if (!new_path.isEmpty())
       _path = new_path;
@@ -501,7 +499,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
 
     QReadLocker locker(&main_lock);
     write(&f, QString("kmap"));
-    write(&f, compression_level);
     write(&f, frame);
     char has_borders = (borders.count() > 0);
     write(&f, has_borders);
@@ -512,8 +509,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       write(ba, borders.count());
       for (auto& border: borders)
         border.save(ba, border_coor_precision_coef);
-      if (compression_level > 0)
-        ba = qCompress(ba, compression_level);
+      ba = qCompress(ba, 9);
       write(&f, ba.count());
       f.write(ba.data(), ba.count());
     }
@@ -525,8 +521,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       shape->save(&f);
 
     QByteArray ba;
-    if (compression_level > 0)
-      ba = qCompress(ba, compression_level);
+    ba = qCompress(ba, 9);
     write(&f, ba.count());
     f.write(ba.data(), ba.count());
 
@@ -535,8 +530,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
 
     for (auto& obj: main)
       obj->save(&shapes, ba);
-    if (compression_level > 0)
-      ba = qCompress(ba, compression_level);
+    ba = qCompress(ba, 9);
     write(&f, ba.count());
     f.write(ba.data(), ba.count());
     write(&f, tiles.count());
@@ -551,8 +545,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
         ba.clear();
         for (auto& obj: *part)
           obj->save(&shapes, ba);
-        if (compression_level)
-          ba = qCompress(ba, compression_level);
+        ba = qCompress(ba, 9);
         write(&f, ba.count());
         f.write(ba.data(), ba.count());
       }
@@ -587,7 +580,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
 
     QString format_id;
     read(&f, format_id);
-    read(&f, compression_level);
     read(&f, frame);
 
     char has_borders = false;
@@ -599,8 +591,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       read(&f, ba_count);
       ba.resize(ba_count);
       f.read(ba.data(), ba_count);
-      if (compression_level > 0)
-        ba = qUncompress(ba);
+      ba      = qUncompress(ba);
       int pos = 0;
       int borders_count;
       read(ba, pos, borders_count);
@@ -638,8 +629,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     QByteArray ba;
     ba.resize(ba_count);
     f.read(ba.data(), ba_count);
-    if (compression_level > 0)
-      ba = qUncompress(ba);
+    ba = qUncompress(ba);
 
     int pos = 0;
 
@@ -652,8 +642,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     read(&f, ba_count);
     ba.resize(ba_count);
     f.read(ba.data(), ba_count);
-    if (compression_level > 0)
-      ba = qUncompress(ba);
+    ba  = qUncompress(ba);
     pos = 0;
     for (auto& obj: main)
     {
@@ -734,8 +723,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     QByteArray ba;
     ba.resize(ba_count);
     f.read(ba.data(), ba_count);
-    if (compression_level > 0)
-      ba = qUncompress(ba);
+    ba = qUncompress(ba);
 
     tiles[tile_idx]->status = KObjectCollection::Loading;
     int pos                 = 0;

@@ -113,7 +113,6 @@ public:
   static constexpr double wrap_longitude             = -168.5;
 
   QString                     path;
-  int                         compression_level;
   double                      main_mip = 0;
   double                      tile_mip = 0;
   QVector<KShape*>            shapes;
