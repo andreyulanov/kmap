@@ -149,7 +149,7 @@ void KRender::checkUnload()
     i++;
     if (i == 0)
       continue;
-    if (map->main.status == KObjectCollection::Loaded)
+    if (map->getMain().status == KObjectCollection::Loaded)
     {
       if (!needToLoadMap(map, draw_rect_m))
         if (loaded_count > 1)
@@ -195,7 +195,7 @@ void KRender::checkLoad()
     if (!needToLoadMap(map, draw_rect_m))
       continue;
 
-    if (map->main.status == KObjectCollection::Null)
+    if (map->getMain().status == KObjectCollection::Null)
     {
       QtConcurrent::run(
           [&map]()
@@ -204,14 +204,14 @@ void KRender::checkLoad()
           });
       continue;
     }
-    if (map->main.status == KObjectCollection::Loaded)
+    if (map->getMain().status == KObjectCollection::Loaded)
     {
       if (needToLoadMap(map, draw_rect_m))
       {
-        int    tile_side_count = sqrt(map->tiles.count());
+        int    tile_side_count = sqrt(map->getTiles().count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
                               map_rect_m.height() / tile_side_count};
-        for (int tile_idx = 0; auto& tile: map->tiles)
+        for (int tile_idx = 0; auto& tile: map->getTiles())
         {
           int    tile_idx_y = tile_idx / tile_side_count;
           int    tile_idx_x = tile_idx - tile_idx_y * tile_side_count;

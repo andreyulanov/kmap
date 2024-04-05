@@ -113,13 +113,12 @@ class KMap
   QVector<QPolygonF> borders_m;
 
 protected:
-  QVector<KShape*>     shapes;
-  QVector<KGeoPolygon> borders;
-
-public:
+  QVector<KShape*>            shapes;
+  QVector<KGeoPolygon>        borders;
   KObjectCollection           main;
   QVector<KObjectCollection*> tiles;
 
+public:
   KMap(const QString& path);
   virtual ~KMap();
   void save(QString new_path = "") const;
@@ -136,8 +135,11 @@ public:
   void   setTileMip(double);
   double getTileMip() const;
 
-  void     setFrame(KGeoRect);
-  KGeoRect getFrame() const;
+  void            setFrame(KGeoRect);
+  const KGeoRect& getFrame() const;
+
+  const KObjectCollection&          getMain() const;
+  const QVector<KObjectCollection*> getTiles() const;
 };
 
 class KRenderMap: public QObject, public KMap

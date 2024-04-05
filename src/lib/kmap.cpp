@@ -449,9 +449,19 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     frame = v;
   }
 
-  KGeoRect KMap::getFrame() const
+  const KGeoRect& KMap::getFrame() const
   {
     return frame;
+  }
+
+  const KObjectCollection& KMap::getMain() const
+  {
+    return main;
+  }
+
+  const QVector<KObjectCollection*> KMap::getTiles() const
+  {
+    return tiles;
   }
 
   bool KMap::intersects(QPolygonF polygon_m) const
