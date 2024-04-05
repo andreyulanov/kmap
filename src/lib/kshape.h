@@ -60,7 +60,6 @@ public:
   QColor              brush;
   QColor              tcolor;
   QImage              image;
-  QImage              large_image;
   int                 name_code = 0;
   QString             attrval;
   QVector<KAttribute> attributes;

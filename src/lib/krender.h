@@ -18,7 +18,6 @@ class KRender: public QThread
     QRect         rect;
     QRect         actual_rect;
     Qt::Alignment alignment;
-    bool          is_selected = false;
   };
 
   struct NameHolder

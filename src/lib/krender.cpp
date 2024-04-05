@@ -264,14 +264,6 @@ void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
   p->drawText(dte.rect,
               dte.alignment | Qt::TextWordWrap | Qt::TextDontClip,
               dte.text);
-
-  if (dte.is_selected)
-  {
-    auto pos = dte.rect.center();
-    pos -= QPoint(dte.shape->large_image.width() / 2,
-                  dte.shape->large_image.height() + 10);
-    p->drawImage(pos, dte.shape->large_image);
-  }
 }
 
 void KRender::addDrawTextEntry(
@@ -369,11 +361,9 @@ void KRender::paintPointObject(QPainter* p, const KMapObject* obj)
     p->drawEllipse(pos, 5, 5);
   else
   {
-    QImage img = obj->shape->id == selected_category_name ?
-                     sh->large_image :
-                     sh->image;
-    pos = {pos.x() - img.width() / 2, pos.y() - img.height() / 2};
-    p->drawImage(pos, img);
+    pos = {pos.x() - sh->image.width() / 2,
+           pos.y() - sh->image.height() / 2};
+    p->drawImage(pos, sh->image);
   }
 }
 
@@ -473,8 +463,7 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
 
       addDrawTextEntry(draw_text_array[render_idx],
                        {obj->name, sh, obj_frame_pix, actual_rect,
-                        Qt::AlignCenter,
-                        obj->shape->id == selected_category_name});
+                        Qt::AlignCenter});
     }
 
     if (obj->polygons.count() == 1)
@@ -483,21 +472,8 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
       continue;
     }
 
-    //    if (polygon_idx == 0)
-    //      path.addPolygon(pl);
-    //    else
-    //    {
-    //      QPainterPath inner_path;
-    //      inner_path.addPolygon(pl);
-    //      path = path.subtracted(inner_path);
-    //    }
-
-    //    if (polygon_idx == obj->polygons.count() - 1)
-    //      p->drawPath(path);
     if (polygon_idx == 0)
-    {
       p->drawPolygon(pl);
-    }
     else
     {
       p->setBrush(Qt::white);

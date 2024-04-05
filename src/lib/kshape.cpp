@@ -78,11 +78,8 @@ void KShape::load(QFile* f)
   QImage img;
   read(f, img);
   if (!img.isNull())
-  {
     image =
         img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
-    large_image = img.scaledToWidth(50, Qt::SmoothTransformation);
-  }
   int n;
   read(f, n);
   for (int i = 0; i < n; i++)
@@ -226,12 +223,8 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           if (image.isNull())
             qDebug() << "error opening" << image_path;
           else
-          {
             sh->image = image.scaledToWidth(sh->getWidthPix(),
                                             Qt::SmoothTransformation);
-            sh->large_image =
-                image.scaledToWidth(50, Qt::SmoothTransformation);
-          }
         }
 
         auto attributes = obj.value("attributes");
