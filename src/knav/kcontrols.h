@@ -5,7 +5,6 @@
 #include <QLineEdit>
 #include <QElapsedTimer>
 #include "kmap.h"
-#include "kfindwidget.h"
 
 class KControls: public QObject
 {
@@ -15,7 +14,6 @@ public:
   struct Settings
   {
     QWidget* map_widget     = nullptr;
-    QWidget* find_widget    = nullptr;
     double   edge_mm        = 0;
     double   step_mm        = 0;
     double   button_size_mm = 0;
@@ -38,7 +36,6 @@ private:
 
   bool        centering_enabled = false;
   ZoomMode    zoom_mode         = None;
-  QPushButton find;
   QPushButton zoom_in;
   QPushButton zoom_out;
   QPushButton center_position;
@@ -51,7 +48,6 @@ private:
   void initButton(QPushButton* b, QPixmap image_path, QPoint pos,
                   double size_mm);
   void setIcon(QPushButton* b, QPixmap pm);
-  void onFind();
   void onZoomIn();
   void onZoomOut();
   void onZoomReleased();

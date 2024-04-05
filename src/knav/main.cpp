@@ -45,9 +45,6 @@ int main(int argc, char* argv[])
   if (!is_device)
     pixel_size_mm /= 2;
 
-  KFindWidget findw;
-  findw.setFixedSize(screen_size_pix);
-
   KEditWidget editw;
   editw.setFixedSize(screen_size_pix);
   editw.move((screen_size_pix.width() - editw.width()) / 2,
@@ -112,11 +109,6 @@ int main(int argc, char* argv[])
 
   KGeoCoor start_lat_lon = KGeoCoor::fromDegs(59.9769195, 30.3642851);
 
-  QObject::connect(&findw, &KFindWidget::showCategory, &mapw,
-                   &KRenderWidget::showCategory);
-  QObject::connect(&findw, &KFindWidget::getCategories, &mapw,
-                   &KRenderWidget::getCategories);
-
   QObject::connect(&mapw, &KRenderWidget::mousePressed, &auto_scroll,
                    &KAutoScroll::stop);
   QObject::connect(&mapw, &KRenderWidget::mouseMoved, &auto_scroll,
@@ -144,7 +136,6 @@ int main(int argc, char* argv[])
 
   KControls::Settings control_settings;
   control_settings.map_widget     = &mapw;
-  control_settings.find_widget    = &findw;
   control_settings.edge_mm        = edge_mm;
   control_settings.step_mm        = step_mm;
   control_settings.button_size_mm = button_size_mm;

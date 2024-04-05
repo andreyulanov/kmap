@@ -419,17 +419,6 @@ void KRenderWidget::setScrollingEnabled(bool v)
   scrolling_enabled = v;
 }
 
-KCategories KRenderWidget::getCategories() const
-{
-  return r.getMaps()->getCategories();
-}
-
-void KRenderWidget::showCategory(const QString& v)
-{
-  r.selectCategory(v);
-  r.renderMap();
-}
-
 QPoint KRenderWidget::getTotalShift() const
 {
   auto   coef = r.getRenderWindowSizeCoef();

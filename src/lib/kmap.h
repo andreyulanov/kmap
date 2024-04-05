@@ -94,13 +94,6 @@ struct KObjectCollection: public QVector<KMapObject*>
   Status status = Null;
 };
 
-struct KCategory
-{
-  QString name;
-  QImage  image;
-};
-typedef QVector<KCategory> KCategories;
-
 struct PartBorder
 {
   int layer_idx;
@@ -173,7 +166,6 @@ public:
 struct KMapCollection: public QVector<KMap*>
 {
   virtual ~KMapCollection();
-  KCategories getCategories() const;
 };
 
 #endif  // KMAP_H

@@ -23,11 +23,6 @@ void KControls::setIcon(QPushButton* b, QPixmap pm)
   b->setIcon(pm);
 }
 
-void KControls::onFind()
-{
-  settings.find_widget->show();
-}
-
 void KControls::onZoomIn()
 {
   zoom_mode = In;
@@ -91,22 +86,16 @@ void KControls::update()
 }
 
 KControls::KControls(Settings v):
-    find(v.map_widget), zoom_in(v.map_widget), zoom_out(v.map_widget),
+    zoom_in(v.map_widget), zoom_out(v.map_widget),
     center_position(v.map_widget), record(v.map_widget),
     add(v.map_widget), ok(v.map_widget)
 {
   settings           = v;
-  auto findw         = settings.find_widget;
   auto mapw          = settings.map_widget;
   auto pixel_size_mm = settings.pixel_size_mm;
 
   int edge = settings.edge_mm / pixel_size_mm;
   int step = settings.step_mm / pixel_size_mm;
-
-  initButton(&find, QPixmap(":/labels/find.png"),
-             {mapw->width() - edge, mapw->height() / 2 - step},
-             settings.button_size_mm);
-  connect(&find, &QPushButton::pressed, findw, &QWidget::show);
 
   auto       pm = QPixmap(":/labels/compass.png");
   QTransform tr;

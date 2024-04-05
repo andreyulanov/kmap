@@ -821,15 +821,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     }
   }
 
-  KCategories KMapCollection::getCategories() const
-  {
-    KCategories ret;
-    for (auto map: *this)
-      for (auto shape: map->shapes)
-        ret.append({shape->id, shape->image});
-    return ret;
-  }
-
   KMapCollection::~KMapCollection()
   {
     qDeleteAll(*this);
