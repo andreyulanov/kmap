@@ -8,7 +8,6 @@
 #include "krenderwidget.h"
 #include "kautoscroll.h"
 #include "kcontrols.h"
-#include "kfindobject.h"
 #include "keditwidget.h"
 #include "kmap.h"
 #include "kposgenerator.h"

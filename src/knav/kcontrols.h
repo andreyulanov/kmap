@@ -57,8 +57,6 @@ signals:
   void zoomOut();
   void zoomReleased();
   void scrollTo(const KGeoCoor&);
-  void setRotation(double);
-  void changedFindString(const QString&);
   void switchRecording();
   bool isRecording();
   void selectShape();
