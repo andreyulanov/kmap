@@ -59,9 +59,9 @@ void KRenderWidget::scan(QString map_dir)
   }
 }
 
-const KMap* KRenderWidget::addMap(QString path, bool load_now)
+void KRenderWidget::addMap(QString path, bool load_now)
 {
-  return r.addMap(path, load_now);
+  r.addMap(path, load_now);
 }
 
 const KMap* KRenderWidget::getWorldMap()

@@ -39,20 +39,19 @@ KRender::~KRender()
   stopAndWait();
 }
 
-const KMap* KRender::addMap(QString path, bool load_now)
+void KRender::addMap(QString path, bool load_now)
 {
   stopAndWait();
-  return insertMap(maps.count(), path, load_now);
+  insertMap(maps.count(), path, load_now);
 }
 
-const KMap* KRender::insertMap(int idx, QString path, bool load_now)
+void KRender::insertMap(int idx, QString path, bool load_now)
 {
   auto map = new KRenderMap(path);
   connect(map, &KRenderMap::loaded, this, &KRender::onLoaded,
           Qt::UniqueConnection);
   map->loadMain(load_now);
   maps.insert(idx, map);
-  return map;
 }
 
 void KRender::setMip(double v)

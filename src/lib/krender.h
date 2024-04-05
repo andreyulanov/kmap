@@ -66,12 +66,12 @@ class KRender: public QThread
   QVector<QRect>         point_object_text_rects;
   QVector<KMapObject*>   rendered_objects[KRenderMap::render_count];
 
-  void        run();
-  void        start() = delete;
-  const KMap* insertMap(int idx, QString path, bool load_now);
-  void        renderMap(QPainter* p, KRenderMap* map, int render_idx);
-  void        render(QPainter* p, QVector<KRenderMap*> render_maps,
-                     int render_idx);
+  void run();
+  void start() = delete;
+  void insertMap(int idx, QString path, bool load_now);
+  void renderMap(QPainter* p, KRenderMap* map, int render_idx);
+  void render(QPainter* p, QVector<KRenderMap*> render_maps,
+              int render_idx);
 
   bool checkMipRange(const KMapObject* obj);
   bool canContinue();
@@ -106,7 +106,7 @@ signals:
 
 public:
   virtual ~KRender();
-  const KMap*    addMap(QString path, bool load_now);
+  void           addMap(QString path, bool load_now);
   void           setMip(double);
   double         getMip() const;
   void           setCenterM(QPointF);
