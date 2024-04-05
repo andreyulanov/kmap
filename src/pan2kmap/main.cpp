@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
           {
             found_borders = true;
             for (auto polygon: obj->polygons)
-              map.borders.append(*polygon);
+              map.addBorder(*polygon);
           }
         }
         if (!found_borders)

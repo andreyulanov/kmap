@@ -106,17 +106,17 @@ class KMap
 {
   static constexpr int border_coor_precision_coef = 10000;
 
-  QString  path;
-  double   main_mip = 0;
-  double   tile_mip = 0;
-  KGeoRect frame;
+  QString            path;
+  double             main_mip = 0;
+  double             tile_mip = 0;
+  KGeoRect           frame;
+  QVector<QPolygonF> borders_m;
 
 protected:
-  QVector<KShape*> shapes;
+  QVector<KShape*>     shapes;
+  QVector<KGeoPolygon> borders;
 
 public:
-  QVector<KGeoPolygon>        borders;
-  QVector<QPolygonF>          borders_m;
   KObjectCollection           main;
   QVector<KObjectCollection*> tiles;
 
@@ -179,6 +179,7 @@ public:
   void addObjects(const QVector<KMapObject*>& obj_list,
                   int                         max_objects_per_tile);
   void setShapes(QVector<KShape*>);
+  void addBorder(KGeoPolygon);
 };
 
 #endif  // KMAP_H

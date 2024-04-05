@@ -808,6 +808,11 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     shapes = v;
   }
 
+  void KEditableMap::addBorder(KGeoPolygon v)
+  {
+    borders.append(v);
+  }
+
   void KEditableMap::addObjects(const QVector<KMapObject*>& obj_list,
                                 int max_objects_per_tile)
   {
