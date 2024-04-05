@@ -206,7 +206,7 @@ int main(int argc, char* argv[])
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
 
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
-                   &KRenderWidget::renderMap);
+                   &KRenderWidget::renderUserObjects);
   QObject::connect(&object_man, &KPortableObjectManager::updated,
                    &mapw, &KRenderWidget::renderUserObjects);
   QObject::connect(&object_man, &KPortableObjectManager::finishEdit,
