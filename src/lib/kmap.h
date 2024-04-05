@@ -102,15 +102,9 @@ struct PartBorder
   int obj_idx;
 };
 
-class KMap: public QObject
+class KMap
 {
-  Q_OBJECT
-
-  void addCollectionToIndex(const KObjectCollection* collection);
-
 public:
-  static constexpr int max_layer_count            = 24;
-  static constexpr int render_count               = 6;
   static constexpr int border_coor_precision_coef = 10000;
 
   QString                     path;
@@ -121,12 +115,7 @@ public:
   QVector<KGeoPolygon>        borders;
   QVector<QPolygonF>          borders_m;
   KObjectCollection           main;
-  QReadWriteLock              main_lock;
   QVector<KObjectCollection*> tiles;
-  QReadWriteLock              tile_lock;
-  QVector<KMapObject*>        render_data[max_layer_count];
-  QList<PartBorder>           render_start_list;
-  int                         render_object_count;
 
   KMap(const QString& path);
   virtual ~KMap();
@@ -137,8 +126,38 @@ public:
   void clear();
   void add(KMap*);
   bool intersects(QPolygonF polygon) const;
+};
+
+class KRenderMap: public QObject, public KMap
+{
+  Q_OBJECT
+
+public:
+  static constexpr int max_layer_count = 24;
+  static constexpr int render_count    = 6;
+
+  QVector<KMapObject*> render_data[max_layer_count];
+  QReadWriteLock       main_lock;
+  QReadWriteLock       tile_lock;
+  QList<PartBorder>    render_start_list;
+  int                  render_object_count;
+
+  void addCollectionToIndex(const KObjectCollection* collection);
+
 signals:
   void loaded();
+
+public:
+  KRenderMap(const QString& path);
+  ~KRenderMap();
+  void clear();
+  void loadMain(bool load_objects);
+  void loadTile(int tile_idx, QRectF tile_rect_m);
+};
+
+struct KRenderMapCollection: public QVector<KRenderMap*>
+{
+  virtual ~KRenderMapCollection();
 };
 
 class KEditableMap: public KMap
@@ -147,11 +166,6 @@ public:
   KEditableMap(const QString& path);
   void addObjects(const QVector<KMapObject*>& obj_list,
                   int                         max_objects_per_tile);
-};
-
-struct KMapCollection: public QVector<KMap*>
-{
-  virtual ~KMapCollection();
 };
 
 #endif  // KMAP_H

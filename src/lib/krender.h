@@ -50,27 +50,27 @@ class KRender: public QThread
   bool    getting_pixmap_enabled = false;
   QString selected_category_name;
 
-  QPointF        center_m;
-  QSize          pixmap_size   = {100, 100};
-  double         pixel_size_mm = 0.1;
-  KMapCollection maps;
-  QFont          font;
+  QPointF              center_m;
+  QSize                pixmap_size   = {100, 100};
+  double               pixel_size_mm = 0.1;
+  KRenderMapCollection maps;
+  QFont                font;
 
-  QVector<DrawTextEntry> draw_text_array[KMap::render_count];
-  QVector<NameHolder>    name_holder_array[KMap::render_count];
+  QVector<DrawTextEntry> draw_text_array[KRenderMap::render_count];
+  QVector<NameHolder>    name_holder_array[KRenderMap::render_count];
   QVector<QRect>         text_rect_array;
   QSizeF                 size_m;
   QPointF                render_top_left_m;
   QRectF                 render_frame_m;
   QElapsedTimer          yield_timer;
   QVector<QRect>         point_object_text_rects;
-  QVector<KMapObject*>   rendered_objects[KMap::render_count];
+  QVector<KMapObject*>   rendered_objects[KRenderMap::render_count];
 
   void        run();
   void        start() = delete;
   const KMap* insertMap(int idx, QString path, bool load_now);
-  void        renderMap(QPainter* p, KMap* map, int render_idx);
-  void        render(QPainter* p, QVector<KMap*> render_maps,
+  void        renderMap(QPainter* p, KRenderMap* map, int render_idx);
+  void        render(QPainter* p, QVector<KRenderMap*> render_maps,
                      int render_idx);
 
   bool checkMipRange(const KMapObject* obj);
@@ -122,12 +122,12 @@ public:
   static void    paintOutlinedText(QPainter* p, const QString& text,
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
-  const KMapCollection* getMaps() const;
-  void                  selectCategory(const QString&);
-  void                  renderMap();
-  void                  renderUserObjects();
-  void                  stopAndWait();
-  void                  enableLoading(bool);
+  const KRenderMapCollection* getMaps() const;
+  void                        selectCategory(const QString&);
+  void                        renderMap();
+  void                        renderUserObjects();
+  void                        stopAndWait();
+  void                        enableLoading(bool);
 
   QPoint kcoor2pix(KGeoCoor) const;
 

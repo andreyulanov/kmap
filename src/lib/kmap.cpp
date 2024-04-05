@@ -455,13 +455,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
 
   void KMap::clear()
   {
-    KLocker big_locker(&main_lock, KLocker::Write);
-    if (!big_locker.hasLocked())
-      return;
-    KLocker small_locker(&tile_lock, KLocker::Write);
-    if (!small_locker.hasLocked())
-      return;
-
     if (main.status != KObjectCollection::Loaded)
       return;
     if (main.status == KObjectCollection::Loading)
@@ -480,11 +473,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     tiles.clear();
     shapes.clear();
     qDeleteAll(shapes);
-    for (int i = 0; i < max_layer_count; i++)
-      render_data[i].clear();
-    main.status         = KObjectCollection::Null;
-    render_object_count = 0;
-    render_start_list.clear();
+    main.status = KObjectCollection::Null;
   }
 
   void KMap::save(QString new_path)
@@ -502,7 +491,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       return;
     }
 
-    QReadLocker locker(&main_lock);
     write(&f, QString("kmap"));
     write(&f, frame);
     char has_borders = (borders.count() > 0);
@@ -659,10 +647,6 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     tiles.resize(small_count);
     for (auto& part: tiles)
       part = nullptr;
-    QWriteLocker big_locker(&main_lock);
-    addCollectionToIndex(&main);
-    main.status = KObjectCollection::Loaded;
-    loaded();
   }
 
   void KMap::loadAll()
@@ -738,6 +722,47 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
       obj->load(&shapes, pos, ba);
       obj->tile_frame_m = tile_rect_m;
     }
+  }
+
+  KRenderMap::KRenderMap(const QString& path): KMap(path)
+  {
+  }
+
+  KRenderMap::~KRenderMap()
+  {
+    clear();
+  }
+
+  void KRenderMap::clear()
+  {
+    KLocker big_locker(&main_lock, KLocker::Write);
+    if (!big_locker.hasLocked())
+      return;
+    KLocker small_locker(&tile_lock, KLocker::Write);
+    if (!small_locker.hasLocked())
+      return;
+    KMap::clear();
+    for (int i = 0; i < max_layer_count; i++)
+      render_data[i].clear();
+    render_object_count = 0;
+    render_start_list.clear();
+  }
+
+  void KRenderMap::loadMain(bool load_objects)
+  {
+    KMap::loadMain(load_objects);
+    if (load_objects)
+    {
+      QWriteLocker big_locker(&main_lock);
+      addCollectionToIndex(&main);
+      main.status = KObjectCollection::Loaded;
+      loaded();
+    }
+  }
+
+  void KRenderMap::loadTile(int tile_idx, QRectF tile_rect_m)
+  {
+    KMap::loadTile(tile_idx, tile_rect_m);
     QWriteLocker small_locker(&tile_lock);
     addCollectionToIndex(tiles[tile_idx]);
     tiles[tile_idx]->status = KObjectCollection::Loaded;
@@ -780,7 +805,8 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     }
   }
 
-  void KMap::addCollectionToIndex(const KObjectCollection* collection)
+  void KRenderMap::addCollectionToIndex(
+      const KObjectCollection* collection)
   {
     for (auto& obj: *collection)
       render_data[obj->shape->layer].append(obj);
@@ -811,7 +837,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     }
   }
 
-  KMapCollection::~KMapCollection()
+  KRenderMapCollection::~KRenderMapCollection()
   {
     qDeleteAll(*this);
   }

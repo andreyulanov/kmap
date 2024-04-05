@@ -47,8 +47,8 @@ const KMap* KRender::addMap(QString path, bool load_now)
 
 const KMap* KRender::insertMap(int idx, QString path, bool load_now)
 {
-  auto map = new KMap(path);
-  connect(map, &KMap::loaded, this, &KRender::onLoaded,
+  auto map = new KRenderMap(path);
+  connect(map, &KRenderMap::loaded, this, &KRender::onLoaded,
           Qt::UniqueConnection);
   map->loadMain(load_now);
   maps.insert(idx, map);
@@ -120,7 +120,7 @@ const QPixmap* KRender::getPixmap() const
   return getting_pixmap_enabled ? &render_pixmap : nullptr;
 }
 
-const KMapCollection* KRender::getMaps() const
+const KRenderMapCollection* KRender::getMaps() const
 {
   return &maps;
 }
@@ -223,7 +223,7 @@ void KRender::checkLoad()
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (!tile && tile_rect_m.intersects(draw_rect_m) &&
               render_mip < map->tile_mip)
-            QtConcurrent::run(map, &KMap::loadTile, tile_idx,
+            QtConcurrent::run(map, &KRenderMap::loadTile, tile_idx,
                               tile_rect_m);
           tile_idx++;
         }
@@ -735,7 +735,7 @@ void KRender::checkYieldResult()
 bool KRender::paintLineNames(QPainter* p)
 {
   text_rect_array.clear();
-  for (int render_idx = 0; render_idx < KMap::render_count;
+  for (int render_idx = 0; render_idx < KRenderMap::render_count;
        render_idx++)
     for (auto nh: name_holder_array[render_idx])
     {
@@ -769,7 +769,7 @@ bool KRender::paintLineNames(QPainter* p)
 
 bool KRender::paintPolygonNames(QPainter* p)
 {
-  for (int render_idx = 0; render_idx < KMap::render_count;
+  for (int render_idx = 0; render_idx < KRenderMap::render_count;
        render_idx++)
     for (auto& dte: draw_text_array[render_idx])
     {
@@ -792,7 +792,7 @@ bool KRender::paintPolygonNames(QPainter* p)
   return true;
 }
 
-void KRender::render(QPainter* p, QVector<KMap*> render_maps,
+void KRender::render(QPainter* p, QVector<KRenderMap*> render_maps,
                      int render_idx)
 {
   for (auto map: render_maps)
@@ -807,7 +807,7 @@ void KRender::render(QPainter* p, QVector<KMap*> render_maps,
   }
 }
 
-void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
+void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
 {
   if (!map || render_idx > map->render_start_list.count() - 1)
     return;
@@ -818,7 +818,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
   auto render_frame_m = getDrawRectM();
 
   for (int layer_idx = start.layer_idx;
-       layer_idx < KMap::max_layer_count; layer_idx++)
+       layer_idx < KRenderMap::max_layer_count; layer_idx++)
   {
     int start_obj_idx = 0;
     if (layer_idx == start.layer_idx)
@@ -831,7 +831,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
       object_count++;
       if (object_count == map->render_object_count)
       {
-        if (render_idx == KMap::render_count - 1)
+        if (render_idx == KRenderMap::render_count - 1)
           paintUserObjects(p);
         return;
       }
@@ -846,7 +846,7 @@ void KRender::renderMap(QPainter* p, KMap* map, int render_idx)
 
       if (!paintObject(p, obj, render_idx))
       {
-        if (render_idx == KMap::render_count - 1)
+        if (render_idx == KRenderMap::render_count - 1)
           paintUserObjects(p);
         emit rendered(0);
         return;
@@ -894,7 +894,7 @@ void KRender::run()
   for (auto r: rendered_objects)
     r.clear();
 
-  for (int i = 0; i < KMap::render_count; i++)
+  for (int i = 0; i < KRenderMap::render_count; i++)
   {
     draw_text_array[i].clear();
     name_holder_array[i].clear();
@@ -945,7 +945,7 @@ void KRender::run()
       intersecting_maps.append(map_idx);
   }
 
-  QVector<KMap*> render_maps;
+  QVector<KRenderMap*> render_maps;
   for (int map_idx = -1; auto& map: maps)
   {
     map_idx++;
@@ -976,7 +976,7 @@ void KRender::run()
   }
 
   QList<RenderEntry*> render_list;
-  for (int render_idx = 1; render_idx < KMap::render_count;
+  for (int render_idx = 1; render_idx < KRenderMap::render_count;
        render_idx++)
   {
     auto render =
