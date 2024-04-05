@@ -404,7 +404,7 @@ int main(int argc, char* argv[])
     map.addObjects(obj_list, 500000);
 
     qDebug() << "  saving...";
-    map.save(KMap::Compression::Gzip9);
+    map.save();
 
     qDeleteAll(obj_list);
 

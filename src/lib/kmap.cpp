@@ -482,14 +482,11 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     render_start_list.clear();
   }
 
-  void KMap::save(Compression compression, QString new_path)
+  void KMap::save(QString new_path)
   {
     using namespace KSerialize;
 
-    if (compression == Compression::Uncompressed)
-      compression_level = 0;
-    else
-      compression_level = int(compression);
+    compression_level = 9;
 
     auto _path = path;
     if (!new_path.isEmpty())

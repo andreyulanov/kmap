@@ -35,5 +35,5 @@ int main(int argc, char* argv[])
   }
   qDebug() << "saving united map...";
   if (united_map)
-    united_map->save(KMap::Compression::Gzip9, result_path);
+    united_map->save(result_path);
 }

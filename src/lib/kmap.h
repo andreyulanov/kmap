@@ -112,20 +112,6 @@ public:
   static constexpr int    border_coor_precision_coef = 10000;
   static constexpr double wrap_longitude             = -168.5;
 
-  enum class Compression
-  {
-    Uncompressed,
-    Gzip1,
-    Gzip2,
-    Gzip3,
-    Gzip4,
-    Gzip5,
-    Gzip6,
-    Gzip7,
-    Gzip8,
-    Gzip9
-  };
-
   QString                     path;
   int                         compression_level;
   double                      main_mip = 0;
@@ -144,7 +130,7 @@ public:
 
   KMap(const QString& path);
   virtual ~KMap();
-  void save(Compression compression, QString new_path = "");
+  void save(QString new_path = "");
   void loadMain(bool load_objects);
   void loadTile(int tile_idx, QRectF tile_rect_m);
   void loadAll();
