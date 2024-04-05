@@ -793,6 +793,11 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
   {
   }
 
+  void KEditableMap::setShapes(QVector<KShape*> v)
+  {
+    shapes = v;
+  }
+
   void KEditableMap::addObjects(const QVector<KMapObject*>& obj_list,
                                 int max_objects_per_tile)
   {

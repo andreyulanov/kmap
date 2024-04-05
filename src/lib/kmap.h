@@ -110,8 +110,10 @@ class KMap
   double  main_mip = 0;
   double  tile_mip = 0;
 
+protected:
+  QVector<KShape*> shapes;
+
 public:
-  QVector<KShape*>            shapes;
   KGeoRect                    frame;
   QVector<KGeoPolygon>        borders;
   QVector<QPolygonF>          borders_m;
@@ -173,6 +175,7 @@ public:
   KEditableMap(const QString& path);
   void addObjects(const QVector<KMapObject*>& obj_list,
                   int                         max_objects_per_tile);
+  void setShapes(QVector<KShape*>);
 };
 
 #endif  // KMAP_H

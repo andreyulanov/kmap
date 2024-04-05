@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
                     "borders!";
     }
 
-    map.shapes = *shape_list;
+    map.setShapes(*shape_list);
     map.setMainMip(shape_man.main_mip);
     map.setTileMip(shape_man.tile_mip);
     QVector<KMapObject*> obj_list;
