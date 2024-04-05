@@ -464,7 +464,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     return tiles;
   }
 
-  bool KMap::intersects(QPolygonF polygon_m) const
+  bool KRenderMap::intersects(QPolygonF polygon_m) const
   {
     for (auto border_m: borders_m)
       if (border_m.intersects(polygon_m))

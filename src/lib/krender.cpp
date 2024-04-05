@@ -159,8 +159,8 @@ void KRender::checkUnload()
   }
 }
 
-bool KRender::needToLoadMap(const KMap*   map,
-                            const QRectF& draw_rect_m)
+bool KRender::needToLoadMap(const KRenderMap* map,
+                            const QRectF&     draw_rect_m)
 {
   if (map->getMainMip() > 0 && render_mip > map->getMainMip())
     return false;

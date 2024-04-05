@@ -94,7 +94,7 @@ class KRender: public QThread
   void     paintLineObject(QPainter* painter, const KMapObject* obj,
                            int render_idx);
   QRectF   getDrawRectM() const;
-  bool     needToLoadMap(const KMap*, const QRectF& draw_rect);
+  bool     needToLoadMap(const KRenderMap *, const QRectF& draw_rect);
   void     checkLoad();
   void     checkUnload();
   void     onLoaded();

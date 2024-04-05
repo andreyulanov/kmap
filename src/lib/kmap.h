@@ -96,7 +96,7 @@ struct KObjectCollection: public QVector<KMapObject*>
   Status status = Null;
 };
 
-struct PartBorder
+struct RenderAddress
 {
   int layer_idx;
   int obj_idx;
@@ -106,14 +106,14 @@ class KMap
 {
   static constexpr int border_coor_precision_coef = 10000;
 
-  QString            path;
-  double             main_mip = 0;
-  double             tile_mip = 0;
-  KGeoRect           frame;
-  QVector<QPolygonF> borders_m;
+  QString  path;
+  double   main_mip = 0;
+  double   tile_mip = 0;
+  KGeoRect frame;
 
 protected:
   QVector<KShape*>            shapes;
+  QVector<QPolygonF>          borders_m;
   QVector<KGeoPolygon>        borders;
   KObjectCollection           main;
   QVector<KObjectCollection*> tiles;
@@ -127,7 +127,6 @@ public:
   void loadAll();
   void clear();
   void add(KMap*);
-  bool intersects(QPolygonF polygon) const;
 
   void   setMainMip(double);
   double getMainMip() const;
@@ -153,7 +152,7 @@ public:
   QVector<KMapObject*> render_data[max_layer_count];
   QReadWriteLock       main_lock;
   QReadWriteLock       tile_lock;
-  QList<PartBorder>    render_start_list;
+  QList<RenderAddress> render_start_list;
   int                  render_object_count;
 
   void addCollectionToIndex(const KObjectCollection* collection);
@@ -167,6 +166,7 @@ public:
   void clear();
   void loadMain(bool load_objects);
   void loadTile(int tile_idx, QRectF tile_rect_m);
+  bool intersects(QPolygonF polygon) const;
 };
 
 struct KRenderMapCollection: public QVector<KRenderMap*>
