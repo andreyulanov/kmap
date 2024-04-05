@@ -424,6 +424,26 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     clear();
   }
 
+  void KMap::setMainMip(double v)
+  {
+    main_mip = v;
+  }
+
+  double KMap::getMainMip() const
+  {
+    return main_mip;
+  }
+
+  void KMap::setTileMip(double v)
+  {
+    tile_mip = v;
+  }
+
+  double KMap::getTileMip() const
+  {
+    return tile_mip;
+  }
+
   bool KMap::intersects(QPolygonF polygon_m) const
   {
     for (auto border_m: borders_m)
@@ -786,7 +806,8 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     auto map_top_left_m = frame.top_left.toMeters();
     for (auto& obj: obj_list)
     {
-      if (obj->shape->max_mip == 0 || obj->shape->max_mip > tile_mip)
+      if (obj->shape->max_mip == 0 ||
+          obj->shape->max_mip > getTileMip())
         main.append(obj);
       else
       {

@@ -104,12 +104,13 @@ struct PartBorder
 
 class KMap
 {
-public:
   static constexpr int border_coor_precision_coef = 10000;
 
-  QString                     path;
-  double                      main_mip = 0;
-  double                      tile_mip = 0;
+  QString path;
+  double  main_mip = 0;
+  double  tile_mip = 0;
+
+public:
   QVector<KShape*>            shapes;
   KGeoRect                    frame;
   QVector<KGeoPolygon>        borders;
@@ -126,6 +127,12 @@ public:
   void clear();
   void add(KMap*);
   bool intersects(QPolygonF polygon) const;
+
+  void   setMainMip(double);
+  double getMainMip() const;
+
+  void   setTileMip(double);
+  double getTileMip() const;
 };
 
 class KRenderMap: public QObject, public KMap

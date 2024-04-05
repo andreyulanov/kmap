@@ -163,7 +163,7 @@ void KRender::checkUnload()
 bool KRender::needToLoadMap(const KMap*   map,
                             const QRectF& draw_rect_m)
 {
-  if (map->main_mip > 0 && render_mip > map->main_mip)
+  if (map->getMainMip() > 0 && render_mip > map->getMainMip())
     return false;
   auto map_rect_m       = map->frame.toMeters();
   bool frame_intersects = draw_rect_m.intersects(map_rect_m);
@@ -222,7 +222,7 @@ void KRender::checkLoad()
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (!tile && tile_rect_m.intersects(draw_rect_m) &&
-              render_mip < map->tile_mip)
+              render_mip < map->getTileMip())
             QtConcurrent::run(map, &KRenderMap::loadTile, tile_idx,
                               tile_rect_m);
           tile_idx++;
@@ -935,7 +935,7 @@ void KRender::run()
   auto         draw_rect = getDrawRectM();
   for (int map_idx = -1; auto& map: maps)
   {
-    if (map->main_mip > 0 && render_mip > map->main_mip)
+    if (map->getMainMip() > 0 && render_mip > map->getMainMip())
       continue;
     map_idx++;
     if (map_idx == 0)

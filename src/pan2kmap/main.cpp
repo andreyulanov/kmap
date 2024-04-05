@@ -142,16 +142,16 @@ int main(int argc, char* argv[])
           }
         }
         if (!found_borders)
-          qDebug() << "ERROR: no borders found for" << map.path;
+          qDebug() << "ERROR: no borders found for" << map_name;
       }
       else
         qDebug() << "ERROR: world map not found, could not add map "
                     "borders!";
     }
 
-    map.shapes   = *shape_list;
-    map.main_mip = shape_man.main_mip;
-    map.tile_mip = shape_man.tile_mip;
+    map.shapes = *shape_list;
+    map.setMainMip(shape_man.main_mip);
+    map.setTileMip(shape_man.tile_mip);
     QVector<KMapObject*> obj_list;
     DFRAME               df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
