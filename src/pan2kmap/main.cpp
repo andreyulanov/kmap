@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
         KGeoCoor::fromDegs(rad2deg(df.X2), rad2deg(df.Y1));
     auto bottom_right =
         KGeoCoor::fromDegs(rad2deg(df.X1), rad2deg(df.Y2));
-    map.frame = {top_left, bottom_right};
+    map.setFrame({top_left, bottom_right});
 
     int  object_count = mapGetObjectCount(hMap, 1);
     HOBJ info         = mapCreateSiteObject(hMap, hMap);

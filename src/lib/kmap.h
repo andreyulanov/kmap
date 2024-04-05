@@ -106,15 +106,15 @@ class KMap
 {
   static constexpr int border_coor_precision_coef = 10000;
 
-  QString path;
-  double  main_mip = 0;
-  double  tile_mip = 0;
+  QString  path;
+  double   main_mip = 0;
+  double   tile_mip = 0;
+  KGeoRect frame;
 
 protected:
   QVector<KShape*> shapes;
 
 public:
-  KGeoRect                    frame;
   QVector<KGeoPolygon>        borders;
   QVector<QPolygonF>          borders_m;
   KObjectCollection           main;
@@ -122,7 +122,7 @@ public:
 
   KMap(const QString& path);
   virtual ~KMap();
-  void save(QString new_path = "");
+  void save(QString new_path = "") const;
   void loadMain(bool load_objects);
   void loadTile(int tile_idx, QRectF tile_rect_m);
   void loadAll();
@@ -135,6 +135,9 @@ public:
 
   void   setTileMip(double);
   double getTileMip() const;
+
+  void     setFrame(KGeoRect);
+  KGeoRect getFrame() const;
 };
 
 class KRenderMap: public QObject, public KMap

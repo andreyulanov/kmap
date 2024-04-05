@@ -444,6 +444,16 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     return tile_mip;
   }
 
+  void KMap::setFrame(KGeoRect v)
+  {
+    frame = v;
+  }
+
+  KGeoRect KMap::getFrame() const
+  {
+    return frame;
+  }
+
   bool KMap::intersects(QPolygonF polygon_m) const
   {
     for (auto border_m: borders_m)
@@ -496,7 +506,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     main.status = KObjectCollection::Null;
   }
 
-  void KMap::save(QString new_path)
+  void KMap::save(QString new_path) const
   {
     using namespace KSerialize;
 
@@ -520,7 +530,7 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     {
       QByteArray ba;
       write(ba, borders.count());
-      for (auto& border: borders)
+      for (auto border: borders)
         border.save(ba, border_coor_precision_coef);
       ba = qCompress(ba, 9);
       write(&f, ba.count());
@@ -807,8 +817,8 @@ KGeoCoor KGeoCoor::inc(KGeoCoor step) const
     tiles.resize(tile_num);
     for (auto& tile: tiles)
       tile = nullptr;
-    auto map_size_m     = frame.getSizeMeters();
-    auto map_top_left_m = frame.top_left.toMeters();
+    auto map_size_m     = getFrame().getSizeMeters();
+    auto map_top_left_m = getFrame().top_left.toMeters();
     for (auto& obj: obj_list)
     {
       if (obj->shape->max_mip == 0 ||

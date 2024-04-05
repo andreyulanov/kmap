@@ -164,7 +164,7 @@ bool KRender::needToLoadMap(const KMap*   map,
 {
   if (map->getMainMip() > 0 && render_mip > map->getMainMip())
     return false;
-  auto map_rect_m       = map->frame.toMeters();
+  auto map_rect_m       = map->getFrame().toMeters();
   bool frame_intersects = draw_rect_m.intersects(map_rect_m);
   if (!frame_intersects)
     return false;
@@ -190,7 +190,7 @@ void KRender::checkLoad()
   auto draw_rect_m = getDrawRectM();
   for (auto& map: maps)
   {
-    auto map_rect_m = map->frame.toMeters();
+    auto map_rect_m = map->getFrame().toMeters();
 
     if (!needToLoadMap(map, draw_rect_m))
       continue;
@@ -960,7 +960,7 @@ void KRender::run()
     if (map_idx > 0 && !needToLoadMap(map, render_frame_m))
       continue;
 
-    auto map_rect_m = map->frame.toMeters();
+    auto map_rect_m = map->getFrame().toMeters();
     if (map_idx > 0 && !render_frame_m.intersects(map_rect_m))
       continue;
 
