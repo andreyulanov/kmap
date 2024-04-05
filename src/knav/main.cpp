@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
   KMapFetcher map_fetcher(mapw_settings.map_dir, mapw.getWorldMap());
   KShapeManager          kvo_shape_man(mmc_path + "/class");
   KTrackManager          track_man(mmc_path + "/tracks");
-  KPortableObjectManager object_man(mmc_path + "/objects",
+  KObjectManager object_man(mmc_path + "/objects",
                                     pixel_size_mm);
   KAutoScroll            auto_scroll;
 
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
   QObject::connect(&mapw, &KRenderWidget::mouseReleased, &auto_scroll,
                    &KAutoScroll::start);
   QObject::connect(&mapw, &KRenderWidget::tapped, &object_man,
-                   &KPortableObjectManager::addPoint);
+                   &KObjectManager::addPoint);
   QObject::connect(&mapw, &KRenderWidget::pinchStarted, &auto_scroll,
                    &KAutoScroll::stop);
   QObject::connect(&mapw, &KRenderWidget::startedRender, &map_fetcher,
@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
   QObject::connect(&controls, &KControls::switchRecording, &track_man,
                    &KTrackManager::onSwitchRecording);
   QObject::connect(&controls, &KControls::acceptObject, &object_man,
-                   &KPortableObjectManager::acceptObject);
+                   &KObjectManager::acceptObject);
   QObject::connect(&track_man, &KTrackManager::switchRecording,
                    [&track_man, &editw]()
                    {
@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
                    &kvo_shape_man, &KShapeManager::getShapeImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
                    &object_man,
-                   &KPortableObjectManager::createObject);
+                   &KObjectManager::createObject);
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
                    &kvo_shape_man, &KShapeManager::getShapeById);
 
@@ -195,11 +195,11 @@ int main(int argc, char* argv[])
                    &track_man, &KTrackManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&mapw, &KRenderWidget::paintUserObjects,
-                   &object_man, &KPortableObjectManager::paint,
+                   &object_man, &KObjectManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::kcoor2pix, &mapw,
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KPortableObjectManager::kcoor2pix,
+  QObject::connect(&object_man, &KObjectManager::kcoor2pix,
                    &mapw, &KRenderWidget::kcoor2pix,
                    Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2pix, &mapw,
@@ -207,9 +207,9 @@ int main(int argc, char* argv[])
 
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KPortableObjectManager::updated,
+  QObject::connect(&object_man, &KObjectManager::updated,
                    &mapw, &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KPortableObjectManager::finishEdit,
+  QObject::connect(&object_man, &KObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 
   QGeoPositionInfoSource* geo =

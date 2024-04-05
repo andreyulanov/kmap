@@ -1,9 +1,9 @@
-#ifndef KPORTABLEOBJECT_H
-#define KPORTABLEOBJECT_H
+#ifndef KOBJECT_H
+#define KOBJECT_H
 
 #include "kmap.h"
 
-struct KPortableObject
+struct KObject
 {
   QString                   name;
   KShape::Type              type         = KShape::None;
@@ -24,14 +24,14 @@ struct KPortableObject
   int                       getWidthPix(double pixel_size_mm);
 };
 
-class KPortableObjectManager: public QObject
+class KObjectManager: public QObject
 {
   Q_OBJECT
 
   double                   pixel_size_mm = 0;
   QString                  objects_dir;
-  QVector<KPortableObject> objects;
-  KPortableObject          active_object;
+  QVector<KObject> objects;
+  KObject          active_object;
   QString                  generateObjectFileName();
 
 signals:
@@ -40,12 +40,12 @@ signals:
   void   finishEdit();
 
 public:
-  KPortableObjectManager(QString objects_dir, double pixel_size_mm);
+  KObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
-  void paintObject(QPainter* p, KPortableObject obj);
+  void paintObject(QPainter* p, KObject obj);
   void addPoint(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();
 };
 
-#endif  // KPORTABLEOBJECT_H
+#endif  // KOBJECT_H

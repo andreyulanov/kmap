@@ -1,10 +1,10 @@
-#include "kportableobject.h"
+#include "kobject.h"
 #include "kserialize.h"
 #include <math.h>
 #include <QDir>
 #include <QDebug>
 
-void KPortableObject::save(QString path)
+void KObject::save(QString path)
 {
   QFile f(path);
   if (!f.open(QIODevice::WriteOnly))
@@ -50,7 +50,7 @@ void KPortableObject::save(QString path)
   write(&f, file_attr);
 }
 
-void KPortableObject::load(QString path, double pixel_size_mm)
+void KObject::load(QString path, double pixel_size_mm)
 {
   QFile f(path);
   if (!f.open(QIODevice::ReadOnly))
@@ -112,17 +112,17 @@ void KPortableObject::load(QString path, double pixel_size_mm)
   read(&f, file_attr);
 }
 
-bool KPortableObject::isEmpty()
+bool KObject::isEmpty()
 {
   return polygons.isEmpty();
 }
 
-int KPortableObject::getWidthPix(double pixel_size_mm)
+int KObject::getWidthPix(double pixel_size_mm)
 {
   return round(pen_width_mm / pixel_size_mm);
 }
 
-KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
+KObjectManager::KObjectManager(QString _objects_dir,
                                                double  _pixel_size_mm)
 {
   pixel_size_mm = _pixel_size_mm;
@@ -132,7 +132,7 @@ KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
   auto fi_list = dir.entryInfoList(QDir::Files, QDir::Name);
   for (auto fi: fi_list)
   {
-    KPortableObject obj;
+    KObject obj;
     obj.load(fi.absoluteFilePath(), pixel_size_mm);
     objects.append(obj);
   }
@@ -140,14 +140,14 @@ KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
   pixel_size_mm = _pixel_size_mm;
 }
 
-QString KPortableObjectManager::generateObjectFileName()
+QString KObjectManager::generateObjectFileName()
 {
   return objects_dir + "/" +
          QDateTime::currentDateTime().toString("yyyyMMd-hhmmss") +
          ".kobject";
 }
 
-void KPortableObjectManager::createObject(KShape sh)
+void KObjectManager::createObject(KShape sh)
 {
   active_object.type         = sh.type;
   active_object.style        = sh.style;
@@ -158,8 +158,8 @@ void KPortableObjectManager::createObject(KShape sh)
   active_object.image        = sh.image;
 }
 
-void KPortableObjectManager::paintObject(QPainter*       p,
-                                         KPortableObject obj)
+void KObjectManager::paintObject(QPainter*       p,
+                                         KObject obj)
 {
   if (obj.polygons.isEmpty())
     return;
@@ -221,7 +221,7 @@ void KPortableObjectManager::paintObject(QPainter*       p,
   }
 }
 
-void KPortableObjectManager::addPoint(KGeoCoor coor)
+void KObjectManager::addPoint(KGeoCoor coor)
 {
   if (active_object.type == KShape::None)
     return;
@@ -253,14 +253,14 @@ void KPortableObjectManager::addPoint(KGeoCoor coor)
   updated();
 }
 
-void KPortableObjectManager::paint(QPainter* p)
+void KObjectManager::paint(QPainter* p)
 {
   for (auto& obj: objects)
     paintObject(p, obj);
   paintObject(p, active_object);
 }
 
-void KPortableObjectManager::acceptObject()
+void KObjectManager::acceptObject()
 {
   active_object.save(generateObjectFileName());
   objects.append(active_object);

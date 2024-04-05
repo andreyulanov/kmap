@@ -9,7 +9,7 @@ SOURCES += \
  ../lib/kdatetime.cpp \
 ../lib/klocker.cpp \
 ../lib/kmap.cpp \
- ../lib/kportableobject.cpp \
+ ../lib/kobject.cpp \
 ../lib/krender.cpp \
 ../lib/kshape.cpp \
 kautoscroll.cpp \
@@ -27,7 +27,7 @@ HEADERS += \
  ../lib/kdatetime.h \
 ../lib/klocker.h \
 ../lib/kmap.h \
- ../lib/kportableobject.h \
+ ../lib/kobject.h \
 ../lib/krender.h \
 ../lib/kshape.h \
 kautoscroll.h \

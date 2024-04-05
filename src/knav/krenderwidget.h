@@ -8,7 +8,7 @@
 #include <QGestureEvent>
 #include <QWheelEvent>
 #include "krender.h"
-#include "kportableobject.h"
+#include "kobject.h"
 #include <QOpenGLWidget>
 
 class KRenderWidget: public QWidget
@@ -27,6 +27,12 @@ public:
     double  render_window_size_coef = 2;
     QColor  background_color        = QColor(166, 220, 238);
     int     update_interval_ms      = 100;
+  };
+
+  struct ObjectSearchResult
+  {
+    QVector<KObject>    objects;
+    QVector<KMapObject> map_objects;
   };
 
 private:
@@ -89,19 +95,21 @@ signals:
 
 public:
   KRenderWidget(Settings settings);
-  void        renderMap();
-  void        renderUserObjects();
-  void        setViewPoint(const KGeoCoor& deg, double mip);
-  void        setMaxZoomSpeed(double);
-  void        addMap(QString path, bool load_now);
-  const KMap* getWorldMap();
-  void        scroll(QPoint diff);
-  void        scrollTo(const KGeoCoor& coor);
-  void        zoomIn();
-  void        zoomOut();
-  QPoint      deg2pix(const KGeoCoor&) const;
-  QPoint      kcoor2pix(const KGeoCoor&) const;
-  KGeoCoor    pix2deg(const QPoint&) const;
-  void        setScrollingEnabled(bool);
+  void               renderMap();
+  void               renderUserObjects();
+  void               setViewPoint(const KGeoCoor& deg, double mip);
+  void               setMaxZoomSpeed(double);
+  void               addMap(QString path, bool load_now);
+  const KMap*        getWorldMap();
+  void               scroll(QPoint diff);
+  void               scrollTo(const KGeoCoor& coor);
+  void               zoomIn();
+  void               zoomOut();
+  QPoint             deg2pix(const KGeoCoor&) const;
+  QPoint             kcoor2pix(const KGeoCoor&) const;
+  KGeoCoor           pix2deg(const QPoint&) const;
+  void               setScrollingEnabled(bool);
+  ObjectSearchResult getObjectsAtPoint(KGeoCoor);
+  ObjectSearchResult getObjectsInsideRect(KGeoRect);
 };
 #endif  // KRENDERWIDGET_H
