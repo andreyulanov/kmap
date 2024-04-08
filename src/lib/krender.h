@@ -64,7 +64,6 @@ class KRender: public QThread
   QRectF                 render_frame_m;
   QElapsedTimer          yield_timer;
   QVector<QRect>         point_object_text_rects;
-  QVector<KMapObject*>   rendered_objects[KRenderMap::render_count];
 
   void run();
   void start() = delete;
@@ -94,7 +93,7 @@ class KRender: public QThread
   void     paintLineObject(QPainter* painter, const KMapObject* obj,
                            int render_idx);
   QRectF   getDrawRectM() const;
-  bool     needToLoadMap(const KRenderMap *, const QRectF& draw_rect);
+  bool     needToLoadMap(const KRenderMap*, const QRectF& draw_rect);
   void     checkLoad();
   void     checkUnload();
   void     onLoaded();

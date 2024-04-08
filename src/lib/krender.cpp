@@ -850,7 +850,6 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
         emit rendered(0);
         return;
       }
-      rendered_objects[render_idx].append(obj);
     }
   }
 }
@@ -890,8 +889,6 @@ void KRender::run()
   render_center_m = center_m;
   render_mip      = mip;
   point_object_text_rects.clear();
-  for (auto r: rendered_objects)
-    r.clear();
 
   for (int i = 0; i < KRenderMap::render_count; i++)
   {
