@@ -1,5 +1,7 @@
 #include "knewobjectwidget.h"
 #include <QPushButton>
+#include <QSpacerItem>
+#include <QSizePolicy>
 #include <QIcon>
 
 KNewObjectWidget::KNewObjectWidget(QSize s)
@@ -7,7 +9,15 @@ KNewObjectWidget::KNewObjectWidget(QSize s)
   setLayout(&root_layout);
   root_layout.setAlignment(Qt::AlignCenter);
   setFixedSize(s);
-  send_chack_box = new QCheckBox("Send", this);
+  root_layout.addSpacerItem(new QSpacerItem(0, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+  QVBoxLayout* options_layout = new QVBoxLayout(&options_group_box);
+  send_chack_box = new QCheckBox("Send", &options_group_box);
+  options_layout->addWidget(send_chack_box);
+  options_group_box.setLayout(options_layout);
+  options_group_box.setAlignment(Qt::AlignLeft);
+  options_group_box.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+  root_layout.addWidget(&options_group_box);
 }
 
 void KNewObjectWidget::addItem(int& posy, QImage image, QString id)

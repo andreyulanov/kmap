@@ -3,6 +3,7 @@
 
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <QGroupBox>
 #include <QPushButton>
 #include <QCheckBox>
 #include "kshape.h"
@@ -12,6 +13,7 @@ class KNewObjectWidget: public QWidget
   Q_OBJECT
 
   QVBoxLayout                 root_layout;
+  QGroupBox					  options_group_box;
   QMap<QPushButton*, QString> button_id_map;
   QCheckBox* send_chack_box;
   void addItem(int& posy, QImage icon, QString text);

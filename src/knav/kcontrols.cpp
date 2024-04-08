@@ -142,7 +142,7 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
                      double step_mm, double button_size_mm):
     find(mapw),
     zoom_in(mapw), zoom_out(mapw), center_position(mapw),
-    orient(mapw), record(mapw), add(mapw), ok(mapw), ok_and_send(mapw)
+    orient(mapw), record(mapw), add(mapw), ok(mapw)
 {
   findw = _findw;
 
@@ -197,21 +197,13 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
   connect(&add, &QPushButton::pressed, this, &KControls::selectShape);
   connect(&add, &QPushButton::pressed, &record, &QWidget::hide);
   connect(&add, &QPushButton::pressed, &ok, &QWidget::show);
-  connect(&add, &QPushButton::pressed, &ok_and_send, &QWidget::show);
   initButton(&ok, QPixmap(":/labels/ok.png"),
              {mapw->width() / 2, mapw->height() / 2 + step * 2},
              button_size_mm);
   connect(&ok, &QPushButton::pressed, &record, &QWidget::show);
   connect(&ok, &QPushButton::pressed, &ok, &QWidget::hide);
-  connect(&ok, &QPushButton::pressed, &ok_and_send, &QWidget::hide);
   connect(&ok, &QPushButton::pressed, this, &KControls::acceptObject);
   ok.hide();
-  initButton(&ok_and_send, QPixmap(":/labels/envelope.png"),
-             {edge, mapw->height() / 2 + step * 2},
-             button_size_mm);
-  connect(&ok_and_send, &QPushButton::pressed, &ok, &QPushButton::pressed);
-  connect(&ok_and_send, &QPushButton::pressed, this, &KControls::sendOnSave);
-  ok_and_send.hide();
 }
 
 void KControls::checkZoomRepeat()

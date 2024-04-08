@@ -390,9 +390,9 @@ int main(int argc, char* argv[])
   });
   KPortableObjectSender sender;
 
-  QObject::connect(&controls, &KControls::sendOnSave,
+  QObject::connect(&newobjw, &KNewObjectWidget::sendObject,
                    &roster_widget, &KRosterWidget::show);
-  QObject::connect(&controls, &KControls::sendOnSave,
+  QObject::connect(&newobjw, &KNewObjectWidget::sendObject,
                    &sender, &KPortableObjectSender::turnOnSendOnReady);
   QObject::connect(&sender, &KPortableObjectSender::send,
                    &bob, &KXmppClient::sendFile);

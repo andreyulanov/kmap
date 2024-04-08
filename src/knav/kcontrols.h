@@ -36,7 +36,6 @@ class KControls: public QObject
   QPushButton record;
   QPushButton add;
   QPushButton ok;
-  QPushButton ok_and_send;
   QPixmap     orient_pixmap;
   KGeoCoor    curr_coor;
   QWidget*    findw = nullptr;
@@ -62,7 +61,6 @@ signals:
   void acceptObject();
   void enableRotation();
   void disableRotation();
-  void sendOnSave();
 
 public:
   KControls(QWidget* w, QWidget* _findw, double edge_mm,

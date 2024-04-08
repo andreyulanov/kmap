@@ -15,7 +15,6 @@
         <file>ok.png</file>
         <file>select.png</file>
         <file>objects.png</file>
-        <file>envelope.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
