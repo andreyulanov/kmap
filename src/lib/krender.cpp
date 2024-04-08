@@ -271,12 +271,11 @@ void KRender::addDrawTextEntry(
   bool can_fit = true;
   for (auto dte: draw_text_array)
   {
-    if (new_dte.shape->id != selected_category_name)
-      if (dte.actual_rect.intersects(new_dte.actual_rect))
-      {
-        can_fit = false;
-        break;
-      }
+    if (dte.actual_rect.intersects(new_dte.actual_rect))
+    {
+      can_fit = false;
+      break;
+    }
   }
   if (can_fit)
     draw_text_array.append(new_dte);
@@ -402,8 +401,7 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
                              pow(obj_frame_m.height(), 2));
   int    obj_span_pix = obj_span_m / render_mip;
   auto   size_pix     = frame.getSizeMeters() / render_mip;
-  if (obj->shape->id != selected_category_name &&
-      obj->shape->reductible)
+  if (obj->shape->reductible)
     if (size_pix.width() < min_object_size_pix ||
         size_pix.height() < min_object_size_pix)
       return;
@@ -435,10 +433,9 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
     {
       auto polygon_size_m = polygon->getFrame().getSizeMeters();
       if (obj->shape->reductible)
-        if (obj->shape->id != selected_category_name)
-          if (polygon_size_m.width() / mip < min_object_size_pix &&
-              polygon_size_m.height() / mip < min_object_size_pix)
-            continue;
+        if (polygon_size_m.width() / mip < min_object_size_pix &&
+            polygon_size_m.height() / mip < min_object_size_pix)
+          continue;
     }
 
     auto pl = poly2pix(*polygon);
@@ -490,8 +487,7 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
                       obj_center.y() - sh->image.height() / 2};
     if (!obj->name.isEmpty())
       pos -= QPoint(0, obj->shape->getWidthPix() + 5);
-    if (obj->shape->id != selected_category_name)
-      p->drawImage(pos, sh->image);
+    p->drawImage(pos, sh->image);
   }
 }
 
@@ -838,9 +834,8 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
       }
       if (!obj)
         continue;
-      if (obj->shape->id != selected_category_name)
-        if (!checkMipRange(obj))
-          continue;
+      if (!checkMipRange(obj))
+        continue;
       if (obj->tile_frame_m.isValid())
         if (!obj->tile_frame_m.intersects(render_frame_m))
           continue;
@@ -1017,11 +1012,6 @@ void KRender::run()
   emit rendered(0);
   if (loading_enabled)
     checkLoad();
-}
-
-void KRender::selectCategory(const QString& v)
-{
-  selected_category_name = v;
 }
 
 void KRender::renderUserObjects()

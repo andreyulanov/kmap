@@ -49,7 +49,6 @@ class KRender: public QThread
   bool    rendering_enabled      = false;
   bool    loading_enabled        = true;
   bool    getting_pixmap_enabled = false;
-  QString selected_category_name;
 
   QPointF              center_m;
   QSize                pixmap_size   = {100, 100};
@@ -123,7 +122,6 @@ public:
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
   const KRenderMapCollection* getMaps() const;
-  void                        selectCategory(const QString&);
   void                        renderMap();
   void                        renderUserObjects();
   void                        stopAndWait();
