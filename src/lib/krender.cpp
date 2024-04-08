@@ -516,7 +516,7 @@ void KRender::paintLineObject(QPainter*         painter,
   int obj_name_width = 0;
   if (!obj->name.isEmpty())
     obj_name_width =
-        painter->font().pixelSize() * obj->name.count() * 0.6;
+        painter->font().pixelSize() * obj->name.count() * 0.3;
 
   auto         fixed_w    = sh->getWidthPix();
   int          sizeable_w = 0;
@@ -922,9 +922,9 @@ void KRender::run()
   QFont    f = p0.font();
 
   double font_size =
-      std::min((int)std::round(2.0 / pixel_size_mm / mip), 1);
+      std::min((int)std::round(1.5 / pixel_size_mm / mip), 1);
   font_size =
-      std::clamp(font_size, 2.0 / pixel_size_mm, 3.0 / pixel_size_mm);
+      std::clamp(font_size, 1.5 / pixel_size_mm, 3.0 / pixel_size_mm);
   f.setPixelSize(font_size);
   f.setBold(true);
   p0.setFont(f);
