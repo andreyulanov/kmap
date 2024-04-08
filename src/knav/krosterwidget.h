@@ -28,6 +28,7 @@ public slots:
     void changePresence(const QString &bareJid, const QString &resource);
     void submitButtonPushed();
     void cancelButtonPushed();
+    void clear();
 
 private:
     void addJid(const QString& bareJid);

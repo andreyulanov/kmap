@@ -97,6 +97,11 @@ void KRosterWidget::cancelButtonPushed()
     emit cancel();
 }
 
+void KRosterWidget::clear()
+{
+    jidsTree->clear();
+}
+
 KRosterJid::KRosterJid(const QString& bareJid,
                        const QMap<QString, QXmppPresence> resourcesAndPresences,
                        QTreeWidget* parrent)

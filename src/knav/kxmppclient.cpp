@@ -31,13 +31,26 @@ void KXmppClient::messageReceived(const QXmppMessage &message)
     sendPacket(QXmppMessage("", from, "The functionality of text messages has not yet been implemented"));
 }
 
-void KXmppClient::sendFile(QString jid,
-                           QString filePath,
-                           QString description)
+void KXmppClient::sendFile( QString jid,
+                            QString filePath,
+                            QString description)
 {
     //qDebug() << "The sendFile placeholder does not actually do nothing.";
-    qDebug() << "Sending " << filePath << " to " << jid << " with description " << description;
+    qDebug() << "Sending" << filePath << "to" << jid << "with description" << description;
+    if (!isConnected())
+    {
+        qWarning() << "Attempt to send a file by disconnected client, aborting...";
+        emit needConnection();
+        return;
+    }
     transferManager->sendFile(jid, filePath, description);
+}
+
+void KXmppClient::reconnectToServer(const QString& jid, const QString& password)
+{
+    if (isConnected())
+        disconnectFromServer();
+    connectToServer(jid, password);
 }
 
 QString KXmppClient::generateReceivedFileName(QXmppTransferJob *job)

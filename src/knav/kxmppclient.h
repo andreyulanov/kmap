@@ -14,13 +14,18 @@ public:
     KXmppClient(QString object_dir, QString proxy, QObject *parent = nullptr);
     ~KXmppClient();
 
-    void messageReceived(const QXmppMessage &);
-    Q_SLOT void sendFile(QString jid,
-                  QString filePath,
-                  QString description = QString());
     QString objects_dir;
 
-    Q_SIGNAL void KPortableObjectReceived(KPortableObject*);
+    void messageReceived(const QXmppMessage &);
+
+public slots:
+    void sendFile(QString jid,
+                  QString filePath,
+                  QString description = QString());
+    void reconnectToServer(const QString& jid, const QString& password);
+
+signals:
+    void needConnection();
 
 private:
     QXmppTransferManager *transferManager;

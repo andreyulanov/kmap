@@ -16,6 +16,7 @@ kautoscroll.cpp \
 kcontrols.cpp \
  keditwidget.cpp \
  kfindwidget.cpp \
+    kloginwidget.cpp \
  kmapwidget.cpp \
  knewobjectwidget.cpp \
     kportableobjectsender.cpp \
@@ -37,6 +38,7 @@ kautoscroll.h \
 kcontrols.h \
  keditwidget.h \
  kfindwidget.h \
+    kloginwidget.h \
  kmapwidget.h \
  knewobjectwidget.h \
     kportableobjectsender.h \

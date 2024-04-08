@@ -142,7 +142,7 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
                      double step_mm, double button_size_mm):
     find(mapw),
     zoom_in(mapw), zoom_out(mapw), center_position(mapw),
-    orient(mapw), record(mapw), add(mapw), ok(mapw)
+    orient(mapw), record(mapw), add(mapw), ok(mapw), login_button(mapw)
 {
   findw = _findw;
 
@@ -204,6 +204,9 @@ KControls::KControls(QWidget* mapw, QWidget* _findw, double edge_mm,
   connect(&ok, &QPushButton::pressed, &ok, &QWidget::hide);
   connect(&ok, &QPushButton::pressed, this, &KControls::acceptObject);
   ok.hide();
+  initButton(&login_button, QPixmap(":/labels/in.png"),
+             {edge, mapw->height() / 2 - step * 2}, button_size_mm);
+  connect(&login_button, &QPushButton::pressed, this, &KControls::login);
 }
 
 void KControls::checkZoomRepeat()
