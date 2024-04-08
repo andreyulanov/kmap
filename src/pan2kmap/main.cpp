@@ -366,16 +366,17 @@ int main(int argc, char* argv[])
         continue;
       }
 
-      if (obj->shape->id == "океан, море" ||
-          obj->shape->id == "водоём" ||
-          obj->shape->id == "река (площадной)")
-      {
-        if (obj->polygons.count() > 20)
+      if (is_analyzing_local_map)
+        if (obj->shape->id == "океан, море" ||
+            obj->shape->id == "водоём" ||
+            obj->shape->id == "река (площадной)")
         {
-          auto idx   = shape_man.getShapeIdxById("complex_water");
-          obj->shape = (*shape_list)[idx];
+          if (obj->polygons.count() > 20)
+          {
+            auto idx   = shape_man.getShapeIdxById("complex_water");
+            obj->shape = (*shape_list)[idx];
+          }
         }
-      }
 
       obj_list.append(obj);
     }
