@@ -18,6 +18,7 @@ kcontrols.cpp \
  kfindwidget.cpp \
  kmapwidget.cpp \
  knewobjectwidget.cpp \
+    kportableobjectsender.cpp \
  kposgenerator.cpp \
     krosterwidget.cpp \
  kswitch.cpp \
@@ -38,6 +39,7 @@ kcontrols.h \
  kfindwidget.h \
  kmapwidget.h \
  knewobjectwidget.h \
+    kportableobjectsender.h \
  kposgenerator.h \
     krosterwidget.h \
  kswitch.h \

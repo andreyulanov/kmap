@@ -7,6 +7,7 @@
 #include <QTreeWidgetItem>
 #include <QAbstractItemView>
 #include <QFlags>
+#include <QPushButton>
 #include <qxmpp/QXmppRosterManager.h>
 
 const int jidColumn = 0;
@@ -25,17 +26,26 @@ public:
 public slots:
     void initialise();
     void changePresence(const QString &bareJid, const QString &resource);
+    void submitButtonPushed();
+    void cancelButtonPushed();
 
 private:
     void addJid(const QString& bareJid);
     KRosterJid* findJid(const QString& bareJid);
 
+
 signals:
+    void jidSelected(QList<QString> Jids);
+    void cancel();
 
 protected:
     QVBoxLayout* rootLayout;
+    QHBoxLayout* controlsLayout;
     QTreeWidget* jidsTree;
     QXmppRosterManager* rosterManager;
+    QPushButton* submitButton;
+    QPushButton* cancelButton;
+    QList<QString> selectedJids();
 };
 
 class KRosterJid : public QTreeWidgetItem

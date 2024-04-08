@@ -7,6 +7,7 @@ KNewObjectWidget::KNewObjectWidget(QSize s)
   setLayout(&root_layout);
   root_layout.setAlignment(Qt::AlignCenter);
   setFixedSize(s);
+  send_chack_box = new QCheckBox("Send", this);
 }
 
 void KNewObjectWidget::addItem(int& posy, QImage image, QString id)
@@ -30,6 +31,7 @@ void KNewObjectWidget::onSelected()
   auto b  = dynamic_cast<QPushButton*>(sender());
   auto id = button_id_map.value(b);
   selectedShape(getShapeById(id));
+  emit sendObject();
   hide();
 }
 

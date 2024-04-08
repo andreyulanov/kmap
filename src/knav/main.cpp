@@ -19,6 +19,7 @@
 #include <qxmpp/QXmppClient.h>
 #include <qxmpp/QXmppLogger.h>
 #include <qxmpp/QXmppRosterManager.h>
+#include <kportableobjectsender.h>
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -285,9 +286,9 @@ int main(int argc, char* argv[])
 
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
                    &KMapWidget::render);
-  QObject::connect(&object_man, &KPortableObjectManager::updated,
+  QObject::connect(&object_man, qOverload<>(&KPortableObjectManager::updated),
                    &mapw, &KMapWidget::render);
-  QObject::connect(&object_man, &KPortableObjectManager::finishEdit,
+  QObject::connect(&object_man, qOverload<>(&KPortableObjectManager::finishEdit),
                    &controls, &KControls::finishEdit);
 
   QGeoPositionInfoSource* geo =
@@ -368,7 +369,6 @@ int main(int argc, char* argv[])
   QString proxy 			= QString("proxy.macaw.me");
   QString fileToSendPath	= objects_dir + QString("/file-to-send.kpo");
 
-
   //KXmppClient alice(objects_dir, proxy);
   //alice.logger()->setLogFilePath(aliceLog);
   //alice.logger()->setLoggingType(QXmppLogger::FileLogging);
@@ -382,7 +382,24 @@ int main(int argc, char* argv[])
   //             "Alice, let's test if the file transfer works");
 
 
-  KRosterWidget *rosterWidget = new KRosterWidget(bob.findExtension<QXmppRosterManager>());
-  //rosterWidget->show();
+  KRosterWidget roster_widget(bob.findExtension<QXmppRosterManager>());
+  roster_widget.setFixedSize(screen_size_pix);
+  QObject::connect(&roster_widget, &KRosterWidget::jidSelected, [](QList<QString> jids)
+  {
+      qDebug() << "Selected jids:" << jids;
+  });
+  KPortableObjectSender sender;
+
+  QObject::connect(&controls, &KControls::sendOnSave,
+                   &roster_widget, &KRosterWidget::show);
+  QObject::connect(&controls, &KControls::sendOnSave,
+                   &sender, &KPortableObjectSender::turnOnSendOnReady);
+  QObject::connect(&sender, &KPortableObjectSender::send,
+                   &bob, &KXmppClient::sendFile);
+  QObject::connect(&roster_widget, &KRosterWidget::jidSelected,
+                   &sender, &KPortableObjectSender::setJid);
+  QObject::connect(&object_man, &KPortableObjectManager::saved,
+                   &sender, &KPortableObjectSender::setFilename);
+
   return a.exec();
 }

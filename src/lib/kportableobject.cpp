@@ -123,6 +123,7 @@ int KPortableObject::getWidthPix()
 }
 
 KPortableObjectManager::KPortableObjectManager(QString _objects_dir)
+    :QObject{}
 {
   QDir dir(_objects_dir);
   if (!dir.exists())
@@ -135,6 +136,11 @@ KPortableObjectManager::KPortableObjectManager(QString _objects_dir)
     objects.append(obj);
   }
   objects_dir = _objects_dir;
+
+  connect(this, qOverload<>(&KPortableObjectManager::updated),
+          this, qOverload<>(&KPortableObjectManager::updatedEmitter));
+  connect(this, qOverload<>(&KPortableObjectManager::finishEdit),
+          this, qOverload<>(&KPortableObjectManager::finishEditEmitter));
 }
 
 QString KPortableObjectManager::generateObjectFileName()
@@ -259,10 +265,22 @@ void KPortableObjectManager::paint(QPainter* p)
 
 void KPortableObjectManager::acceptObject()
 {
-  active_object.save(generateObjectFileName());
+  const QString filename = QString(generateObjectFileName());
+  active_object.save(filename);
   objects.append(active_object);
   active_object.polygons.clear();
   active_object.type = KShape::None;
   updated();
   finishEdit();
+  saved(filename);
+}
+
+void KPortableObjectManager::updatedEmitter()
+{
+    emit updated(active_object);
+}
+
+void KPortableObjectManager::finishEditEmitter()
+{
+    emit finishEdit(active_object);
 }

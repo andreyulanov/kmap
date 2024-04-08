@@ -36,7 +36,10 @@ class KPortableObjectManager: public QObject
 signals:
   QPoint kcoor2pix(KGeoCoor);
   void   updated();
+  void   updated(const KPortableObject&);
   void   finishEdit();
+  void   finishEdit(const KPortableObject&);
+  void	 saved(QString);
 
 public:
   KPortableObjectManager(QString objects_dir);
@@ -45,6 +48,11 @@ public:
   void addPoint(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();
+
+private slots:
+  // Catches signals without arguments and emmits its overloaded variants with arguments
+  void updatedEmitter();
+  void finishEditEmitter();
 };
 
 #endif  // KPORTABLEOBJECT_H

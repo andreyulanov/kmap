@@ -9,16 +9,26 @@ KRosterWidget::KRosterWidget(QXmppRosterManager* rosterManager,
     : QWidget{parent}
 {
     this->rosterManager = rosterManager;
-    rootLayout = new QVBoxLayout(this);
-    jidsTree = new QTreeWidget();
+    rootLayout 		= new QVBoxLayout(this);
+    controlsLayout 	= new QHBoxLayout();
+    submitButton 	= new QPushButton("Submit");
+    cancelButton	= new QPushButton("Cancel");
+    jidsTree 		= new QTreeWidget();
     jidsTree->setColumnCount(2);
+
     rootLayout->addWidget(jidsTree);
+    rootLayout->addLayout(controlsLayout);
+    controlsLayout->addWidget(cancelButton);
+    controlsLayout->addWidget(submitButton);
 
     connect(rosterManager, &QXmppRosterManager::rosterReceived,
             this, &KRosterWidget::initialise);
-
     connect(rosterManager, &QXmppRosterManager::presenceChanged,
             this, &KRosterWidget::changePresence);
+    connect(submitButton, &QPushButton::clicked,
+            this, &KRosterWidget::submitButtonPushed);
+    connect(cancelButton, &QPushButton::clicked,
+            this, &KRosterWidget::cancelButtonPushed);
 }
 
 void KRosterWidget::initialise()
@@ -59,6 +69,32 @@ void KRosterWidget::changePresence(const QString &bareJid, const QString &resour
         else
             kRosterResource->updatePresence(rosterManager->getPresence(bareJid, resource));
     }
+}
+
+QList<QString> KRosterWidget::selectedJids()
+{
+    QList<QTreeWidgetItem*> selectedItems = jidsTree->selectedItems();
+    QList<QString> jids;
+    for (QTreeWidgetItem* i : selectedItems)
+    {
+        if (i->parent() == nullptr) // selected top level item i.e Jid
+            jids.append(i->text(jidColumn)); // no resource specified
+        else
+            jids.append(i->parent()->text(jidColumn) + "/" + i->text(resourceColumn));
+    }
+    return jids;
+}
+
+void KRosterWidget::submitButtonPushed()
+{
+    this->hide();
+    emit jidSelected(selectedJids());
+}
+
+void KRosterWidget::cancelButtonPushed()
+{
+    this->hide();
+    emit cancel();
 }
 
 KRosterJid::KRosterJid(const QString& bareJid,
@@ -113,6 +149,7 @@ void KRosterResource::updatePresence(const QXmppPresence& presence)
         case QXmppPresence::Type::Available : parent()->setDisabled(false); setDisabled(false); break;
         case QXmppPresence::Type::Unavailable : setDisabled(true); break;
         // TODO: disable jid if all its resources disabled
+        default: break; //Do nothng
     }
 }
 

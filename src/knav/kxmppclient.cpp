@@ -10,6 +10,7 @@ KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
             this, &KXmppClient::messageReceived);
 
     this->objects_dir = objects_dir;
+    configuration().setResource("knav");
 
     transferManager = new QXmppTransferManager;
     transferManager->setProxy(proxy);
@@ -30,12 +31,13 @@ void KXmppClient::messageReceived(const QXmppMessage &message)
     sendPacket(QXmppMessage("", from, "The functionality of text messages has not yet been implemented"));
 }
 
-void KXmppClient::sendFile(const QString &jid,
-                           const QString &filePath,
-                           const QString &description)
+void KXmppClient::sendFile(QString jid,
+                           QString filePath,
+                           QString description)
 {
-    qDebug() << "The sendFile placeholder does not actually do nothing.";
+    //qDebug() << "The sendFile placeholder does not actually do nothing.";
     qDebug() << "Sending " << filePath << " to " << jid << " with description " << description;
+    transferManager->sendFile(jid, filePath, description);
 }
 
 QString KXmppClient::generateReceivedFileName(QXmppTransferJob *job)

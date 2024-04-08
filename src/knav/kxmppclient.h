@@ -15,9 +15,9 @@ public:
     ~KXmppClient();
 
     void messageReceived(const QXmppMessage &);
-    void sendFile(const QString &jid,
-                  const QString &filePath,
-                  const QString &description = QString());
+    Q_SLOT void sendFile(QString jid,
+                  QString filePath,
+                  QString description = QString());
     QString objects_dir;
 
     Q_SIGNAL void KPortableObjectReceived(KPortableObject*);
