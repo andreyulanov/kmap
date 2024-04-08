@@ -303,10 +303,6 @@ void KMapObject::load(QVector<KShape*>* shape_list, int& pos,
   read(ba, pos, has_name);
   if (has_name)
     read(ba, pos, name);
-  uchar has_name_en;
-  read(ba, pos, has_name_en);
-  if (has_name_en)
-    read(ba, pos, name_en);
 
   read(ba, pos, attributes);
 
@@ -380,9 +376,6 @@ void KMapObject::save(const QVector<KShape*>* shape_list,
   write(ba, (uchar)(name.count() > 0));
   if (!name.isEmpty())
     write(ba, name);
-  write(ba, (uchar)(name_en.count() > 0));
-  if (!name_en.isEmpty())
-    write(ba, name_en);
 
   write(ba, attributes);
 

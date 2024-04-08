@@ -39,13 +39,6 @@ void KObject::save(QString path)
     for (auto point: polygon)
       write(&f, point);
   }
-  if (type == KShape::Polygon)
-  {
-    write(&f, inner_polygon_idx_list.count());
-    for (auto idx: inner_polygon_idx_list)
-      write(&f, idx);
-  }
-
   write(&f, text_attr);
   write(&f, file_attr);
 }
@@ -101,13 +94,6 @@ void KObject::load(QString path, double pixel_size_mm)
     for (auto& point: polygon)
       read(&f, point);
   }
-  if (type == KShape::Polygon)
-  {
-    read(&f, n);
-    inner_polygon_idx_list.resize(n);
-    for (auto idx: inner_polygon_idx_list)
-      read(&f, idx);
-  }
   read(&f, text_attr);
   read(&f, file_attr);
 }
@@ -123,7 +109,7 @@ int KObject::getWidthPix(double pixel_size_mm)
 }
 
 KObjectManager::KObjectManager(QString _objects_dir,
-                                               double  _pixel_size_mm)
+                               double  _pixel_size_mm)
 {
   pixel_size_mm = _pixel_size_mm;
   QDir dir(_objects_dir);
@@ -158,8 +144,7 @@ void KObjectManager::createObject(KShape sh)
   active_object.image        = sh.image;
 }
 
-void KObjectManager::paintObject(QPainter*       p,
-                                         KObject obj)
+void KObjectManager::paintObject(QPainter* p, KObject obj)
 {
   if (obj.polygons.isEmpty())
     return;

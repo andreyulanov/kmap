@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
 
     for (int in_obj_idx = 0; in_obj_idx < object_count; in_obj_idx++)
     {
-      QString name, name_en;
+      QString name;
 
       int percentage = 100 * in_obj_idx / object_count;
       if (percentage != curr_percentage)
@@ -275,20 +275,10 @@ int main(int argc, char* argv[])
             name += "\n" + QString::fromUtf16(str_utf16).simplified();
         }
 
-      if (mapSemanticCodeValueNameUn(info, 3238, str_utf16,
-                                     sizeof(str_utf16), 1))
-      {
-        auto n = QString::fromUtf16(str_utf16).simplified();
-        if (n != name)
-          name_en += QString::fromUtf16(str_utf16).simplified();
-      }
-
-      name    = name.remove("\"");
-      name_en = name_en.remove("\"");
+      name = name.remove("\"");
 
       KMapObject* obj = new KMapObject;
       obj->name       = name;
-      obj->name_en    = name_en;
 
       obj->shape = (*shape_list)[shape_idx];
 

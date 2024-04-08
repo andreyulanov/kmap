@@ -15,7 +15,6 @@ struct KObject
   float                     text_size_mm = 2;
   QImage                    image;
   QVector<KGeoPolygon>      polygons;
-  QVector<int>              inner_polygon_idx_list;
   QMap<QString, QString>    text_attr;
   QMap<QString, QByteArray> file_attr;
   void                      save(QString path);
@@ -28,11 +27,11 @@ class KObjectManager: public QObject
 {
   Q_OBJECT
 
-  double                   pixel_size_mm = 0;
-  QString                  objects_dir;
+  double           pixel_size_mm = 0;
+  QString          objects_dir;
   QVector<KObject> objects;
   KObject          active_object;
-  QString                  generateObjectFileName();
+  QString          generateObjectFileName();
 
 signals:
   QPoint kcoor2pix(KGeoCoor);
