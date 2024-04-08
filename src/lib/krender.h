@@ -35,10 +35,11 @@ class KRender: public QThread
 
   Q_OBJECT
 
-  int    min_object_size_pix     = 0;
-  double render_window_size_coef = 0;
-  QColor background_color        = Qt::white;
-  int    update_interval_ms      = 0;
+  int    min_object_size_pix          = 0;
+  double render_window_size_coef      = 0;
+  QColor background_color             = Qt::white;
+  int    update_interval_ms           = 0;
+  double max_object_size_with_name_mm = 20.0;
 
   QPointF render_center_m;
   double  mip        = 1;

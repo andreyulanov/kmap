@@ -445,7 +445,9 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
 
     if ((polygon_idx == 0 && !obj->name.isEmpty() &&
          obj_span_pix < std::min(pixmap_size.width(),
-                                 pixmap_size.height() / 2)) ||
+                                 pixmap_size.height() / 2) &&
+         obj_span_pix >
+             max_object_size_with_name_mm / pixel_size_mm) ||
         !obj->shape->image.isNull())
     {
 
