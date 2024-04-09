@@ -80,11 +80,10 @@ int main(int argc, char* argv[])
 
   KRenderWidget mapw(mapw_settings);
   KMapFetcher map_fetcher(mapw_settings.map_dir, mapw.getWorldMap());
-  KShapeManager          kvo_shape_man(mmc_path + "/class");
-  KTrackManager          track_man(mmc_path + "/tracks");
-  KObjectManager object_man(mmc_path + "/objects",
-                                    pixel_size_mm);
-  KAutoScroll            auto_scroll;
+  KShapeManager  kvo_shape_man(mmc_path + "/class");
+  KTrackManager  track_man(mmc_path + "/tracks");
+  KObjectManager object_man(mmc_path + "/objects", pixel_size_mm);
+  KAutoScroll    auto_scroll;
 
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
                    [&mapw](QString map_path)
@@ -172,8 +171,7 @@ int main(int argc, char* argv[])
   QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
                    &kvo_shape_man, &KShapeManager::getShapeImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
-                   &object_man,
-                   &KObjectManager::createObject);
+                   &object_man, &KObjectManager::createObject);
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
                    &kvo_shape_man, &KShapeManager::getShapeById);
 
@@ -199,16 +197,15 @@ int main(int argc, char* argv[])
                    Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::kcoor2pix, &mapw,
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::kcoor2pix,
-                   &mapw, &KRenderWidget::kcoor2pix,
-                   Qt::DirectConnection);
+  QObject::connect(&object_man, &KObjectManager::kcoor2pix, &mapw,
+                   &KRenderWidget::kcoor2pix, Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2pix, &mapw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
 
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KObjectManager::updated,
-                   &mapw, &KRenderWidget::renderUserObjects);
+  QObject::connect(&object_man, &KObjectManager::updated, &mapw,
+                   &KRenderWidget::renderUserObjects);
   QObject::connect(&object_man, &KObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 

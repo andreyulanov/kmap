@@ -1143,15 +1143,6 @@
     ]
 },
 {
-    "id"     : "subway_entrance",
-    "type"   : "Point",
-    "key"    : "040-000-P",
-    "image"  : "subway_entrance.png",
-    "layer"  : 22,
-    "width_mm"  : 2.0,
-    "max_mip": 0.5
-},
-{
     "id"     : "crossing",
     "type"   : "Point",
     "key"    : "p_crossing",
@@ -1421,12 +1412,14 @@
     "max_mip": 1
 },
 {
-    "id"     : "auto_station",
+    "id"     : "subway_station",
     "type"   : "Point",
-    "key"    : "p_autostation",
+    "code"   : 62131000,
+    "key"   : "p_autostation",
+    "attrval": "-5",
     "image"  : "subway_entrance.png",
     "layer"  : 22,
-    "width_mm"  : 2.0,
+    "width_mm" : 2.0,
     "max_mip": 100
 },
 {

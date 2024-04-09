@@ -200,41 +200,6 @@ int main(int argc, char* argv[])
       }
 
       int shape_idx = shape_man.getShapeIdx(code, key, attr_values);
-
-      int local_shape_idx = 0;
-      int attr_shape_idx  = -1;
-      for (auto& sh: shape_man.shapes)
-      {
-        if (!sh->attrval.isEmpty())
-        {
-          WCHAR str_utf16[1000];
-          auto  semantic_count = mapSemanticAmount(info);
-          for (int sematic_idx = 1; sematic_idx <= semantic_count;
-               sematic_idx++)
-          {
-            if (mapSemanticValueUnicode(info, sematic_idx, str_utf16,
-                                        sizeof(str_utf16)))
-            {
-              auto value = QString::fromUtf16(str_utf16).simplified();
-              if (value == sh->attrval)
-              {
-                attr_shape_idx = local_shape_idx;
-                if (mapSemanticCodeValueNameUn(info, 9, str_utf16,
-                                               sizeof(str_utf16), 1))
-                  name = QString::fromUtf16(str_utf16).simplified();
-                break;
-              }
-            }
-          }
-        }
-        if (attr_shape_idx >= 0)
-        {
-          shape_idx = attr_shape_idx;
-          break;
-        }
-        local_shape_idx++;
-      }
-
       if (shape_idx < 0)
       {
         WCHAR   str_utf16[1000];
