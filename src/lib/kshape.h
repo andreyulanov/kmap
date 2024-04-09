@@ -14,12 +14,6 @@ struct KAttribute
   double  max_mip;
 };
 
-struct KOsmTag
-{
-  QString key;
-  QString value;
-};
-
 struct KShape
 {
   Q_GADGET
