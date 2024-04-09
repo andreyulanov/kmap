@@ -55,7 +55,6 @@ public:
   float               min_mip             = 0;
   float               max_mip             = 100;
   int                 coor_precision_coef = 1;
-  bool                reductible          = true;
   QColor              pen;
   QColor              brush;
   QColor              tcolor;

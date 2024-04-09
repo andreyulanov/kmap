@@ -23,7 +23,6 @@ public:
     QString map_dir;
     double  pixel_size_mm;
     QSize   window_size;
-    int     min_object_size_pix     = 40;
     double  render_window_size_coef = 2;
     QColor  background_color        = QColor(166, 220, 238);
     int     update_interval_ms      = 100;

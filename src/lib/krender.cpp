@@ -89,11 +89,6 @@ void KRender::setPixelSizeMM(double v)
   pixel_size_mm = v;
 }
 
-void KRender::setMinObjectSizePix(int v)
-{
-  min_object_size_pix = v;
-}
-
 void KRender::setUpdateIntervalMs(int v)
 {
   update_interval_ms = v;
@@ -400,11 +395,6 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
   double obj_span_m   = sqrt(pow(obj_frame_m.width(), 2) +
                              pow(obj_frame_m.height(), 2));
   int    obj_span_pix = obj_span_m / render_mip;
-  auto   size_pix     = frame.getSizeMeters() / render_mip;
-  if (obj->shape->reductible)
-    if (size_pix.width() < min_object_size_pix ||
-        size_pix.height() < min_object_size_pix)
-      return;
 
   auto sh = obj->shape;
   if (sh->getWidthPix() == 0 || sh->pen == Qt::black)
@@ -428,15 +418,6 @@ void KRender::paintPolygonObject(QPainter* p, const KMapObject* obj,
   for (int polygon_idx = -1; auto polygon: obj->polygons)
   {
     polygon_idx++;
-
-    if (polygon_idx == 0)
-    {
-      auto polygon_size_m = polygon->getFrame().getSizeMeters();
-      if (obj->shape->reductible)
-        if (polygon_size_m.width() / mip < min_object_size_pix &&
-            polygon_size_m.height() / mip < min_object_size_pix)
-          continue;
-    }
 
     auto pl = poly2pix(*polygon);
 
@@ -541,23 +522,6 @@ void KRender::paintLineObject(QPainter*         painter,
     NameHolder nh;
     QPoint     p0;
     double     a0 = 0;
-
-    auto polygon_size_m   = polygon->getFrame().getSizeMeters();
-    auto polygon_size_pix = polygon_size_m / mip;
-    if (obj->shape->reductible)
-    {
-      if (polygon_size_pix.width() < 2 &&
-          polygon_size_pix.height() < 2)
-        continue;
-      if (polygon_size_pix.width() < min_object_size_pix &&
-          polygon_size_pix.height() < min_object_size_pix)
-      {
-        QPoint p1 = kcoor2pix(polygon->first());
-        QPoint p2 = kcoor2pix(polygon->last());
-        painter->drawLine(p1, p2);
-        continue;
-      }
-    }
 
     auto pl = poly2pix(*polygon);
 

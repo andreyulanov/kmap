@@ -15,7 +15,6 @@ KRenderWidget::KRenderWidget(Settings settings):
   r.setUpdateIntervalMs(settings.update_interval_ms);
   r.setBackgroundColor(settings.background_color);
   r.setRenderWindowSizeCoef(settings.render_window_size_coef);
-  r.setMinObjectSizePix(settings.min_object_size_pix);
   r.setPixmapSize(size());
 
   setAttribute(Qt::WA_AcceptTouchEvents);
