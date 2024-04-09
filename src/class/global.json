@@ -1,8 +1,5 @@
 [
 {
-  "reduction_precision_m" : 100
-},
-{
   "default_coor_precision_coef" : 10000
 },
 {

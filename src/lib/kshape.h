@@ -84,7 +84,6 @@ struct KShapeManager: public QObject
 public:
   double           main_mip                    = 0;
   double           tile_mip                    = 0;
-  double           reduction_precision_m       = 0;
   int              default_coor_precision_coef = 1;
   QVector<KShape*> shapes;
   QString          error_str;

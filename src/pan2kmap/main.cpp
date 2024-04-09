@@ -282,7 +282,7 @@ int main(int argc, char* argv[])
                                pow(prev_point_m.y - point_m.y, 2));
               max_dist  = std::max(dist, max_dist);
 
-              if (dist < shape_man.reduction_precision_m &&
+              if (dist < shape->coor_precision_coef * 0.01 &&
                   point_idx < point_count - 1)
                 continue;
             }
@@ -324,7 +324,7 @@ int main(int argc, char* argv[])
           obj->frame = obj->frame.united(polygon->getFrame());
       }
 
-      if (max_dist < shape_man.reduction_precision_m &&
+      if (max_dist < shape->coor_precision_coef * 0.01 &&
           shape->type == KShape::Polygon)
       {
         delete obj;

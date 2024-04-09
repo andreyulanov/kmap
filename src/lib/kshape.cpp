@@ -125,13 +125,6 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           tile_mip = _tile_mip;
           continue;
         }
-        auto _reduction_precision_m =
-            obj.value("reduction_precision_m").toDouble();
-        if (_reduction_precision_m > 0)
-        {
-          reduction_precision_m = _reduction_precision_m;
-          continue;
-        }
         auto _coor_precision_coef =
             obj.value("default_coor_precision_coef").toInt();
         if (_coor_precision_coef > 0)
