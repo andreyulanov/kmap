@@ -53,7 +53,7 @@
     "layer"  : 9,
     "pen"    : [1, 1, 1],
     "max_mip": 3000,
-    "min_mip": 100
+    "min_mip": 200
 },
 {
     "id"     : "river",
@@ -63,7 +63,7 @@
     "pen"    : [37, 151, 194],
     "tcolor" : [37, 151, 194],
     "max_mip": 5000,
-    "min_mip": 100
+    "min_mip": 200
 },
 {
     "id"     : "lake",
@@ -73,23 +73,24 @@
     "brush"  : [166, 220, 238],
     "tcolor" : [37, 151, 194],
     "max_mip": 5000,
-    "min_mip": 100
+    "min_mip": 200
 },
 {
     "id"     : "road",
     "type"   : "Line",
     "code"   : 1000000001,
+    "name_code": 1,
     "layer"  : 4,
     "pen"    : [255, 130, 70],
     "max_mip": 5000,
-    "min_mip": 100
+    "min_mip": 200
 },
 {
     "id"     : "boundary",
     "type"   : "Line",
     "code"   : 1000000001,
     "layer"  : 7,
-    "width_mm"  : 0.8,
+    "width_mm" : 0.8,
     "pen"    : [252, 0, 84]
 },
 {
@@ -107,7 +108,7 @@
     "layer"  : 10,
     "brush"  : [166, 220, 238],
     "tcolor" : [37, 151, 194],
-    "max_mip": 300
+    "max_mip": 200
 },
 {
     "id"     : "Столицы государств",
@@ -117,8 +118,8 @@
     "layer"  : 4,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
-    "min_mip": 100,
-    "width_mm" : 3
+    "min_mip": 200,
+    "width_mm" : 4
 },
 {
     "id"     : "Федеральные центры",
@@ -128,8 +129,8 @@
     "layer"  : 5,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
-    "min_mip": 100,
-    "width_mm" : 3
+    "min_mip": 200,
+    "width_mm" : 4
 },
 {
     "id"     : "Региональные центры",
@@ -139,8 +140,8 @@
     "layer"  : 6,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
-    "min_mip": 100,
-    "width_mm" : 2
+    "min_mip": 200,
+    "width_mm" : 3.5
 },
 {
     "id"     : "Города крупные",
@@ -150,8 +151,8 @@
     "layer"  : 7,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
-    "min_mip": 100,
-    "width_mm" : 1.5
+    "min_mip": 200,
+    "width_mm" : 3
 },
 {
     "id"     : "Города прочие",
@@ -161,8 +162,8 @@
     "layer"  : 8,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
-    "width_mm" : 1.0,
-    "min_mip": 100,
+    "width_mm" : 2,
+    "min_mip": 200,
     "max_mip": 4000
 }
 ]
