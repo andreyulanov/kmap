@@ -124,8 +124,9 @@ int KPortableObject::getWidthPix()
 
 void KPortableObjectManager::loadFileWithoutUpdate(QString path)
 {
-    active_object.load(path);
-    objects.append(active_object);
+    KPortableObject object;
+    object.load(path);
+    objects.append(object);
 }
 
 void KPortableObjectManager::loadFileWithoutUpdate(QFileInfo file_info)
