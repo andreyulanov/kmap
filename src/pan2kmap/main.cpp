@@ -231,6 +231,8 @@ int main(int argc, char* argv[])
         name = QString::fromUtf16(str_utf16).simplified();
 
       if (shape->name_code > 0)
+      {
+        name.clear();
         if (mapSemanticCodeValueNameUn(info, shape->name_code,
                                        str_utf16, sizeof(str_utf16),
                                        1))
@@ -239,6 +241,7 @@ int main(int argc, char* argv[])
           if (n != name)
             name += "\n" + QString::fromUtf16(str_utf16).simplified();
         }
+      }
 
       name = name.remove("\"");
 
@@ -352,8 +355,9 @@ int main(int argc, char* argv[])
     QElapsedTimer t;
     t.start();
     for (auto obj: obj_list)
-      while (joinPolys(obj))
-        ;
+      if (obj->shape->type == KShape::Line)
+        while (joinPolys(obj))
+          ;
     qDebug() << "joinPolys() elapsed" << t.restart();
 
     map.addObjects(obj_list, 500000);
