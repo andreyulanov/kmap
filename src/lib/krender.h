@@ -48,6 +48,7 @@ class KRender: public QThread
   bool    rendering_enabled      = false;
   bool    loading_enabled        = true;
   bool    getting_pixmap_enabled = false;
+  int     load_thread_count      = 0;
 
   QPointF              center_m;
   QSize                pixmap_size   = {100, 100};

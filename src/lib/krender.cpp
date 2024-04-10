@@ -131,7 +131,11 @@ QRectF KRender::getDrawRectM() const
 
 void KRender::onLoaded()
 {
-  if (rendering_enabled)
+  load_thread_count--;
+  if (load_thread_count < 0)
+    load_thread_count = 0;
+  qDebug() << "loaded, load_thread_count" << load_thread_count;
+  if (rendering_enabled && load_thread_count == 0)
     renderMap();
 }
 
@@ -190,8 +194,12 @@ void KRender::checkLoad()
     if (!needToLoadMap(map, draw_rect_m))
       continue;
 
-    if (map->getMain().status == KObjectCollection::Null)
+    if (map->getMain().status == KObjectCollection::Null &&
+        load_thread_count < QThread::idealThreadCount())
     {
+      load_thread_count++;
+      qDebug() << "loading main, load_thread_count"
+               << load_thread_count;
       QtConcurrent::run(
           [&map]()
           {
@@ -215,10 +223,17 @@ void KRender::checkLoad()
           double tile_top =
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
-          if (!tile && tile_rect_m.intersects(draw_rect_m) &&
-              render_mip < map->getTileMip())
-            QtConcurrent::run(map, &KRenderMap::loadTile, tile_idx,
-                              tile_rect_m);
+          if (load_thread_count < QThread::idealThreadCount())
+
+            if (!tile && tile_rect_m.intersects(draw_rect_m) &&
+                render_mip < map->getTileMip())
+            {
+              load_thread_count++;
+              qDebug() << "loading tile, load_thread_count"
+                       << load_thread_count;
+              QtConcurrent::run(map, &KRenderMap::loadTile, tile_idx,
+                                tile_rect_m);
+            }
           tile_idx++;
         }
       }
