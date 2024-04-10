@@ -12,8 +12,8 @@ KNewObjectWidget::KNewObjectWidget(QSize s)
   root_layout.addSpacerItem(new QSpacerItem(0, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
   QVBoxLayout* options_layout = new QVBoxLayout(&options_group_box);
-  send_chack_box = new QCheckBox("Send", &options_group_box);
-  options_layout->addWidget(send_chack_box);
+  send_check_box = new QCheckBox("Send", &options_group_box);
+  options_layout->addWidget(send_check_box);
   options_group_box.setLayout(options_layout);
   options_group_box.setAlignment(Qt::AlignLeft);
   options_group_box.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
@@ -41,7 +41,11 @@ void KNewObjectWidget::onSelected()
   auto b  = dynamic_cast<QPushButton*>(sender());
   auto id = button_id_map.value(b);
   selectedShape(getShapeById(id));
-  emit sendObject();
+  if (send_check_box->isChecked())
+      emit sendObject();
+  else
+      emit doNotSendObject();
+
   hide();
 }
 

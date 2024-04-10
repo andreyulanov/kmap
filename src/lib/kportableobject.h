@@ -2,6 +2,7 @@
 #define KPORTABLEOBJECT_H
 
 #include "kmap.h"
+#include <QFileInfo>
 
 struct KPortableObject
 {
@@ -36,9 +37,7 @@ class KPortableObjectManager: public QObject
 signals:
   QPoint kcoor2pix(KGeoCoor);
   void   updated();
-  void   updated(const KPortableObject&);
   void   finishEdit();
-  void   finishEdit(const KPortableObject&);
   void	 saved(QString);
 
 public:
@@ -49,10 +48,13 @@ public:
   void paint(QPainter*);
   void acceptObject();
 
+public slots:
+  void loadFile(QString path);
+
 private slots:
   // Catches signals without arguments and emmits its overloaded variants with arguments
-  void updatedEmitter();
-  void finishEditEmitter();
+  void loadFileWithoutUpdate(QFileInfo file_info);
+  void loadFileWithoutUpdate(QString path);
 };
 
 #endif  // KPORTABLEOBJECT_H

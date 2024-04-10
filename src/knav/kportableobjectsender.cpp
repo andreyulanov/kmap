@@ -14,8 +14,16 @@ void KPortableObjectSender::turnOnSendOnReady()
     send_if_ready = true;
 }
 
+void KPortableObjectSender::turnOffSendOnReady()
+{
+    clear();
+    send_if_ready = false;
+}
+
+
 void KPortableObjectSender::setJid(QList<QString> jids)
 {
+    if (!send_if_ready) return;
     if (jids.isEmpty())
     {
         qWarning() << "No jid seleted, abourting...";
@@ -27,8 +35,11 @@ void KPortableObjectSender::setJid(QList<QString> jids)
 }
 void KPortableObjectSender::setFilename(QString file_path)
 {
-    this->file_path = new QString(file_path);
-    sendIfReady();
+    if (send_if_ready)
+    {
+        this->file_path = new QString(file_path);
+        sendIfReady();
+    }
 }
 
 bool KPortableObjectSender::sendIfReady()

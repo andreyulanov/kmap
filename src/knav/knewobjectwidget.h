@@ -15,7 +15,7 @@ class KNewObjectWidget: public QWidget
   QVBoxLayout                 root_layout;
   QGroupBox					  options_group_box;
   QMap<QPushButton*, QString> button_id_map;
-  QCheckBox* send_chack_box;
+  QCheckBox* send_check_box;
   void addItem(int& posy, QImage icon, QString text);
   void onSelected();
 
@@ -24,6 +24,7 @@ signals:
   KShape     getShapeById(QString);
   void       selectedShape(KShape);
   void		 sendObject();
+  void		 doNotSendObject();
 
 public:
   KNewObjectWidget(QSize s);

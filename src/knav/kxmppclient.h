@@ -26,6 +26,7 @@ public slots:
 
 signals:
     void needConnection();
+    void fileDownloaded(QString path);
 
 private:
     QXmppTransferManager *transferManager;
@@ -36,6 +37,13 @@ private:
     QString generateReceivedFileName(QXmppTransferJob*);
 };
 
+///
+/// \brief The KXmppObjectReceiver class provides transfer of a file
+///	\note What for do we need this class,
+/// 	there is the QXmppTransferJob which do the same job?
+/// 	QXmppTransferJob does not flush the file befour emmiting the
+/// 	QXmppTransferJob::finished signal.
+///
 class KXmppObjectReceiver : public QObject
 {
     Q_OBJECT
@@ -44,10 +52,14 @@ public:
     KXmppObjectReceiver(QXmppTransferJob *job, QString filePath);
     ~KXmppObjectReceiver();
 
-    Q_SIGNAL void finishedSucessfully(KPortableObject *);
+signals:
+    /// Emitting of the signal guarantees that file was transferred correctly.
+    void finishedSucessfully(QString path);
+    /// Transmission failed, file removed.
+    void failed();
 
 private:
-    QString filePath;
+    QFile* file;
     QXmppTransferJob *job;
 
     Q_SLOT void slotFinished();

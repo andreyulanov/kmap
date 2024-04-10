@@ -287,7 +287,7 @@ int main(int argc, char* argv[])
 
   QObject::connect(&track_man, &KTrackManager::updated, &mapw,
                    &KMapWidget::render);
-  QObject::connect(&object_man, qOverload<>(&KPortableObjectManager::updated),
+  QObject::connect(&object_man, &KPortableObjectManager::updated,
                    &mapw, &KMapWidget::render);
   QObject::connect(&object_man, qOverload<>(&KPortableObjectManager::finishEdit),
                    &controls, &KControls::finishEdit);
@@ -389,6 +389,10 @@ int main(int argc, char* argv[])
                    &roster_widget, &KRosterWidget::show);
   QObject::connect(&newobjw, &KNewObjectWidget::sendObject,
                    &sender, &KPortableObjectSender::turnOnSendOnReady);
+  QObject::connect(&newobjw, &KNewObjectWidget::doNotSendObject,
+                   &sender, &KPortableObjectSender::turnOffSendOnReady);
+  QObject::connect(&client, &KXmppClient::fileDownloaded,
+                   &object_man, qOverload<QString>(&KPortableObjectManager::loadFile));
   QObject::connect(&sender, &KPortableObjectSender::send,
                    &client, &KXmppClient::sendFile);
   QObject::connect(&roster_widget, &KRosterWidget::jidSelected,

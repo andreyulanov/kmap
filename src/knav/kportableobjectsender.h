@@ -13,6 +13,7 @@ public:
 
 public slots:
     void turnOnSendOnReady();
+    void turnOffSendOnReady();
     void setJid(QList<QString> jids);
     void setFilename(QString);
     void clear();

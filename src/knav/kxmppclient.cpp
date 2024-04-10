@@ -14,6 +14,8 @@ KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
 
     transferManager = new QXmppTransferManager;
     transferManager->setProxy(proxy);
+    //transferManager->proxyOnly();
+    //transferManager->setSupportedMethods(QXmppTransferJob::Method::InBandMethod);
     addExtension(transferManager);
 
     connect(transferManager, &QXmppTransferManager::fileReceived,
@@ -63,29 +65,44 @@ QString KXmppClient::generateReceivedFileName(QXmppTransferJob *job)
 }
 
 KXmppObjectReceiver::KXmppObjectReceiver(QXmppTransferJob *job, QString filePath)
-    :QObject{}, filePath{filePath}
+    :QObject{}
 {
-    connect(job, SIGNAL(error(QXmppTransferJob::Error)),
-            this, SLOT(slotError(QXmppTransferJob::Error)));
+    connect(job, qOverload<QXmppTransferJob::Error>(&QXmppTransferJob::error),
+            this, &KXmppObjectReceiver::slotError);
     connect(job, &QXmppTransferJob::finished,
             this, &KXmppObjectReceiver::slotFinished);
+    connect(job, &QXmppTransferJob::finished,
+            this, &QXmppTransferJob::deleteLater);
     connect(job, &QXmppTransferJob::progress,
             this, &KXmppObjectReceiver::slotProgress);
     connect(job, &QXmppTransferJob::stateChanged,
             this, &KXmppObjectReceiver::slotState);
 
     qDebug() << "Transfer method" << job->method();
-    job->accept(filePath);
+    file = new QFile(filePath, this);
+    if (file->open(QIODevice::WriteOnly))
+        job->accept(file);
+    else
+    {
+        qWarning() << "Failed to open file" << filePath << "\n"
+                 << file->errorString() << "\n"
+                 << "Aborting transmission...";
+        emit failed();
+        job->abort();
+        this->deleteLater();
+    }
 }
 KXmppObjectReceiver::~KXmppObjectReceiver()
 {
-    //qDebug() << "KXmppObjectReceiver ends its life...";
+    if (file->isOpen())
+        file->close();
 }
 
 void KXmppObjectReceiver::slotError(QXmppTransferJob::Error error)
 {
-    ///TODO: delete the file
     qWarning() << "Receiving failed:" << error;
+    file->remove();
+    emit failed();
 }
 
 void KXmppClient::slotFileReceived(QXmppTransferJob *job)
@@ -105,18 +122,19 @@ void KXmppClient::slotFileReceived(QXmppTransferJob *job)
     ///TODO: Delete receivers by timeout
     KXmppObjectReceiver* receiver = new KXmppObjectReceiver(job, generateReceivedFileName(job));
 
-    connect(receiver, SIGNAL(finishedSucessfully(KPortableObject *)),
-            this, SLOT(KXmppClient::slotFileReceived(KPortableObject*)));
+    connect(receiver, &KXmppObjectReceiver::finishedSucessfully,
+            this, &KXmppClient::fileDownloaded);
 }
 
 void KXmppObjectReceiver::slotFinished()
 {
-    qDebug() << "Transmission finished! Object saved to" << this->filePath;
-    KPortableObject* portableObject = nullptr;
-    //KPortableObject* portableObject = new KPortableObject();
-    //portableObject->load(this->filePath);
+    qDebug() << "Transmission finished! Object saved to" << file->fileName();
     ///TODO: Check have the object been loadded correctly
-    emit finishedSucessfully(portableObject);
+    if (file->flush())
+        emit finishedSucessfully(file->fileName());
+    else
+        qWarning() << "Filed to flush file" << file->fileName() << "\n"
+                   << file->errorString();
     this->deleteLater();
 }
 

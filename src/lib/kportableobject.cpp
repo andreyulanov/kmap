@@ -122,25 +122,34 @@ int KPortableObject::getWidthPix()
   return round(pen_width_mm / KShape::pixel_size_mm);
 }
 
+void KPortableObjectManager::loadFileWithoutUpdate(QString path)
+{
+    active_object.load(path);
+    objects.append(active_object);
+}
+
+void KPortableObjectManager::loadFileWithoutUpdate(QFileInfo file_info)
+{
+    loadFile(file_info.absoluteFilePath());
+}
+
+void KPortableObjectManager::loadFile(QString path)
+{
+    loadFileWithoutUpdate(path);
+    emit updated();
+}
+
 KPortableObjectManager::KPortableObjectManager(QString _objects_dir)
     :QObject{}
 {
   QDir dir(_objects_dir);
   if (!dir.exists())
-    dir.mkdir(_objects_dir);
+    dir.mkpath(dir.absolutePath());
   auto fi_list = dir.entryInfoList(QDir::Files, QDir::Name);
   for (auto fi: fi_list)
-  {
-    KPortableObject obj;
-    obj.load(fi.absoluteFilePath());
-    objects.append(obj);
-  }
-  objects_dir = _objects_dir;
+      loadFileWithoutUpdate(fi);
 
-  connect(this, qOverload<>(&KPortableObjectManager::updated),
-          this, qOverload<>(&KPortableObjectManager::updatedEmitter));
-  connect(this, qOverload<>(&KPortableObjectManager::finishEdit),
-          this, qOverload<>(&KPortableObjectManager::finishEditEmitter));
+  objects_dir = _objects_dir;
 }
 
 QString KPortableObjectManager::generateObjectFileName()
@@ -273,14 +282,4 @@ void KPortableObjectManager::acceptObject()
   updated();
   finishEdit();
   saved(filename);
-}
-
-void KPortableObjectManager::updatedEmitter()
-{
-    emit updated(active_object);
-}
-
-void KPortableObjectManager::finishEditEmitter()
-{
-    emit finishEdit(active_object);
 }
