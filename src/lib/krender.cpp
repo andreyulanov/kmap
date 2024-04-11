@@ -357,7 +357,7 @@ void KRender::paintPointObject(QPainter* p, const KMapObject* obj)
     auto f = p->font();
     f.setPixelSize(w);
     p->setFont(f);
-    p->translate(QPoint(0, obj->shape->getWidthPix() / 2 + 2));
+    p->translate(QPoint(0, obj->shape->image.height() / 2));
     for (auto str: str_list)
     {
       p->translate(QPoint(0, text_shift));
