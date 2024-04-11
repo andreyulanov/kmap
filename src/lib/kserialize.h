@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QMap>
 #include <QImage>
+#include <QPen>
 
 namespace KSerialize
 {
@@ -45,6 +46,28 @@ inline void write(QFile* f, QImage image)
     image.save(f, "PNG");
 }
 
+inline void write(QFile* f, QColor c)
+{
+  write(f, (uchar)c.red());
+  write(f, (uchar)c.green());
+  write(f, (uchar)c.blue());
+  write(f, (uchar)c.alpha());
+}
+
+inline void write(QFile* f, QPen pen)
+{
+  write(f, pen.color());
+  uchar style = static_cast<uchar>(pen.style());
+  write(f, style);
+}
+
+inline void write(QFile* f, QBrush brush)
+{
+  write(f, brush.color());
+  uchar style = static_cast<uchar>(brush.style());
+  write(f, style);
+}
+
 inline void read(QFile* f, QString& str)
 {
   uchar n;
@@ -62,6 +85,34 @@ inline void read(QFile* f, QByteArray& ba)
   read(f, n);
   if (n > 0)
     ba = f->read(n);
+}
+
+inline void read(QFile* f, QColor& c)
+{
+  uchar red, green, blue, alpha;
+  read(f, red);
+  read(f, green);
+  read(f, blue);
+  read(f, alpha);
+  c = QColor(red, green, blue, alpha);
+}
+
+inline void read(QFile* f, QPen& pen)
+{
+  QColor c;
+  read(f, c);
+  uchar style;
+  read(f, style);
+  pen.setStyle(static_cast<Qt::PenStyle>(style));
+}
+
+inline void read(QFile* f, QBrush& brush)
+{
+  QColor c;
+  read(f, c);
+  uchar style;
+  read(f, style);
+  brush.setStyle(static_cast<Qt::BrushStyle>(style));
 }
 
 inline void read(QFile* f, QImage& image)

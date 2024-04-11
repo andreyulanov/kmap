@@ -3,20 +3,25 @@
 
 #include "kmap.h"
 
+struct KObjectClass
+{
+  QString              name;
+  KShape::Type         type;
+  KShape::Style        style;
+  QColor               pen;
+  float                pen_width_mm = 0;
+  QColor               brush;
+  QImage               image;
+  static constexpr int default_image_size_mm = 3.0;
+};
+
 struct KObject
 {
+  KObjectClass              cl;
   QString                   name;
-  KShape::Type              type         = KShape::None;
-  KShape::Style             style        = KShape::Solid;
-  QColor                    pen          = Qt::black;
-  float                     pen_width_mm = 0.2;
-  QColor                    brush        = Qt::white;
-  QColor                    text_color   = Qt::black;
-  float                     text_size_mm = 2;
-  QImage                    image;
   QVector<KGeoPolygon>      polygons;
   QMap<QString, QString>    text_attr;
-  QMap<QString, QByteArray> file_attr;
+  QMap<QString, QByteArray> data_attr;
   void                      save(QString path);
   void                      load(QString path, double pixel_size_mm);
   bool                      isEmpty();

@@ -14,23 +14,13 @@ void KObject::save(QString path)
   }
 
   using namespace KSerialize;
-  write(&f, type);
-  write(&f, style);
-  write(&f, (uchar)pen.red());
-  write(&f, (uchar)pen.green());
-  write(&f, (uchar)pen.blue());
-  write(&f, (uchar)pen.alpha());
-  write(&f, pen_width_mm);
-  write(&f, (uchar)brush.red());
-  write(&f, (uchar)brush.green());
-  write(&f, (uchar)brush.blue());
-  write(&f, (uchar)brush.alpha());
-  write(&f, (uchar)text_color.red());
-  write(&f, (uchar)text_color.green());
-  write(&f, (uchar)text_color.blue());
-  write(&f, (uchar)text_color.alpha());
-  write(&f, text_size_mm);
-  write(&f, image);
+
+  write(&f, cl.name);
+  write(&f, cl.type);
+  write(&f, cl.pen);
+  write(&f, cl.brush);
+  write(&f, cl.image);
+
   write(&f, name);
   write(&f, polygons.count());
   for (auto polygon: polygons)
@@ -40,7 +30,7 @@ void KObject::save(QString path)
       write(&f, point);
   }
   write(&f, text_attr);
-  write(&f, file_attr);
+  write(&f, data_attr);
 }
 
 void KObject::load(QString path, double pixel_size_mm)
@@ -53,36 +43,16 @@ void KObject::load(QString path, double pixel_size_mm)
   }
 
   using namespace KSerialize;
-  read(&f, type);
-  read(&f, style);
 
-  uchar red, green, blue, alpha;
-  read(&f, red);
-  read(&f, green);
-  read(&f, blue);
-  read(&f, alpha);
-
-  pen = QColor(red, green, blue, alpha);
-  read(&f, pen_width_mm);
-
-  read(&f, red);
-  read(&f, green);
-  read(&f, blue);
-  read(&f, alpha);
-  brush = QColor(red, green, blue, alpha);
-  read(&f, red);
-  read(&f, green);
-  read(&f, blue);
-  read(&f, alpha);
-  text_color = QColor(red, green, blue, alpha);
-  read(&f, text_size_mm);
+  read(&f, cl.name);
+  read(&f, cl.type);
+  read(&f, cl.pen);
+  read(&f, cl.brush);
   QImage img;
   read(&f, img);
   if (!img.isNull())
-  {
-    image = img.scaledToWidth(getWidthPix(pixel_size_mm),
-                              Qt::SmoothTransformation);
-  }
+    cl.image = img.scaledToWidth(getWidthPix(pixel_size_mm),
+                                 Qt::SmoothTransformation);
   read(&f, name);
   int n;
   read(&f, n);
@@ -95,7 +65,7 @@ void KObject::load(QString path, double pixel_size_mm)
       read(&f, point);
   }
   read(&f, text_attr);
-  read(&f, file_attr);
+  read(&f, data_attr);
 }
 
 bool KObject::isEmpty()
@@ -105,7 +75,7 @@ bool KObject::isEmpty()
 
 int KObject::getWidthPix(double pixel_size_mm)
 {
-  return round(pen_width_mm / pixel_size_mm);
+  return round(KObjectClass::default_image_size_mm / pixel_size_mm);
 }
 
 KObjectManager::KObjectManager(QString _objects_dir,
@@ -135,13 +105,12 @@ QString KObjectManager::generateObjectFileName()
 
 void KObjectManager::createObject(KShape sh)
 {
-  active_object.type         = sh.type;
-  active_object.style        = sh.style;
-  active_object.pen_width_mm = sh.width_mm;
-  active_object.pen          = sh.pen;
-  active_object.brush        = sh.brush;
-  active_object.text_color   = sh.tcolor;
-  active_object.image        = sh.image;
+  active_object.cl.type         = sh.type;
+  active_object.cl.style        = sh.style;
+  active_object.cl.pen_width_mm = sh.width_mm;
+  active_object.cl.pen          = sh.pen;
+  active_object.cl.brush        = sh.brush;
+  active_object.cl.image        = sh.image;
 }
 
 void KObjectManager::paintObject(QPainter* p, KObject obj)
@@ -149,9 +118,9 @@ void KObjectManager::paintObject(QPainter* p, KObject obj)
   if (obj.polygons.isEmpty())
     return;
 
-  if (obj.type == KShape::Point)
+  if (obj.cl.type == KShape::Point)
   {
-    auto& img = obj.image;
+    auto& img = obj.cl.image;
     auto  pix = kcoor2pix(obj.polygons.first().first());
     if (img.isNull())
       p->drawEllipse(pix, 5, 5);
@@ -160,14 +129,14 @@ void KObjectManager::paintObject(QPainter* p, KObject obj)
       auto s = img.size();
       p->drawImage(
           QPoint{pix.x() - s.width() / 2, pix.y() - s.height() / 2},
-          obj.image);
+          obj.cl.image);
     }
     return;
   }
 
-  if (obj.type == KShape::Line)
+  if (obj.cl.type == KShape::Line)
   {
-    QPen pen = QPen(obj.pen, obj.getWidthPix(pixel_size_mm));
+    QPen pen = QPen(obj.cl.pen, obj.getWidthPix(pixel_size_mm));
     p->setPen(pen);
     QPoint prev_pix;
     QPoint pix;
@@ -180,10 +149,10 @@ void KObjectManager::paintObject(QPainter* p, KObject obj)
       prev_pix = pix;
     }
   }
-  if (obj.type == KShape::Polygon)
+  if (obj.cl.type == KShape::Polygon)
   {
-    QPen   pen   = QPen(obj.pen, obj.getWidthPix(pixel_size_mm));
-    QBrush brush = QBrush(obj.brush);
+    QPen   pen   = QPen(obj.cl.pen, obj.getWidthPix(pixel_size_mm));
+    QBrush brush = QBrush(obj.cl.brush);
     p->setPen(pen);
     p->setBrush(brush);
 
@@ -208,9 +177,9 @@ void KObjectManager::paintObject(QPainter* p, KObject obj)
 
 void KObjectManager::addPoint(KGeoCoor coor)
 {
-  if (active_object.type == KShape::None)
+  if (active_object.cl.type == KShape::None)
     return;
-  auto type = active_object.type;
+  auto type = active_object.cl.type;
   if (type == KShape::Point)
   {
     active_object.name = "object1";
@@ -250,7 +219,7 @@ void KObjectManager::acceptObject()
   active_object.save(generateObjectFileName());
   objects.append(active_object);
   active_object.polygons.clear();
-  active_object.type = KShape::None;
+  active_object.cl.type = KShape::None;
   updated();
   finishEdit();
 }
