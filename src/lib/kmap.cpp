@@ -131,7 +131,7 @@ QSizeF KGeoRect::getSizeMeters() const
   return {w, h};
 }
 
-QRectF KGeoRect::toRectM()
+QRectF KGeoRect::toRectM() const
 {
   return {top_left.toMeters(), bottom_right.toMeters()};
 }
@@ -458,6 +458,8 @@ const QVector<KObjectCollection*> KMap::getTiles() const
 
 bool KRenderMap::intersects(QPolygonF polygon_m) const
 {
+  if (borders_m.isEmpty())
+    return polygon_m.intersects(frame.toRectM());
   for (auto border_m: borders_m)
     if (border_m.intersects(polygon_m))
       return true;

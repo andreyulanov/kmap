@@ -57,7 +57,7 @@ struct KGeoRect
   bool     isNull() const;
   QRectF   toMeters() const;
   QSizeF   getSizeMeters() const;
-  QRectF   toRectM();
+  QRectF   toRectM() const;
 };
 
 struct KGeoPolygon: public QVector<KGeoCoor>
@@ -104,13 +104,13 @@ class KMap
 {
   static constexpr int border_coor_precision_coef = 10000;
 
-  QString  path;
-  double   main_mip = 0;
-  double   tile_mip = 0;
-  KGeoRect frame;
+  QString path;
+  double  main_mip = 0;
+  double  tile_mip = 0;
 
 protected:
   QVector<KShape*>            shapes;
+  KGeoRect                    frame;
   QVector<QPolygonF>          borders_m;
   QVector<KGeoPolygon>        borders;
   KObjectCollection           main;
