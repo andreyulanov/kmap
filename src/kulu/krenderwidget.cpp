@@ -393,17 +393,6 @@ void KRenderWidget::scaleLabel()
           .scaled(screen_size, Qt::KeepAspectRatio,
                   Qt::SmoothTransformation);
   scaled_label.setFixedSize(screen_size);
-
-  //  QPixmap rpm(scaled_pm.size());
-  //  rpm.fill(Qt::transparent);
-  //  QPainter p(&rpm);
-  //  auto center = QPoint{scaled_pm.width() / 2, scaled_pm.height() /
-  //  2}; center += total_pan_pos; p.translate(center);
-  //  p.rotate(rotation);
-  //  p.translate(-center);
-  //  p.drawPixmap(0, 0, scaled_pm);
-  //  scaled_label.setPixmap(rpm);
-
   scaled_label.setPixmap(scaled_pm);
   auto shift =
       label.size() / r.getRenderWindowSizeCoef() * (coef - 1) * 0.5;
@@ -411,6 +400,11 @@ void KRenderWidget::scaleLabel()
   scaled_label.move(zoom_focus_shift -
                     QPoint{shift.width(), shift.height()});
   scaled_label.show();
+}
+
+double KRenderWidget::getMip()
+{
+  return r.getMip() * intermediate_zoom_coef;
 }
 
 void KRenderWidget::setScrollingEnabled(bool v)

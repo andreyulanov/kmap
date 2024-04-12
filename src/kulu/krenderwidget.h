@@ -102,5 +102,6 @@ public:
   QPoint      kcoor2pix(const KGeoCoor&) const;
   KGeoCoor    pix2deg(const QPoint&) const;
   void        setScrollingEnabled(bool);
+  double      getMip();
 };
 #endif  // KRENDERWIDGET_H

@@ -14,6 +14,7 @@
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"
 #include "kmapfetcher.h"
+#include "kscalelabel.h"
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -77,18 +78,19 @@ int main(int argc, char* argv[])
   mapw_settings.render_window_size_coef = 2;
   mapw_settings.update_interval_ms      = 100;
 
-  KRenderWidget mapw(mapw_settings);
-  KMapFetcher map_fetcher(mapw_settings.map_dir, mapw.getWorldMap());
+  KRenderWidget  renderw(mapw_settings);
+  KMapFetcher    map_fetcher(mapw_settings.map_dir,
+                             renderw.getWorldMap());
   KShapeManager  kvo_shape_man(mmc_path + "/class");
   KTrackManager  track_man(mmc_path + "/tracks");
   KObjectManager object_man(mmc_path + "/objects", pixel_size_mm);
   KAutoScroll    auto_scroll;
 
   QObject::connect(&map_fetcher, &KMapFetcher::fetched,
-                   [&mapw](QString map_path)
+                   [&renderw](QString map_path)
                    {
-                     mapw.addMap(map_path, true);
-                     mapw.renderMap();
+                     renderw.addMap(map_path, true);
+                     renderw.renderMap();
                    });
 
   QDir        dir(mmc_path + "/class");
@@ -106,19 +108,19 @@ int main(int argc, char* argv[])
 
   KGeoCoor start_lat_lon = KGeoCoor::fromDegs(59.9769195, 30.3642851);
 
-  QObject::connect(&mapw, &KRenderWidget::mousePressed, &auto_scroll,
-                   &KAutoScroll::stop);
-  QObject::connect(&mapw, &KRenderWidget::mouseMoved, &auto_scroll,
+  QObject::connect(&renderw, &KRenderWidget::mousePressed,
+                   &auto_scroll, &KAutoScroll::stop);
+  QObject::connect(&renderw, &KRenderWidget::mouseMoved, &auto_scroll,
                    &KAutoScroll::accumulate);
-  QObject::connect(&mapw, &KRenderWidget::mouseReleased, &auto_scroll,
-                   &KAutoScroll::start);
-  QObject::connect(&mapw, &KRenderWidget::tapped, &object_man,
+  QObject::connect(&renderw, &KRenderWidget::mouseReleased,
+                   &auto_scroll, &KAutoScroll::start);
+  QObject::connect(&renderw, &KRenderWidget::tapped, &object_man,
                    &KObjectManager::addPoint);
-  QObject::connect(&mapw, &KRenderWidget::pinchStarted, &auto_scroll,
-                   &KAutoScroll::stop);
-  QObject::connect(&mapw, &KRenderWidget::startedRender, &map_fetcher,
-                   &KMapFetcher::requestRect);
-  QObject::connect(&auto_scroll, &KAutoScroll::scroll, &mapw,
+  QObject::connect(&renderw, &KRenderWidget::pinchStarted,
+                   &auto_scroll, &KAutoScroll::stop);
+  QObject::connect(&renderw, &KRenderWidget::startedRender,
+                   &map_fetcher, &KMapFetcher::requestRect);
+  QObject::connect(&auto_scroll, &KAutoScroll::scroll, &renderw,
                    &KRenderWidget::scroll);
 
   double edge_mm        = 15;
@@ -132,7 +134,7 @@ int main(int argc, char* argv[])
   }
 
   KControls::Settings control_settings;
-  control_settings.map_widget     = &mapw;
+  control_settings.map_widget     = &renderw;
   control_settings.edge_mm        = edge_mm;
   control_settings.step_mm        = step_mm;
   control_settings.button_size_mm = button_size_mm;
@@ -141,13 +143,13 @@ int main(int argc, char* argv[])
   KControls controls(control_settings);
   QObject::connect(&controls, &KControls::zoomIn, &auto_scroll,
                    &KAutoScroll::stop);
-  QObject::connect(&controls, &KControls::zoomIn, &mapw,
+  QObject::connect(&controls, &KControls::zoomIn, &renderw,
                    &KRenderWidget::zoomIn);
   QObject::connect(&controls, &KControls::zoomOut, &auto_scroll,
                    &KAutoScroll::stop);
-  QObject::connect(&controls, &KControls::zoomOut, &mapw,
+  QObject::connect(&controls, &KControls::zoomOut, &renderw,
                    &KRenderWidget::zoomOut);
-  QObject::connect(&controls, &KControls::scrollTo, &mapw,
+  QObject::connect(&controls, &KControls::scrollTo, &renderw,
                    &KRenderWidget::scrollTo);
   QObject::connect(&controls, &KControls::switchRecording, &track_man,
                    &KTrackManager::onSwitchRecording);
@@ -174,42 +176,47 @@ int main(int argc, char* argv[])
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
                    &kvo_shape_man, &KShapeManager::getShapeById);
 
-  QObject::connect(&mapw, &KRenderWidget::zoomFinished, &controls,
+  QObject::connect(&renderw, &KRenderWidget::zoomFinished, &controls,
                    &KControls::checkZoomRepeat);
-  QObject::connect(&mapw, &KRenderWidget::mouseMoved, &controls,
+  QObject::connect(&renderw, &KRenderWidget::mouseMoved, &controls,
                    &KControls::onMouseMoved);
-  QObject::connect(&mapw, &KRenderWidget::movedCenterTo, &controls,
+  QObject::connect(&renderw, &KRenderWidget::movedCenterTo, &controls,
                    &KControls::setCurrCoor);
 
+  KScaleLabel scale_label(&renderw);
+  QObject::connect(&scale_label, &KScaleLabel::getMip, &renderw,
+                   &KRenderWidget::getMip, Qt::DirectConnection);
+
 #ifdef BUILD_WITH_SENSORS
-  KPositionLabel   position_label(&mapw);
+  KPositionLabel   position_label(&renderw);
   QGeoPositionInfo info;
   info.setCoordinate({59.9769195, 30.3642851});
   position_label.updateGeoPosition(info);
-  QObject::connect(&mapw, &KRenderWidget::modified, &position_label,
-                   &KPositionLabel::update);
-  QObject::connect(&mapw, &KRenderWidget::paintUserObjects,
+  QObject::connect(&renderw, &KRenderWidget::modified,
+                   &position_label, &KPositionLabel::update);
+  QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
                    &track_man, &KTrackManager::paint,
                    Qt::DirectConnection);
-  QObject::connect(&mapw, &KRenderWidget::paintUserObjects,
+  QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
                    &object_man, &KObjectManager::paint,
                    Qt::DirectConnection);
-  QObject::connect(&track_man, &KTrackManager::kcoor2pix, &mapw,
+  QObject::connect(&track_man, &KTrackManager::kcoor2pix, &renderw,
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::kcoor2pix, &mapw,
+  QObject::connect(&object_man, &KObjectManager::kcoor2pix, &renderw,
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
-  QObject::connect(&position_label, &KPositionLabel::deg2pix, &mapw,
-                   &KRenderWidget::deg2pix, Qt::DirectConnection);
+  QObject::connect(&position_label, &KPositionLabel::deg2pix,
+                   &renderw, &KRenderWidget::deg2pix,
+                   Qt::DirectConnection);
 
-  QObject::connect(&track_man, &KTrackManager::updated, &mapw,
+  QObject::connect(&track_man, &KTrackManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KObjectManager::updated, &mapw,
+  QObject::connect(&object_man, &KObjectManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
   QObject::connect(&object_man, &KObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 
   QGeoPositionInfoSource* geo =
-      QGeoPositionInfoSource::createDefaultSource(&mapw);
+      QGeoPositionInfoSource::createDefaultSource(&renderw);
   if (geo)
   {
     QObject::connect(geo, &QGeoPositionInfoSource::positionUpdated,
@@ -239,7 +246,7 @@ int main(int argc, char* argv[])
     geo->startUpdates();
   }
 
-  QMagnetometer    magnetometer(&mapw);
+  QMagnetometer    magnetometer(&renderw);
   KHeadingProvider heading_provider(&magnetometer);
   QObject::connect(&magnetometer, &QMagnetometer::readingChanged,
                    &heading_provider, &KHeadingProvider::update);
@@ -267,8 +274,8 @@ int main(int argc, char* argv[])
 
 #endif
 
-  mapw.show();
-  mapw.setViewPoint(start_lat_lon, 1);
+  renderw.show();
+  renderw.setViewPoint(start_lat_lon, 1);
 
   return a.exec();
 }

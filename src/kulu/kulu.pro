@@ -19,6 +19,7 @@ kcontrols.cpp \
  knewobjectwidget.cpp \
  kposgenerator.cpp \
  krenderwidget.cpp \
+ kscalelabel.cpp \
  ktrackmanager.cpp \
 main.cpp
 
@@ -36,6 +37,7 @@ kcontrols.h \
  knewobjectwidget.h \
  kposgenerator.h \
  krenderwidget.h \
+ kscalelabel.h \
  ktrackmanager.h
 
 !linux-buildroot-g++: SOURCES += \
