@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 
-android: SUBDIRS += knav
-else: SUBDIRS += pan2kmap kunite knav
+android: SUBDIRS += kulu
+else: SUBDIRS += pan2kmap kunite kulu
+
 
 
