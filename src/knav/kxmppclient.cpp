@@ -37,7 +37,6 @@ void KXmppClient::sendFile( QString jid,
                             QString filePath,
                             QString description)
 {
-    //qDebug() << "The sendFile placeholder does not actually do nothing.";
     qDebug() << "Sending" << filePath << "to" << jid << "with description" << description;
     if (!isConnected())
     {
@@ -51,8 +50,18 @@ void KXmppClient::sendFile( QString jid,
 void KXmppClient::reconnectToServer(const QString& jid, const QString& password)
 {
     if (isConnected())
+    {
         disconnectFromServer();
-    connectToServer(jid, password);
+        auto conn = std::make_shared<QMetaObject::Connection>();
+        *conn = connect(this, &QXmppClient::disconnected,
+                [this, jid, password, conn]()
+        {
+            QObject::disconnect(*conn);
+            this->connectToServer(jid, password);
+        });
+    }
+    else
+        connectToServer(jid, password);
 }
 
 QString KXmppClient::generateReceivedFileName(QXmppTransferJob *job)
