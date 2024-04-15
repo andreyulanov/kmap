@@ -806,11 +806,7 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
       auto obj = map->render_data[layer_idx][obj_idx];
       object_count++;
       if (object_count == map->render_object_count)
-      {
-        if (render_idx == KRenderMap::render_count - 1)
-          paintUserObjects(p);
         return;
-      }
       if (!obj)
         continue;
       if (!checkMipRange(obj))
@@ -821,8 +817,6 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
 
       if (!paintObject(p, obj, render_idx))
       {
-        if (render_idx == KRenderMap::render_count - 1)
-          paintUserObjects(p);
         emit rendered(0);
         return;
       }
@@ -988,6 +982,8 @@ void KRender::run()
 
   getting_pixmap_enabled = true;
   main_pixmap            = render_pixmap;
+  paintUserObjects(&p0);
+
   emit rendered(0);
   if (loading_enabled)
     checkLoad();
