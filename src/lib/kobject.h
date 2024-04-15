@@ -1,6 +1,7 @@
 #ifndef KOBJECT_H
 #define KOBJECT_H
 
+#include <QFileInfo>
 #include "kmap.h"
 
 struct KObjectClass
@@ -42,6 +43,7 @@ signals:
   QPoint kcoor2pix(KGeoCoor);
   void   updated();
   void   finishEdit();
+  void   saved(QString);
 
 public:
   KObjectManager(QString objects_dir, double pixel_size_mm);
@@ -50,6 +52,13 @@ public:
   void addPoint(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();
+  void loadFile(QString path);
+
+private slots:
+  // Catches signals without arguments and emmits its overloaded
+  // variants with arguments
+  void loadFileWithoutUpdate(QFileInfo file_info);
+  void loadFileWithoutUpdate(QString path);
 };
 
 #endif  // KOBJECT_H

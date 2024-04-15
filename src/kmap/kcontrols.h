@@ -42,6 +42,7 @@ private:
   QPushButton record;
   QPushButton add;
   QPushButton ok;
+  QPushButton login_button;
   KGeoCoor    curr_coor;
   Settings    settings;
 
@@ -61,6 +62,7 @@ signals:
   bool isRecording();
   void selectShape();
   void acceptObject();
+  void login();
 
 public:
   KControls(Settings settings);

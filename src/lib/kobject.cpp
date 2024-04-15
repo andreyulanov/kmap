@@ -223,3 +223,21 @@ void KObjectManager::acceptObject()
   updated();
   finishEdit();
 }
+
+void KObjectManager::loadFileWithoutUpdate(QString path)
+{
+  KObject object;
+  object.load(path, pixel_size_mm);
+  objects.append(object);
+}
+
+void KObjectManager::loadFileWithoutUpdate(QFileInfo file_info)
+{
+  loadFile(file_info.absoluteFilePath());
+}
+
+void KObjectManager::loadFile(QString path)
+{
+  loadFileWithoutUpdate(path);
+  emit updated();
+}

@@ -88,7 +88,7 @@ void KControls::update()
 KControls::KControls(Settings v):
     zoom_in(v.map_widget), zoom_out(v.map_widget),
     center_position(v.map_widget), record(v.map_widget),
-    add(v.map_widget), ok(v.map_widget)
+    add(v.map_widget), ok(v.map_widget), login_button(v.map_widget)
 {
   settings           = v;
   auto mapw          = settings.map_widget;
@@ -142,6 +142,12 @@ KControls::KControls(Settings v):
   connect(&ok, &QPushButton::pressed, &ok, &QWidget::hide);
   connect(&ok, &QPushButton::pressed, this, &KControls::acceptObject);
   ok.hide();
+
+  initButton(&login_button, QPixmap(":/labels/in.png"),
+             {edge, mapw->height() / 2 - step * 2},
+             settings.button_size_mm);
+  connect(&login_button, &QPushButton::pressed, this,
+          &KControls::login);
 }
 
 void KControls::checkZoomRepeat()

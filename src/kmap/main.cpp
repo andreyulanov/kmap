@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QProcess>
+
 #include "krenderwidget.h"
 #include "kautoscroll.h"
 #include "kcontrols.h"
@@ -15,6 +16,13 @@
 #include "knewobjectwidget.h"
 #include "kmapfetcher.h"
 #include "kscalelabel.h"
+#include "kxmppclient.h"
+#include "kloginwidget.h"
+#include "krosterwidget.h"
+#include <kportableobjectsender.h>
+#include <qxmpp/QXmppClient.h>
+#include <qxmpp/QXmppLogger.h>
+#include <qxmpp/QXmppRosterManager.h>
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -276,6 +284,53 @@ int main(int argc, char* argv[])
 
   renderw.show();
   renderw.setViewPoint(start_lat_lon, 1);
+
+  /// TODO: Improve setting up
+  QString aliceJid      = "knav.alice@macaw.me";
+  QString alicePassword = "very-secure-password-for-knav-alice";
+  QString bobJid        = "knav.bob@macaw.me";
+  QString bobPassword   = "very-secure-password-for-knav-bob";
+  QString log_path      = "client.log";
+  // QString jidResource	 	= String("QXmpp");
+  QString jidResource = "flowerpot";
+  QString objects_dir = "./objects";
+  QString proxy       = "proxy.macaw.me";
+
+  KXmppClient client(objects_dir, proxy);
+  client.logger()->setLogFilePath(log_path);
+  client.logger()->setLoggingType(QXmppLogger::FileLogging);
+
+  KLoginWidget* loginw =
+      new KLoginWidget(screen_size_pix, bobJid, bobPassword);
+  QObject::connect(loginw, &KLoginWidget::connectToServer, &client,
+                   qOverload<const QString&, const QString&>(
+                       &KXmppClient::reconnectToServer));
+  QObject::connect(&controls, &KControls::login, loginw,
+                   &QWidget::show);
+  loginw->show();
+
+  KRosterWidget roster_widget(
+      client.findExtension<QXmppRosterManager>());
+  roster_widget.setFixedSize(screen_size_pix);
+  KPortableObjectSender sender;
+
+  QObject::connect(&client, &QXmppClient::disconnected,
+                   &roster_widget, &KRosterWidget::clear);
+  QObject::connect(&newobjw, &KNewObjectWidget::sendObject,
+                   &roster_widget, &KRosterWidget::show);
+  QObject::connect(&newobjw, &KNewObjectWidget::sendObject, &sender,
+                   &KPortableObjectSender::turnOnSendOnReady);
+  QObject::connect(&newobjw, &KNewObjectWidget::doNotSendObject,
+                   &sender,
+                   &KPortableObjectSender::turnOffSendOnReady);
+  QObject::connect(&client, &KXmppClient::fileDownloaded, &object_man,
+                   qOverload<QString>(&KObjectManager::loadFile));
+  QObject::connect(&sender, &KPortableObjectSender::send, &client,
+                   &KXmppClient::sendFile);
+  QObject::connect(&roster_widget, &KRosterWidget::jidSelected,
+                   &sender, &KPortableObjectSender::setJid);
+  QObject::connect(&object_man, &KObjectManager::saved, &sender,
+                   &KPortableObjectSender::setFilename);
 
   return a.exec();
 }

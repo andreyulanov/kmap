@@ -1,5 +1,5 @@
 linux-buildroot-g++: QT += core gui widgets
-else:QT += core gui widgets positioning sensors
+else:QT += core gui widgets positioning sensors network
 CONFIG += c++2a
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
@@ -15,12 +15,16 @@ SOURCES += \
 kautoscroll.cpp \
 kcontrols.cpp \
  keditwidget.cpp \
+ kloginwidget.cpp \
  kmapfetcher.cpp \
  knewobjectwidget.cpp \
+ kportableobjectsender.cpp \
  kposgenerator.cpp \
  krenderwidget.cpp \
+ krosterwidget.cpp \
  kscalelabel.cpp \
  ktrackmanager.cpp \
+ kxmppclient.cpp \
 main.cpp
 
 HEADERS += \
@@ -33,12 +37,16 @@ HEADERS += \
 kautoscroll.h \
 kcontrols.h \
  keditwidget.h \
+ kloginwidget.h \
  kmapfetcher.h \
  knewobjectwidget.h \
+ kportableobjectsender.h \
  kposgenerator.h \
  krenderwidget.h \
+ krosterwidget.h \
  kscalelabel.h \
- ktrackmanager.h
+ ktrackmanager.h \
+ kxmppclient.h
 
 !linux-buildroot-g++: SOURCES += \
     kheading.cpp \
@@ -49,6 +57,8 @@ kcontrols.h \
     kpositionlabel.h \
 
 INCLUDEPATH += ../lib
+
+unix|win32: LIBS += -lqxmpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
