@@ -307,7 +307,7 @@ int main(int argc, char* argv[])
                        &KXmppClient::reconnectToServer));
   QObject::connect(&controls, &KControls::login, loginw,
                    &QWidget::show);
-  loginw->show();
+  //  loginw->show();
 
   KRosterWidget roster_widget(
       client.findExtension<QXmppRosterManager>());
