@@ -1,2 +1,2 @@
-# kmap
-Geomessaging application and OSM rendering library
+# ksys
+Geomessenger with OSM rendering engine

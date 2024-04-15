@@ -1,11 +1,11 @@
-rm /home/user/kmap/data/maps/global/*
-rm /home/user/kmap/data/maps/world.kmap
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class land.json /home/user/kmap/panmaps/land /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class admin0.json /home/user/kmap/panmaps/admin0 /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class admin1.json /home/user/kmap/panmaps/admin1 /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class rivers.json /home/user/kmap/panmaps/rivers /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class lakes.json /home/user/kmap/panmaps/lakes /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class roads.json /home/user/kmap/panmaps/roads /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class boundaries.json /home/user/kmap/panmaps/boundaries /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/pan2kmap/pan2kmap /home/user/kmap/src/class global.json /home/user/kmap/panmaps /home/user/kmap/data/maps/global
-/home/user/kmap/build-kmap-Desktop-Debug/kunite/kunite /home/user/kmap/data/maps/global ru-spe,ru-len.kmap /home/user/kmap/data/maps/world.kmap
+rm /home/user/ksys/data/maps/global/*
+rm /home/user/ksys/data/maps/world.kmap
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class land.json /home/user/ksys/panmaps/land /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class admin0.json /home/user/ksys/panmaps/admin0 /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class admin1.json /home/user/ksys/panmaps/admin1 /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class rivers.json /home/user/ksys/panmaps/rivers /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class lakes.json /home/user/ksys/panmaps/lakes /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class roads.json /home/user/ksys/panmaps/roads /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class boundaries.json /home/user/ksys/panmaps/boundaries /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/pan2kmap/pan2kmap /home/user/ksys/src/class global.json /home/user/ksys/panmaps /home/user/ksys/data/maps/global
+/home/user/ksys/build-ksys-Desktop-Debug/kunite/kunite /home/user/ksys/data/maps/global ru-spe,ru-len.kmap /home/user/ksys/data/maps/world.kmap
