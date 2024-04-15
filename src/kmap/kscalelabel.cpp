@@ -8,9 +8,9 @@ KScaleLabel::KScaleLabel(QWidget* w)
   setAttribute(Qt::WA_TranslucentBackground);
   for (int i = 0; i < 7; i++)
   {
-    scales.append(pow(1.0, i));
-    scales.append(pow(2.0, i));
-    scales.append(pow(5.0, i));
+    scales.append(1.0 * pow(10, i));
+    scales.append(2.0 * pow(10, i));
+    scales.append(5.0 * pow(10, i));
   }
 }
 
@@ -35,5 +35,8 @@ void KScaleLabel::update()
   pm.fill(Qt::transparent);
   QPainter p(&pm);
   p.translate(pm.width() / 2, pm.height() / 2);
+  p.setPen(QPen(Qt::darkGray, 3));
+  p.drawLine(-nearest_scale_length / 2, 0, nearest_scale_length / 2,
+             0);
   setPixmap(pm);
 }

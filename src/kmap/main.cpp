@@ -194,6 +194,13 @@ int main(int argc, char* argv[])
   KScaleLabel scale_label(&renderw);
   QObject::connect(&scale_label, &KScaleLabel::getMip, &renderw,
                    &KRenderWidget::getMip, Qt::DirectConnection);
+  QObject::connect(&renderw, &KRenderWidget::modified, &scale_label,
+                   &KScaleLabel::update);
+  auto pos  = QPointF{3.0 / pixel_size_mm,
+                     renderw.height() - 10.0 / pixel_size_mm};
+  auto size = QSizeF{10.0 / pixel_size_mm, 3.0 / pixel_size_mm};
+  scale_label.setFixedSize(size.toSize());
+  scale_label.move(pos.toPoint());
 
 #ifdef BUILD_WITH_SENSORS
   KPositionLabel   position_label(&renderw);
