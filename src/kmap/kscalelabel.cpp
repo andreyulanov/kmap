@@ -51,7 +51,6 @@ void KScaleLabel::update()
   auto str = getScaleStr(nearest_scale);
   auto w   = QFontMetrics(font()).horizontalAdvance(str);
   auto h   = QFontMetrics(font()).height();
-  p.setPen(QPen(Qt::black, 4));
   p.drawLine(-nearest_scale_length / 2, -h / 4,
              -nearest_scale_length / 2, h / 4);
   p.drawLine(nearest_scale_length / 2, -h / 4,

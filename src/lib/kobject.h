@@ -33,6 +33,8 @@ class KObjectManager: public QObject
 {
   Q_OBJECT
 
+  static constexpr double proximity_mm = 5.0;
+
   double           pixel_size_mm = 0;
   QString          objects_dir;
   QVector<KObject> objects;
@@ -47,12 +49,14 @@ signals:
 
 public:
   KObjectManager(QString objects_dir, double pixel_size_mm);
-  void createObject(KShape);
-  void paintObject(QPainter* p, KObject obj);
-  void addPoint(KGeoCoor coor);
-  void paint(QPainter*);
-  void acceptObject();
-  void loadFile(QString path);
+  void    createObject(KShape);
+  void    paintObject(QPainter* p, KObject obj);
+  void    addPoint(KGeoCoor coor);
+  void    paint(QPainter*);
+  void    acceptObject();
+  void    loadFile(QString path);
+  KObject getObjectNearPoint(QPoint);
+  KObject getObjectInsidePolygon(QPolygon);
 
 private slots:
   // Catches signals without arguments and emmits its overloaded

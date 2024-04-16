@@ -1,6 +1,6 @@
 #include "kobject.h"
 #include "kserialize.h"
-#include <math.h>
+#include "kmath.h"
 #include <QDir>
 #include <QDebug>
 
@@ -240,4 +240,37 @@ void KObjectManager::loadFile(QString path)
 {
   loadFileWithoutUpdate(path);
   emit updated();
+}
+
+KObject KObjectManager::getObjectNearPoint(QPoint p0)
+{
+  using namespace kmath;
+  auto proximity_pix = proximity_mm / pixel_size_mm;
+  for (auto obj: objects)
+  {
+    if (obj.cl.type == KShape::Point)
+    {
+      auto point_pos = kcoor2pix(obj.polygons.first().first());
+      if ((point_pos - p0).manhattanLength() < proximity_pix)
+        return obj;
+    }
+    if (obj.cl.type == KShape::Line)
+    {
+      for (auto polygon: obj.polygons)
+      {
+        QPolygon polygon_pix;
+        for (auto p: polygon)
+          polygon_pix.append(kcoor2pix(p));
+        if (isNearPolyline(p0, polygon_pix, proximity_pix))
+        {
+        }
+      }
+    }
+  }
+  return KObject();
+}
+
+KObject KObjectManager::getObjectInsidePolygon(QPolygon polygon)
+{
+  return KObject();
 }

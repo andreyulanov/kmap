@@ -1,4 +1,4 @@
-#include "math.h"
+#include "kmath.h"
 #include "kmap.h"
 #include "kserialize.h"
 #include "klocker.h"
@@ -6,6 +6,8 @@
 #include <QElapsedTimer>
 #include <QDateTime>
 #include <QRegularExpression>
+
+using namespace kmath;
 
 namespace kmath
 {
@@ -17,17 +19,56 @@ double rad2deg(double rad)
 {
   return rad / M_PI * 180;
 }
+double sqr(double x)
+{
+  return x * x;
+}
 double getLength(QPoint p1, QPoint p2)
 {
-  return sqrt(pow(p1.x() - p2.x(), 2) + pow(p1.y() - p2.y(), 2));
+  return sqrt(sqr(p1.x() - p2.x()) + sqr(p1.y() - p2.y()));
 }
 double getAngle(QPoint p1, QPoint p2)
 {
   return atan2(p2.y() - p1.y(), p2.x() - p1.x());
 }
-}
+bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
+{
+  QPoint p1 = polyline.first();
+  if (getLength(p0, p1) < tolerance_pix)
+    return true;
+  int x0 = p0.x();
+  int y0 = p0.y();
+  for (int idx = -1; auto p2: polyline)
+  {
+    idx++;
+    if (idx == 0)
+      continue;
 
-using namespace kmath;
+    if (getLength(p0, p2) < tolerance_pix)
+      return true;
+
+    int x1 = p1.x();
+    int y1 = p1.y();
+    int x2 = p2.x();
+    int y2 = p2.y();
+
+    p1 = p2;
+
+    double l  = sqrt(sqr(x2 - x1) + sqr(y2 - y1));
+    double pr = (x0 - x1) * (x2 - x1) + (y0 - y1) * (y2 - y1);
+    double cf = pr / l;
+    if (cf < 0 || cf > 1)
+      continue;
+
+    double d =
+        fabs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)) / l;
+
+    if (d < tolerance_pix)
+      return true;
+  }
+  return false;
+}
+}
 
 double KGeoCoor::longitude() const
 {
