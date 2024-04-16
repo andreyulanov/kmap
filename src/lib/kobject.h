@@ -2,7 +2,7 @@
 #define KOBJECT_H
 
 #include <QFileInfo>
-#include "kmap.h"
+#include "kpack.h"
 
 struct KObjectClass
 {

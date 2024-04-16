@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>
-#include "kmap.h"
+#include "kpack.h"
 
 int main(int argc, char* argv[])
 {
@@ -17,19 +17,19 @@ int main(int argc, char* argv[])
   QFile().remove(result_path);
 
   QString first_map_path = QString(argv[1]) + "/" + argv[2];
-  KMap*   united_map     = new KMap(first_map_path);
+  KPack*  united_map     = new KPack(first_map_path);
   united_map->loadAll();
 
   for (auto& fi: fi_list)
   {
-    if (fi.suffix() != "kmap")
+    if (fi.suffix() != "kpack")
       continue;
 
     if (fi.absoluteFilePath() == first_map_path)
       continue;
 
     qDebug() << "loading" << fi.absoluteFilePath();
-    KMap* map = new KMap(fi.absoluteFilePath());
+    KPack* map = new KPack(fi.absoluteFilePath());
     map->loadAll();
     united_map->add(map);
   }

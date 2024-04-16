@@ -1,10 +1,10 @@
-#include "kmapfetcher.h"
+#include "kpackfetcher.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
 #include <QDebug>
 
-KMapFetcher::KMapFetcher(QString _map_dir, const KMap* world_map)
+KPackFetcher::KPackFetcher(QString _map_dir, const KPack* world_map)
 {
   map_dir = _map_dir;
   QFile f(map_dir + "/maplist.txt");
@@ -32,11 +32,11 @@ KMapFetcher::KMapFetcher(QString _map_dir, const KMap* world_map)
   }
 }
 
-void KMapFetcher::run()
+void KPackFetcher::run()
 {
   QDir        dir(map_dir);
   QStringList list;
-  list << "*.kmap";
+  list << "*.kpack";
   dir.setNameFilters(list);
   auto existing_maps = dir.entryList();
 
@@ -85,7 +85,7 @@ void KMapFetcher::run()
   }
 }
 
-void KMapFetcher::requestRect(QRectF rect)
+void KPackFetcher::requestRect(QRectF rect)
 {
   requested_rect = rect;
   start();

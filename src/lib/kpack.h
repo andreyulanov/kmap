@@ -1,5 +1,5 @@
-#ifndef KMAP_H
-#define KMAP_H
+#ifndef KPACK_H
+#define KPACK_H
 
 #include <QPolygon>
 #include <QColor>
@@ -70,7 +70,7 @@ struct KGeoPolygon: public QVector<KGeoCoor>
   QPolygonF toPolygonM();
 };
 
-struct KMapObject
+struct KPackObject
 {
   KShape*                   shape;
   QString                   name;
@@ -82,10 +82,10 @@ struct KMapObject
   void save(const QVector<KShape*>* shape_list, QByteArray& ba);
   void load(QVector<KShape*>* shape_list, int& pos,
             const QByteArray& ba);
-  virtual ~KMapObject();
+  virtual ~KPackObject();
 };
 
-struct KObjectCollection: public QVector<KMapObject*>
+struct KObjectCollection: public QVector<KPackObject*>
 {
   enum Status
   {
@@ -102,7 +102,7 @@ struct RenderAddress
   int obj_idx;
 };
 
-class KMap
+class KPack
 {
   static constexpr int border_coor_precision_coef = 10000;
 
@@ -119,14 +119,14 @@ protected:
   QVector<KObjectCollection*> tiles;
 
 public:
-  KMap(const QString& path);
-  virtual ~KMap();
+  KPack(const QString& path);
+  virtual ~KPack();
   void save(QString new_path = "") const;
   void loadMain(bool load_objects);
   void loadTile(int tile_idx, QRectF tile_rect_m);
   void loadAll();
   void clear();
-  void add(KMap*);
+  void add(KPack*);
 
   void   setMainMip(double);
   double getMainMip() const;
@@ -141,7 +141,7 @@ public:
   const QVector<KObjectCollection*> getTiles() const;
 };
 
-class KRenderMap: public QObject, public KMap
+class KRenderMap: public QObject, public KPack
 {
   Q_OBJECT
 
@@ -149,7 +149,7 @@ public:
   static constexpr int max_layer_count = 24;
   static constexpr int render_count    = 6;
 
-  QVector<KMapObject*> render_data[max_layer_count];
+  QVector<KPackObject*> render_data[max_layer_count];
   QReadWriteLock       main_lock;
   QReadWriteLock       tile_lock;
   QList<RenderAddress> render_start_list;
@@ -174,14 +174,14 @@ struct KRenderMapCollection: public QVector<KRenderMap*>
   virtual ~KRenderMapCollection();
 };
 
-class KEditableMap: public KMap
+class KEditablePack: public KPack
 {
 public:
-  KEditableMap(const QString& path);
-  void addObjects(const QVector<KMapObject*>& obj_list,
+  KEditablePack(const QString& path);
+  void addObjects(const QVector<KPackObject*>& obj_list,
                   int                         max_objects_per_tile);
   void setShapes(QVector<KShape*>);
   void addBorder(KGeoPolygon);
 };
 
-#endif  // KMAP_H
+#endif  // KPACK_H

@@ -10,11 +10,11 @@
 #include "kautoscroll.h"
 #include "kcontrols.h"
 #include "keditwidget.h"
-#include "kmap.h"
+#include "kpack.h"
 #include "kposgenerator.h"
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"
-#include "kmapfetcher.h"
+#include "kpackfetcher.h"
 #include "kscalelabel.h"
 #include "kxmppclient.h"
 #include "kloginwidget.h"
@@ -87,14 +87,14 @@ int main(int argc, char* argv[])
   mapw_settings.update_interval_ms      = 100;
 
   KRenderWidget  renderw(mapw_settings);
-  KMapFetcher    map_fetcher(mapw_settings.map_dir,
+  KPackFetcher    map_fetcher(mapw_settings.map_dir,
                              renderw.getWorldMap());
   KShapeManager  kvo_shape_man(mmc_path + "/class");
   KTrackManager  track_man(mmc_path + "/tracks");
   KObjectManager object_man(mmc_path + "/objects", pixel_size_mm);
   KAutoScroll    auto_scroll;
 
-  QObject::connect(&map_fetcher, &KMapFetcher::fetched,
+  QObject::connect(&map_fetcher, &KPackFetcher::fetched,
                    [&renderw](QString map_path)
                    {
                      renderw.addMap(map_path, true);
@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::pinchStarted,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::startedRender,
-                   &map_fetcher, &KMapFetcher::requestRect);
+                   &map_fetcher, &KPackFetcher::requestRect);
   QObject::connect(&auto_scroll, &KAutoScroll::scroll, &renderw,
                    &KRenderWidget::scroll);
 

@@ -43,14 +43,14 @@ void KRenderWidget::scan(QString map_dir)
                 QDir::NoSymLinks | QDir::NoDotAndDotDot);
   QFileInfoList list = dir.entryInfoList();
 
-  auto world_map_path = map_dir + "/world.kmap";
+  auto world_map_path = map_dir + "/world.kpack";
   addMap(world_map_path, true);
   for (auto fi: list)
   {
     auto path = fi.absoluteFilePath();
     if (path == world_map_path)
       continue;
-    if (path.endsWith(".kmap"))
+    if (path.endsWith(".kpack"))
     {
       qDebug() << "adding" << path;
       addMap(path, false);
@@ -63,7 +63,7 @@ void KRenderWidget::addMap(QString path, bool load_now)
   r.addMap(path, load_now);
 }
 
-const KMap* KRenderWidget::getWorldMap()
+const KPack* KRenderWidget::getWorldMap()
 {
   return r.getMaps()->first();
 }

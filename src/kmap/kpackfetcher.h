@@ -1,12 +1,12 @@
-#ifndef KMAPFETCHER_H
-#define KMAPFETCHER_H
+#ifndef KPACKFETCHER_H
+#define KPACKFETCHER_H
 
 #include <QThread>
 #include <QPolygonF>
 #include <QMap>
-#include "kmap.h"
+#include "kpack.h"
 
-class KMapFetcher: public QThread
+class KPackFetcher: public QThread
 {
   Q_OBJECT
 
@@ -26,8 +26,8 @@ signals:
   void fetched(QString map_name);
 
 public:
-  KMapFetcher(QString map_dir, const KMap* world_map);
+  KPackFetcher(QString map_dir, const KPack* world_map);
   void requestRect(QRectF);
 };
 
-#endif  // KMAPFETCHER_H
+#endif  // KPACKFETCHER_H

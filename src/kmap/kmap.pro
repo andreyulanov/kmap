@@ -8,16 +8,16 @@ QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 SOURCES += \
  ../lib/kdatetime.cpp \
 ../lib/klocker.cpp \
-../lib/kmap.cpp \
  ../lib/kobject.cpp \
+ ../lib/kpack.cpp \
 ../lib/krender.cpp \
 ../lib/kshape.cpp \
 kautoscroll.cpp \
 kcontrols.cpp \
  keditwidget.cpp \
  kloginwidget.cpp \
- kmapfetcher.cpp \
  knewobjectwidget.cpp \
+ kpackfetcher.cpp \
  kportableobjectsender.cpp \
  kposgenerator.cpp \
  krenderwidget.cpp \
@@ -30,16 +30,16 @@ main.cpp
 HEADERS += \
  ../lib/kdatetime.h \
 ../lib/klocker.h \
-../lib/kmap.h \
  ../lib/kobject.h \
+ ../lib/kpack.h \
 ../lib/krender.h \
 ../lib/kshape.h \
 kautoscroll.h \
 kcontrols.h \
  keditwidget.h \
  kloginwidget.h \
- kmapfetcher.h \
  knewobjectwidget.h \
+ kpackfetcher.h \
  kportableobjectsender.h \
  kposgenerator.h \
  krenderwidget.h \

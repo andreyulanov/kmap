@@ -1,5 +1,5 @@
 #include "kmath.h"
-#include "kmap.h"
+#include "kpack.h"
 #include "kserialize.h"
 #include "klocker.h"
 #include <QDebug>
@@ -335,8 +335,8 @@ void KGeoPolygon::load(const QByteArray& ba, int& pos,
   }
 }
 
-void KMapObject::load(QVector<KShape*>* shape_list, int& pos,
-                      const QByteArray& ba)
+void KPackObject::load(QVector<KShape*>* shape_list, int& pos,
+                       const QByteArray& ba)
 {
   using namespace KSerialize;
 
@@ -395,7 +395,7 @@ void KMapObject::load(QVector<KShape*>* shape_list, int& pos,
   }
 }
 
-KGeoCoor KMapObject::getCenter()
+KGeoCoor KPackObject::getCenter()
 {
   if (polygons.isEmpty())
     return KGeoCoor();
@@ -410,8 +410,8 @@ KGeoCoor KMapObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-void KMapObject::save(const QVector<KShape*>* shape_list,
-                      QByteArray&             ba)
+void KPackObject::save(const QVector<KShape*>* shape_list,
+                       QByteArray&             ba)
 {
   using namespace KSerialize;
   write(ba, (uchar)(name.count() > 0));
@@ -441,58 +441,58 @@ void KMapObject::save(const QVector<KShape*>* shape_list,
   }
 }
 
-KMapObject::~KMapObject()
+KPackObject::~KPackObject()
 {
   qDeleteAll(polygons);
   polygons.clear();
 }
 
-KMap::KMap(const QString& v)
+KPack::KPack(const QString& v)
 {
   path = v;
 }
 
-KMap::~KMap()
+KPack::~KPack()
 {
   clear();
 }
 
-void KMap::setMainMip(double v)
+void KPack::setMainMip(double v)
 {
   main_mip = v;
 }
 
-double KMap::getMainMip() const
+double KPack::getMainMip() const
 {
   return main_mip;
 }
 
-void KMap::setTileMip(double v)
+void KPack::setTileMip(double v)
 {
   tile_mip = v;
 }
 
-double KMap::getTileMip() const
+double KPack::getTileMip() const
 {
   return tile_mip;
 }
 
-void KMap::setFrame(KGeoRect v)
+void KPack::setFrame(KGeoRect v)
 {
   frame = v;
 }
 
-const KGeoRect& KMap::getFrame() const
+const KGeoRect& KPack::getFrame() const
 {
   return frame;
 }
 
-const KObjectCollection& KMap::getMain() const
+const KObjectCollection& KPack::getMain() const
 {
   return main;
 }
 
-const QVector<KObjectCollection*> KMap::getTiles() const
+const QVector<KObjectCollection*> KPack::getTiles() const
 {
   return tiles;
 }
@@ -507,7 +507,7 @@ bool KRenderMap::intersects(QPolygonF polygon_m) const
   return false;
 }
 
-void KMap::add(KMap* m)
+void KPack::add(KPack* m)
 {
   frame = frame.united(m->frame);
   for (auto new_obj: m->main)
@@ -528,7 +528,7 @@ void KMap::add(KMap* m)
   }
 }
 
-void KMap::clear()
+void KPack::clear()
 {
   if (main.status != KObjectCollection::Loaded)
     return;
@@ -551,7 +551,7 @@ void KMap::clear()
   main.status = KObjectCollection::Null;
 }
 
-void KMap::save(QString new_path) const
+void KPack::save(QString new_path) const
 {
   using namespace KSerialize;
 
@@ -566,7 +566,7 @@ void KMap::save(QString new_path) const
     return;
   }
 
-  write(&f, QString("kmap"));
+  write(&f, QString("kpack"));
   write(&f, frame);
   char has_borders = (borders.count() > 0);
   write(&f, has_borders);
@@ -627,7 +627,7 @@ void KMap::save(QString new_path) const
   write(&f, small_idx_start_pos);
 }
 
-void KMap::loadMain(bool load_objects)
+void KPack::loadMain(bool load_objects)
 {
   if (main.status == KObjectCollection::Loading)
     return;
@@ -714,7 +714,7 @@ void KMap::loadMain(bool load_objects)
   pos = 0;
   for (auto& obj: main)
   {
-    obj = new KMapObject;
+    obj = new KPackObject;
     obj->load(&shapes, pos, ba);
   }
   int small_count;
@@ -724,14 +724,14 @@ void KMap::loadMain(bool load_objects)
     part = nullptr;
 }
 
-void KMap::loadAll()
+void KPack::loadAll()
 {
   loadMain(true);
   for (int i = 0; i < tiles.count(); i++)
     loadTile(i, QRect());
 }
 
-void KMap::loadTile(int tile_idx, QRectF tile_rect_m)
+void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
 {
   if (main.status != KObjectCollection::Loaded)
     return;
@@ -793,13 +793,13 @@ void KMap::loadTile(int tile_idx, QRectF tile_rect_m)
   int pos                 = 0;
   for (auto& obj: *tiles[tile_idx])
   {
-    obj = new KMapObject;
+    obj = new KPackObject;
     obj->load(&shapes, pos, ba);
     obj->tile_frame_m = tile_rect_m;
   }
 }
 
-KRenderMap::KRenderMap(const QString& path): KMap(path)
+KRenderMap::KRenderMap(const QString& path): KPack(path)
 {
 }
 
@@ -816,7 +816,7 @@ void KRenderMap::clear()
   KLocker small_locker(&tile_lock, KLocker::Write);
   if (!small_locker.hasLocked())
     return;
-  KMap::clear();
+  KPack::clear();
   for (int i = 0; i < max_layer_count; i++)
     render_data[i].clear();
   render_object_count = 0;
@@ -825,7 +825,7 @@ void KRenderMap::clear()
 
 void KRenderMap::loadMain(bool load_objects)
 {
-  KMap::loadMain(load_objects);
+  KPack::loadMain(load_objects);
   if (load_objects)
   {
     QWriteLocker big_locker(&main_lock);
@@ -837,29 +837,29 @@ void KRenderMap::loadMain(bool load_objects)
 
 void KRenderMap::loadTile(int tile_idx, QRectF tile_rect_m)
 {
-  KMap::loadTile(tile_idx, tile_rect_m);
+  KPack::loadTile(tile_idx, tile_rect_m);
   QWriteLocker small_locker(&tile_lock);
   addCollectionToIndex(tiles[tile_idx]);
   tiles[tile_idx]->status = KObjectCollection::Loaded;
   loaded();
 }
 
-KEditableMap::KEditableMap(const QString& path): KMap(path)
+KEditablePack::KEditablePack(const QString& path): KPack(path)
 {
 }
 
-void KEditableMap::setShapes(QVector<KShape*> v)
+void KEditablePack::setShapes(QVector<KShape*> v)
 {
   shapes = v;
 }
 
-void KEditableMap::addBorder(KGeoPolygon v)
+void KEditablePack::addBorder(KGeoPolygon v)
 {
   borders.append(v);
 }
 
-void KEditableMap::addObjects(const QVector<KMapObject*>& obj_list,
-                              int max_objects_per_tile)
+void KEditablePack::addObjects(const QVector<KPackObject*>& obj_list,
+                               int max_objects_per_tile)
 {
   int tile_side_num =
       std::ceil(1.0 * obj_list.count() / max_objects_per_tile);

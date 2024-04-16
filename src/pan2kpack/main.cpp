@@ -3,7 +3,7 @@
 #include "math.h"
 #include "mapapi.h"
 #include "qdmcmp.h"
-#include "kmap.h"
+#include "kpack.h"
 #include <QApplication>
 #include <QtConcurrent/QtConcurrent>
 #include <QDir>
@@ -19,7 +19,7 @@ bool isVectorMap(QString path)
       .contains(ext);
 }
 
-auto joinPolys(KMapObject* obj)
+auto joinPolys(KPackObject* obj)
 {
   double join_tolerance_m = 1.0;
   for (int i = -1; auto& polygon1: obj->polygons)
@@ -89,11 +89,11 @@ int main(int argc, char* argv[])
   if (QString(argv[2]).contains("local"))
     is_analyzing_local_map = true;
 
-  KMap* world_map = nullptr;
+  KPack* world_map = nullptr;
   if (is_analyzing_local_map)
   {
-    auto world_map_path = output_dir + "/world.kmap";
-    world_map           = new KMap(world_map_path);
+    auto world_map_path = output_dir + "/world.kpack";
+    world_map           = new KPack(world_map_path);
     world_map->loadAll();
   }
 
@@ -113,11 +113,11 @@ int main(int argc, char* argv[])
     qDebug() << "  converting...";
 
     int  poi_count = 0;
-    auto path      = output_dir + "/" + map_name + ".kmap";
+    auto path      = output_dir + "/" + map_name + ".kpack";
     path.remove(".sitx");
     path.remove(".sitz");
     path.remove(".mptz");
-    KEditableMap map(path);
+    KEditablePack map(path);
 
     if (is_analyzing_local_map)
     {
@@ -152,8 +152,8 @@ int main(int argc, char* argv[])
     map.setShapes(*shape_list);
     map.setMainMip(shape_man.main_mip);
     map.setTileMip(shape_man.tile_mip);
-    QVector<KMapObject*> obj_list;
-    DFRAME               df;
+    QVector<KPackObject*> obj_list;
+    DFRAME                df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
     auto top_left =
         KGeoCoor::fromDegs(rad2deg(df.X2), rad2deg(df.Y1));
@@ -245,8 +245,8 @@ int main(int argc, char* argv[])
 
       name = name.remove("\"");
 
-      KMapObject* obj = new KMapObject;
-      obj->name       = name;
+      KPackObject* obj = new KPackObject;
+      obj->name        = name;
 
       obj->shape = (*shape_list)[shape_idx];
 

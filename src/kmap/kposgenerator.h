@@ -2,7 +2,7 @@
 #define KPOSGENERATOR_H
 
 #include <QTimer>
-#include "kmap.h"
+#include "kpack.h"
 
 class KPosGenerator: public QObject
 {

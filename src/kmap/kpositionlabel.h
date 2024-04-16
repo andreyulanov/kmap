@@ -2,7 +2,7 @@
 #define KPOSITIONLABEL_H
 
 #include <QLabel>
-#include "kmap.h"
+#include "kpack.h"
 #include <QGeoPositionInfo>
 
 class KPositionLabel: public QLabel

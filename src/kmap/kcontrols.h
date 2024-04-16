@@ -4,7 +4,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QElapsedTimer>
-#include "kmap.h"
+#include "kpack.h"
 
 class KControls: public QObject
 {
