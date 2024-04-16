@@ -8,6 +8,7 @@ class KScaleLabel: public QLabel
   Q_OBJECT
 
   QList<double> scales;
+  QString       getScaleStr(double scale);
 
 signals:
   double getMip();

@@ -404,7 +404,7 @@ void KRenderWidget::scaleLabel()
 
 double KRenderWidget::getMip()
 {
-  return r.getMip() * intermediate_zoom_coef;
+  return r.getMip();
 }
 
 void KRenderWidget::setScrollingEnabled(bool v)

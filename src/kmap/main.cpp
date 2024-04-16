@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
                    &KScaleLabel::update);
   auto pos  = QPointF{3.0 / pixel_size_mm,
                      renderw.height() - 10.0 / pixel_size_mm};
-  auto size = QSizeF{10.0 / pixel_size_mm, 3.0 / pixel_size_mm};
+  auto size = QSizeF{20.0 / pixel_size_mm, 3.0 / pixel_size_mm};
   scale_label.setFixedSize(size.toSize());
   scale_label.move(pos.toPoint());
 
