@@ -487,8 +487,9 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
   }
 }
 
-void KRender::paintLineObject(QPainter*         painter,
-                              const KPackObject* obj, int render_idx)
+void KRender::paintLineObject(QPainter*          painter,
+                              const KPackObject* obj, int render_idx,
+                              int line_iter)
 {
   auto& frame = obj->frame;
 
@@ -610,6 +611,14 @@ void KRender::paintLineObject(QPainter*         painter,
         nh.point_count++;
         nh.end_idx = point_idx;
       }
+
+    QPen pen;
+    if (line_iter == 0)
+      pen =
+          QPen(sh->brush, w * 2, style, Qt::RoundCap, Qt::RoundJoin);
+    else
+      pen = QPen(sh->pen, w, style, Qt::RoundCap, Qt::RoundJoin);
+    painter->setPen(pen);
     painter->drawPolyline(pl);
     if (sizeable_w > 7 && w > 0)
     {
@@ -672,7 +681,7 @@ bool KRender::checkMipRange(const KPackObject* obj)
 }
 
 bool KRender::paintObject(QPainter* p, const KPackObject* obj,
-                          int render_idx)
+                          int render_idx, int line_iter)
 {
   switch (obj->shape->type)
   {
@@ -680,7 +689,7 @@ bool KRender::paintObject(QPainter* p, const KPackObject* obj,
     paintPointObject(p, obj);
     break;
   case KShape::Line:
-    paintLineObject(p, obj, render_idx);
+    paintLineObject(p, obj, render_idx, line_iter);
     break;
   case KShape::Polygon:
     paintPolygonObject(p, obj, render_idx);
@@ -779,11 +788,13 @@ void KRender::render(QPainter* p, QVector<KRenderMap*> render_maps,
     KLocker tile_locker(&map->tile_lock, KLocker::Read);
     if (!tile_locker.hasLocked())
       continue;
-    renderMap(p, map, render_idx);
+    for (int line_iter = 0; line_iter < 2; line_iter++)
+      renderMap(p, map, render_idx, line_iter);
   }
 }
 
-void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
+void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx,
+                        int line_iter)
 {
   if (!map || render_idx > map->render_start_list.count() - 1)
     return;
@@ -793,6 +804,7 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
 
   auto render_frame_m = getDrawRectM();
 
+  p->setRenderHint(QPainter::Antialiasing);
   for (int layer_idx = start.layer_idx;
        layer_idx < KRenderMap::max_layer_count; layer_idx++)
   {
@@ -809,13 +821,21 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx)
         return;
       if (!obj)
         continue;
+
+      if (obj->shape->type != KShape::Line && line_iter == 1)
+        continue;
+
+      if (obj->shape->type == KShape::Line && line_iter == 0 &&
+          obj->shape->brush == Qt::black)
+        continue;
+
       if (!checkMipRange(obj))
         continue;
       if (obj->tile_frame_m.isValid())
         if (!obj->tile_frame_m.intersects(render_frame_m))
           continue;
 
-      if (!paintObject(p, obj, render_idx))
+      if (!paintObject(p, obj, render_idx, line_iter))
       {
         emit rendered(0);
         return;

@@ -68,7 +68,7 @@ class KRender: public QThread
   void run();
   void start() = delete;
   void insertMap(int idx, QString path, bool load_now);
-  void renderMap(QPainter* p, KRenderMap* map, int render_idx);
+  void renderMap(QPainter* p, KRenderMap* map, int render_idx, int line_iter);
   void render(QPainter* p, QVector<KRenderMap*> render_maps,
               int render_idx);
 
@@ -77,7 +77,7 @@ class KRender: public QThread
   void checkYieldResult();
 
   bool paintObject(QPainter* p, const KPackObject* obj,
-                   int render_idx);
+                   int render_idx, int line_iter);
   bool paintLineNames(QPainter* p);
   bool paintPolygonNames(QPainter* p);
 
@@ -91,7 +91,7 @@ class KRender: public QThread
   void     paintPolygonObject(QPainter* p, const KPackObject* obj,
                               int render_idx);
   void     paintLineObject(QPainter* painter, const KPackObject* obj,
-                           int render_idx);
+                           int render_idx, int line_iter);
   QRectF   getDrawRectM() const;
   bool     needToLoadMap(const KRenderMap*, const QRectF& draw_rect);
   void     checkLoad();
