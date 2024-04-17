@@ -6,7 +6,9 @@
     "id"     : "land",
     "type"   : "Polygon",
     "code"   : 1000000002,
-    "layer"  : 1,
+    "layer"  : 2,
+    "pen"    : [1, 1, 1],
+    "brush"  : [250, 246, 230],
     "coor_precision_coef" : 100
 },
 {
@@ -17,7 +19,9 @@
     "layer"  : 1,
     "coor_precision_coef" : 100,
     "pen"    : [1, 1, 1],
-    "brush"  : [255, 255, 255],
+    "brush"  : [250, 246, 230],
+    "max_mip": 0.001,
+    "min_mip": 0.001,
     "attributes":
     [
     {
@@ -70,8 +74,8 @@
     "type"   : "Polygon",
     "code"   : 1000000002,
     "layer"  : 5,
-    "brush"  : [166, 220, 238],
-    "tcolor" : [37, 151, 194],
+    "brush"  : [150, 210, 240],
+    "tcolor" : [79, 147, 184],
     "max_mip": 5000,
     "min_mip": 200
 },
@@ -81,8 +85,9 @@
     "code"   : 1000000001,
     "name_code": 1,
     "layer"  : 4,
-    "pen"    : [255, 130, 70],
-    "max_mip": 5000,
+    "width_mm"  : 0.5,
+    "pen"    : [241, 155, 31],
+    "max_mip": 1500,
     "min_mip": 200
 },
 {
@@ -90,7 +95,7 @@
     "type"   : "Line",
     "code"   : 1000000001,
     "layer"  : 7,
-    "width_mm" : 0.8,
+    "width_mm" : 0.5,
     "pen"    : [252, 0, 84]
 },
 {
@@ -98,16 +103,16 @@
     "type"   : "Polygon",
     "code"   : 31110000,
     "layer"  : 0,
-    "brush"  : [166, 220, 238],
-    "tcolor" : [37, 151, 194],
+    "brush"  : [150, 210, 240],
+    "tcolor" : [79, 147, 184],
     "name_code": 1
 },
 {
     "id"     : "complex_water",
     "type"   : "Polygon",
     "layer"  : 10,
-    "brush"  : [166, 220, 238],
-    "tcolor" : [37, 151, 194],
+    "brush"  : [150, 210, 240],
+    "tcolor" : [79, 147, 184],
     "max_mip": 200
 },
 {

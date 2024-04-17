@@ -24,7 +24,7 @@ public:
     double  pixel_size_mm;
     QSize   window_size;
     double  render_window_size_coef = 2;
-    QColor  background_color        = QColor(166, 220, 238);
+    QColor  background_color        = QColor(150, 210, 240);
     int     update_interval_ms      = 100;
   };
 

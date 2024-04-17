@@ -22,15 +22,15 @@ class KRender: public QThread
 
   struct NameHolder
   {
-    int               length_pix  = 0;
-    int               start_idx   = 0;
-    int               end_idx     = 0;
-    int               point_count = 0;
-    double            angle_deg   = 0;
-    QPoint            mid_point;
+    int                length_pix  = 0;
+    int                start_idx   = 0;
+    int                end_idx     = 0;
+    int                point_count = 0;
+    double             angle_deg   = 0;
+    QPoint             mid_point;
     const KPackObject* obj = nullptr;
-    void              fix(const KPackObject* obj, const QPoint& start,
-                          const QPoint& end);
+    void fix(const KPackObject* obj, const QPoint& start,
+             const QPoint& end);
   };
 
   Q_OBJECT
@@ -68,7 +68,8 @@ class KRender: public QThread
   void run();
   void start() = delete;
   void insertMap(int idx, QString path, bool load_now);
-  void renderMap(QPainter* p, KRenderMap* map, int render_idx, int line_iter);
+  void renderMap(QPainter* p, KRenderMap* map, int render_idx,
+                 int line_iter);
   void render(QPainter* p, QVector<KRenderMap*> render_maps,
               int render_idx);
 
