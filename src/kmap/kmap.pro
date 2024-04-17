@@ -4,6 +4,7 @@ CONFIG += c++2a
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
 !linux-buildroot-g++: DEFINES += BUILD_WITH_SENSORS
+!android: DEFINES += BUILD_WITH_XMPP
 
 SOURCES += \
  ../lib/kdatetime.cpp \
@@ -12,19 +13,15 @@ SOURCES += \
  ../lib/kpack.cpp \
 ../lib/krender.cpp \
 ../lib/kshape.cpp \
-kautoscroll.cpp \
-kcontrols.cpp \
+ kautoscroll.cpp \
+ kcontrols.cpp \
  keditwidget.cpp \
- kloginwidget.cpp \
  knewobjectwidget.cpp \
  kpackfetcher.cpp \
- kportableobjectsender.cpp \
  kposgenerator.cpp \
  krenderwidget.cpp \
- krosterwidget.cpp \
  kscalelabel.cpp \
  ktrackmanager.cpp \
- kxmppclient.cpp \
 main.cpp
 
 HEADERS += \
@@ -34,19 +31,27 @@ HEADERS += \
  ../lib/kpack.h \
 ../lib/krender.h \
 ../lib/kshape.h \
-kautoscroll.h \
-kcontrols.h \
+ kautoscroll.h \
+ kcontrols.h \
  keditwidget.h \
- kloginwidget.h \
  knewobjectwidget.h \
  kpackfetcher.h \
- kportableobjectsender.h \
  kposgenerator.h \
  krenderwidget.h \
- krosterwidget.h \
  kscalelabel.h \
- ktrackmanager.h \
- kxmppclient.h
+ ktrackmanager.h
+
+!android: SOURCES += \
+kloginwidget.cpp \
+kportableobjectsender.cpp \
+krosterwidget.cpp \
+kxmppclient.cpp
+
+!android: HEADERS += \
+kloginwidget.h \
+kportableobjectsender.h \
+krosterwidget.h \
+kxmppclient.h
 
 !linux-buildroot-g++: SOURCES += \
     kheading.cpp \
@@ -58,7 +63,7 @@ kcontrols.h \
 
 INCLUDEPATH += ../lib
 
-unix|win32: LIBS += -lqxmpp
+!android: LIBS += -lqxmpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -16,13 +16,15 @@
 #include "knewobjectwidget.h"
 #include "kpackfetcher.h"
 #include "kscalelabel.h"
-#include "kxmppclient.h"
-#include "kloginwidget.h"
-#include "krosterwidget.h"
-#include <kportableobjectsender.h>
-#include <qxmpp/QXmppClient.h>
-#include <qxmpp/QXmppLogger.h>
-#include <qxmpp/QXmppRosterManager.h>
+#ifdef BUILD_WITH_XMPP
+  #include "kxmppclient.h"
+  #include "kloginwidget.h"
+  #include "krosterwidget.h"
+  #include <kportableobjectsender.h>
+  #include <qxmpp/QXmppClient.h>
+  #include <qxmpp/QXmppLogger.h>
+  #include <qxmpp/QXmppRosterManager.h>
+#endif
 
 #ifdef BUILD_WITH_SENSORS
   #include <QGeoPositionInfoSource>
@@ -292,6 +294,7 @@ int main(int argc, char* argv[])
   renderw.show();
   renderw.setViewPoint(start_lat_lon, 1);
 
+#ifdef BUILD_WITH_XMPP
   /// TODO: Improve setting up
   QString aliceJid      = "knav.alice@macaw.me";
   QString alicePassword = "very-secure-password-for-knav-alice";
@@ -338,6 +341,6 @@ int main(int argc, char* argv[])
                    &sender, &KPortableObjectSender::setJid);
   QObject::connect(&object_man, &KObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
-
+#endif
   return a.exec();
 }
