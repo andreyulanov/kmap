@@ -88,20 +88,20 @@ signals:
 
 public:
   KRenderWidget(Settings settings);
-  void        renderMap();
-  void        renderUserObjects();
-  void        setViewPoint(const KGeoCoor& deg, double mip);
-  void        setMaxZoomSpeed(double);
-  void        addMap(QString path, bool load_now);
+  void         renderMap();
+  void         renderUserObjects();
+  void         setViewPoint(const KGeoCoor& deg, double mip);
+  void         setMaxZoomSpeed(double);
+  void         addMap(QString path, bool load_now);
   const KPack* getWorldMap();
-  void        scroll(QPoint diff);
-  void        scrollTo(const KGeoCoor& coor);
-  void        zoomIn();
-  void        zoomOut();
-  QPoint      deg2pix(const KGeoCoor&) const;
-  QPoint      kcoor2pix(const KGeoCoor&) const;
-  KGeoCoor    pix2deg(const QPoint&) const;
-  void        setScrollingEnabled(bool);
-  double      getMip();
+  void         scroll(QPoint diff);
+  void         scrollTo(const KGeoCoor& coor);
+  void         zoomIn();
+  void         zoomOut();
+  QPoint       deg2pix(const KGeoCoor&) const;
+  QPoint       kcoor2pix(const KGeoCoor&) const;
+  KGeoCoor     pix2deg(const QPoint&) const;
+  void         setScrollingEnabled(bool);
+  double       getMip();
 };
 #endif  // KRENDERWIDGET_H

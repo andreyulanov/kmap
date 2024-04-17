@@ -127,7 +127,10 @@ void KRenderWidget::scroll(QPoint diff)
   auto dx = abs(total_pan_pos.x());
   auto dy = abs(total_pan_pos.y());
 
-  if (dx > width() / 2 || dy > height() / 2)
+  auto max_w = width() * (r.getRenderWindowSizeCoef() - 1) / 2;
+  auto max_h = height() * (r.getRenderWindowSizeCoef() - 1) / 2;
+
+  if (dx > max_w || dy > max_h)
   {
     if (!r.isRunning())
     {
