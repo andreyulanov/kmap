@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     map->loadAll();
     united_map->add(map);
   }
-  qDebug() << "saving united map...";
+  qDebug() << "saving united pack...";
   if (united_map)
     united_map->save(result_path);
 }
