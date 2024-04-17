@@ -55,7 +55,7 @@ void KScaleLabel::update()
              -nearest_scale_length / 2, h / 4);
   p.drawLine(nearest_scale_length / 2, -h / 4,
              nearest_scale_length / 2, h / 4);
-  p.translate(-w / 2, h / 4);
+  p.translate(-w / 2, -h / 4);
   KRender::paintOutlinedText(&p, str, Qt::black);
   setPixmap(pm);
 }
