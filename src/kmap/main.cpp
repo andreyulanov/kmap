@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
   mapw_settings.map_dir                 = mmc_path + "/packs";
   mapw_settings.pixel_size_mm           = pixel_size_mm;
   mapw_settings.window_size             = screen_size_pix;
-  mapw_settings.render_window_size_coef = 2;
+  mapw_settings.render_window_size_coef = 1.5;
   mapw_settings.update_interval_ms      = 100;
 
   KRenderWidget  renderw(mapw_settings);
@@ -198,9 +198,8 @@ int main(int argc, char* argv[])
                    &KRenderWidget::getMip, Qt::DirectConnection);
   QObject::connect(&renderw, &KRenderWidget::modified, &scale_label,
                    &KScaleLabel::update);
-  auto pos  = QPointF{3.0 / pixel_size_mm,
-                     renderw.height() - 10.0 / pixel_size_mm};
-  auto size = QSizeF{20.0 / pixel_size_mm, 3.0 / pixel_size_mm};
+  auto pos  = QPointF{0, renderw.height() - 5.0 / pixel_size_mm};
+  auto size = QSizeF{20.0 / pixel_size_mm, 5.0 / pixel_size_mm};
   scale_label.setFixedSize(size.toSize());
   scale_label.move(pos.toPoint());
 
