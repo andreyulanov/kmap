@@ -16,24 +16,24 @@ int main(int argc, char* argv[])
 
   QFile().remove(result_path);
 
-  QString first_map_path = QString(argv[1]) + "/" + argv[2];
-  KPack*  united_map     = new KPack(first_map_path);
-  united_map->loadAll();
+  QString first_pack_path = QString(argv[1]) + "/" + argv[2];
+  KPack*  united_pack     = new KPack(first_pack_path);
+  united_pack->loadAll();
 
   for (auto& fi: fi_list)
   {
     if (fi.suffix() != "kpack")
       continue;
 
-    if (fi.absoluteFilePath() == first_map_path)
+    if (fi.absoluteFilePath() == first_pack_path)
       continue;
 
     qDebug() << "loading" << fi.absoluteFilePath();
-    KPack* map = new KPack(fi.absoluteFilePath());
-    map->loadAll();
-    united_map->add(map);
+    KPack* pack = new KPack(fi.absoluteFilePath());
+    pack->loadAll();
+    united_pack->add(pack);
   }
   qDebug() << "saving united pack...";
-  if (united_map)
-    united_map->save(result_path);
+  if (united_pack)
+    united_pack->save(result_path);
 }
