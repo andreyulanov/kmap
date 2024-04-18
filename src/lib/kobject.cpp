@@ -1,6 +1,6 @@
+#include "math.h"
 #include "kobject.h"
 #include "kserialize.h"
-#include "kmath.h"
 #include <QDir>
 #include <QDebug>
 
@@ -262,8 +262,7 @@ KObject KObjectManager::getObjectNearPoint(QPoint p0)
         for (auto p: polygon)
           polygon_pix.append(kcoor2pix(p));
         if (isNearPolyline(p0, polygon_pix, proximity_pix))
-        {
-        }
+          return obj;
       }
     }
   }
