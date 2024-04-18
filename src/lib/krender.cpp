@@ -96,7 +96,7 @@ void KRender::setUpdateIntervalMs(int v)
 
 void KRender::setBackgroundColor(QColor v)
 {
-  background_color = v;
+  ocean_color = v;
 }
 
 double KRender::getRenderWindowSizeCoef() const
@@ -470,7 +470,7 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
       p->drawPolygon(pl);
     else
     {
-      p->setBrush(Qt::white);
+      p->setBrush(land_color);
       p->drawPolygon(pl);
     }
   }
@@ -905,7 +905,7 @@ void KRender::run()
 
   if (render_pixmap.size() != pixmap_size)
     render_pixmap = QPixmap(pixmap_size);
-  render_pixmap.fill(background_color);
+  render_pixmap.fill(ocean_color);
   QPainter p0(&render_pixmap);
   QFont    f = p0.font();
 

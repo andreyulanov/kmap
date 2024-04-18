@@ -36,7 +36,8 @@ class KRender: public QThread
   Q_OBJECT
 
   double render_window_size_coef      = 0;
-  QColor background_color             = Qt::white;
+  QColor ocean_color                  = QColor(150, 210, 240);
+  QColor land_color                   = QColor(250, 246, 230);
   int    update_interval_ms           = 0;
   double max_object_size_with_name_mm = 20.0;
 
