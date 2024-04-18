@@ -158,7 +158,7 @@
     "code"   : 31412000,
     "key"    : "237-000-L",
     "layer"  : 13,
-    "width_mm"  : 0.1,
+    "width_mm"  : 0.2,
     "style"  : "Dash",
     "pen"    : [37, 151, 194],
     "tcolor" : [37, 151, 194],
@@ -170,11 +170,34 @@
     "code"   : 31412000,
     "key"    : "237-000-L_I",
     "layer"  : 13,
-    "width_mm"  : 0.1,
+    "width_mm"  : 0.2,
     "style"  : "Dash",
     "pen"    : [37, 151, 194],
     "tcolor" : [37, 151, 194],
     "max_mip": 200
+},
+{
+    "id"     : "ditch",
+    "type"   : "Line",
+    "code"   : 31432000,
+    "key"    : "248-400-L",
+    "layer"  : 13,
+    "width_mm" : 0.2,
+    "pen"    : [37, 151, 194],
+    "tcolor" : [37, 151, 194],
+    "max_mip": 30
+},
+{
+    "id"     : "dry ditch",
+    "type"   : "Line",
+    "code"   : 31432200,
+    "key"    : "248-400-L_I",
+    "layer"  : 13,
+    "width_mm" : 0.2,
+    "style"  : "Dash",
+    "pen"    : [37, 151, 194],
+    "tcolor" : [37, 151, 194],
+    "max_mip": 30
 },
 {
     "id"     : "проходимое болото",
@@ -299,7 +322,7 @@
     "type"   : "Polygon",
     "code"   : 61122002,
     "layer"  : 14,
-    "brush"  : [233, 209, 255],
+    "brush"  : [200, 200, 200],
     "max_mip": 30
 },
 {
@@ -391,6 +414,7 @@
     "width_mm"  : 0.1,
     "pen"    : [116, 116, 116],
     "brush"  : [168, 168, 168],
+    "style"  : "BDiag",
     "max_mip": 3
 },
 {
@@ -421,8 +445,7 @@
     "code"   : 53712000,
     "layer"  : 14,
     "pen"    : [48, 173, 145],
-    "brush"  : [48, 173, 145],
-    "style"  : "BDiag",
+    "brush"  : [100, 210, 130],
     "max_mip": 3
 },
 {
@@ -723,7 +746,7 @@
     "id"     : "проезды",
     "type"   : "Line",
     "key"    : "189-000-L",
-    "layer"  : 14,
+    "layer"  : 15,
     "width_mm"  : 0.3,
     "pen"    : [255, 255, 255],
     "brush"  : [155, 155, 155],
@@ -746,7 +769,7 @@
     "type"   : "Line",
     "key"    : "190-100-L_p",
     "code"   : 45200002,
-    "layer"  : 14,
+    "layer"  : 15,
     "width_mm"  : 0.5,
     "pen"    : [255, 255, 255],
     "brush"  : [155, 155, 155],
@@ -909,9 +932,9 @@
     "key"    : "376-000-L",
     "type"   : "Line",
     "layer"  : 13,
-    "width_mm"  : 0.5,
-    "pen"    : [150, 180, 150],
-    "brush"  : [150, 180, 150],
+    "width_mm"  : 0.4,
+    "pen"  : [210, 230, 160],
+    "brush"  : [210, 230, 160],
     "max_mip": 10
 },
 {
@@ -1041,10 +1064,10 @@
     "type"   : "Polygon",
     "code"   : 62230000,
     "key"    : "D-62230000-S",
-    "layer"  : 16,
-    "width_mm"  : 2.0,
+    "layer"  : 14,
+    "width_mm" : 2.0,
     "pen"    : [100, 100, 100],
-    "brush"  : [237, 239, 183],
+    "brush"  : [200, 200, 200],
     "image"  : "parking.png",
     "max_mip": 3
 },
