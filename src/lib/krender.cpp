@@ -298,7 +298,8 @@ QPoint KRender::kcoor2pix(KGeoCoor kp) const
           int((m.y() - render_top_left_m.y()) / render_mip)};
 }
 
-void KRender::paintPointObject(QPainter* p, const KPackObject* obj)
+void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
+                               int render_idx)
 {
   auto& frame = obj->frame;
 
@@ -312,7 +313,6 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj)
   p->setBrush(sh->brush);
   auto        kpos       = obj->polygons.first()->first();
   QPoint      pos        = kcoor2pix(kpos);
-  auto        text_shift = obj->shape->getWidthPix();
   int         max_length = 0;
   QStringList str_list;
   if (!obj->name.isEmpty())
@@ -336,9 +336,9 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj)
             str_list.count() * obj->shape->getWidthPix()};
 
   bool intersects = false;
-  for (auto r: point_object_text_rects)
+  for (auto item: point_names[render_idx])
   {
-    if (rect.intersects(r))
+    if (rect.intersects(item.rect))
     {
       intersects = true;
       break;
@@ -347,32 +347,7 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj)
   if (intersects)
     return;
 
-  point_object_text_rects.append(rect);
-
-  auto w = obj->shape->getWidthPix();
-  if (w > 0)
-  {
-    p->save();
-    p->translate(pos);
-    auto f = p->font();
-    f.setPixelSize(w);
-    p->setFont(f);
-    p->translate(QPoint(0, obj->shape->image.height() / 2));
-    for (auto str: str_list)
-    {
-      p->translate(QPoint(0, text_shift));
-      paintOutlinedText(p, str, sh->tcolor);
-    }
-    p->restore();
-  }
-  if (sh->image.isNull())
-    p->drawEllipse(pos, 5, 5);
-  else
-  {
-    pos = {pos.x() - sh->image.width() / 2,
-           pos.y() - sh->image.height() / 2};
-    p->drawImage(pos, sh->image);
-  }
+  point_names[render_idx].append({rect, str_list, sh});
 }
 
 QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
@@ -412,7 +387,7 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
   int    obj_span_pix = obj_span_m / render_mip;
 
   auto sh = obj->shape;
-  if (sh->getWidthPix() == 0 || sh->pen == Qt::black)
+  if (sh->pen == Qt::black)
     p->setPen(Qt::NoPen);
   else
     p->setPen(sh->pen);
@@ -686,7 +661,7 @@ bool KRender::paintObject(QPainter* p, const KPackObject* obj,
   switch (obj->shape->type)
   {
   case KShape::Point:
-    paintPointObject(p, obj);
+    paintPointObject(p, obj, render_idx);
     break;
   case KShape::Line:
     paintLineObject(p, obj, render_idx, line_iter);
@@ -715,6 +690,44 @@ void KRender::checkYieldResult()
     emit rendered(el);
     yield_timer.restart();
   }
+}
+
+bool KRender::paintPointNames(QPainter* p)
+{
+  for (int render_idx = 0; render_idx < KRenderMap::render_count;
+       render_idx++)
+    for (auto item: point_names[render_idx])
+    {
+      auto text_shift = item.shape->getWidthPix();
+      auto pos        = item.rect.topLeft();
+      auto w          = item.shape->getWidthPix();
+      if (w > 0)
+      {
+        p->save();
+        p->translate(pos);
+        auto f = p->font();
+        f.setPixelSize(w);
+        p->setFont(f);
+        p->translate(QPoint(0, item.shape->image.height() / 2));
+        for (auto str: item.str_list)
+        {
+          p->translate(QPoint(0, text_shift));
+          paintOutlinedText(p, str, item.shape->tcolor);
+        }
+        p->restore();
+      }
+      if (item.shape)
+      {
+        auto pos2 = QPoint{pos.x() - item.shape->image.width() / 2,
+                           pos.y() - item.shape->image.height() / 2};
+        p->drawImage(pos2, item.shape->image);
+      }
+      else
+        p->drawEllipse(pos, 5, 5);
+      if (!canContinue())
+        return false;
+    }
+  return true;
 }
 
 bool KRender::paintLineNames(QPainter* p)
@@ -878,10 +891,10 @@ void KRender::run()
 {
   render_center_m = center_m;
   render_mip      = mip;
-  point_object_text_rects.clear();
 
   for (int i = 0; i < KRenderMap::render_count; i++)
   {
+    point_names[i].clear();
     draw_text_array[i].clear();
     name_holder_array[i].clear();
   }
@@ -997,6 +1010,12 @@ void KRender::run()
     emit rendered(0);
     return;
   }
+  if (!paintPointNames(&p0))
+  {
+    emit rendered(0);
+    return;
+  }
+
   qDebug() << "mip" << render_mip << ",total render time elapsed"
            << total_render_time.elapsed();
 

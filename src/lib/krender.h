@@ -33,6 +33,13 @@ class KRender: public QThread
              const QPoint& end);
   };
 
+  struct PointName
+  {
+    QRect       rect;
+    QStringList str_list;
+    KShape*     shape;
+  };
+
   Q_OBJECT
 
   double render_window_size_coef      = 0;
@@ -57,6 +64,7 @@ class KRender: public QThread
   KRenderMapCollection maps;
   QFont                font;
 
+  QVector<PointName>     point_names[KRenderMap::render_count];
   QVector<DrawTextEntry> draw_text_array[KRenderMap::render_count];
   QVector<NameHolder>    name_holder_array[KRenderMap::render_count];
   QVector<QRect>         text_rect_array;
@@ -64,7 +72,6 @@ class KRender: public QThread
   QPointF                render_top_left_m;
   QRectF                 render_frame_m;
   QElapsedTimer          yield_timer;
-  QVector<QRect>         point_object_text_rects;
 
   void run();
   void start() = delete;
@@ -80,6 +87,7 @@ class KRender: public QThread
 
   bool paintObject(QPainter* p, const KPackObject* obj,
                    int render_idx, int line_iter);
+  bool paintPointNames(QPainter* p);
   bool paintLineNames(QPainter* p);
   bool paintPolygonNames(QPainter* p);
 
@@ -89,7 +97,8 @@ class KRender: public QThread
                         DrawTextEntry           new_dte);
 
   QPolygon poly2pix(const KGeoPolygon& polygon);
-  void     paintPointObject(QPainter* p, const KPackObject* obj);
+  void     paintPointObject(QPainter* p, const KPackObject* obj,
+                            int render_idx);
   void     paintPolygonObject(QPainter* p, const KPackObject* obj,
                               int render_idx);
   void     paintLineObject(QPainter* painter, const KPackObject* obj,
