@@ -211,9 +211,20 @@
     "max_mip": 30
 },
 {
-    "id"     : "заболоченная тростниковая растительность",
+    "id"     : "wetland",
     "type"   : "Polygon",
     "style"  : "FDiag",
+    "code"   : 31263100,
+    "layer"  : 20,
+    "pen"    : [0, 168, 0],
+    "brush"  : [0, 168, 0],
+    "tcolor" : [0, 168, 0],
+    "max_mip": 30
+},
+{
+    "id"     : "wetland2",
+    "type"   : "Polygon",
+    "style"  : "BDiag",
     "code"   : 31263200,
     "layer"  : 20,
     "pen"    : [0, 168, 0],
@@ -222,10 +233,10 @@
     "max_mip": 30
 },
 {
-    "id"     : "wetland",
+    "id"     : "wetland3",
     "type"   : "Polygon",
     "style"  : "BDiag",
-    "code"   : 31263100,
+    "code"   : 31263300,
     "layer"  : 20,
     "pen"    : [0, 168, 0],
     "brush"  : [0, 168, 0],
@@ -426,6 +437,17 @@
     "code"   : 44200001,
     "layer"  : 15,
     "width_mm"  : 0.1,
+    "pen"    : [116, 116, 116],
+    "brush"  : [215, 212, 228],
+    "max_mip": 3,
+    "name_code": 100
+},
+{
+    "id"     : "мол",
+    "type"   : "Polygon",
+    "code"   : 32230000,
+    "layer"  : 15,
+    "width_mm"  : 0.2,
     "pen"    : [116, 116, 116],
     "brush"  : [215, 212, 228],
     "max_mip": 3,
@@ -930,6 +952,57 @@
     "max_mip": 3
 },
 {
+    "id"     : "лестница",
+    "code"   : 62393000,
+    "key"    : "L0062393000",
+    "type"   : "Line",
+    "style"  : "Dash",
+    "layer"  : 20,
+    "width_mm" : 0.2,
+    "pen"    : [200, 200, 200],
+    "brush"  : [255, 255, 255],
+    "coor_precision_coef" : 10,
+    "max_mip": 3
+},
+{
+    "id"     : "fence",
+    "code"   : 82312000,
+    "key"    : "477-000-L",
+    "type"   : "Line",
+    "style"  : "Dots",
+    "layer"  : 20,
+    "width_mm" : 0.2,
+    "pen"    : [100, 100, 100],
+    "brush"  : [255, 255, 255],
+    "coor_precision_coef" : 10,
+    "max_mip": 3
+},
+{
+    "id"     : "wall",
+    "code"   : 82211000,
+    "key"    : "472-000-L",
+    "type"   : "Line",
+    "style"  : "Dash",
+    "layer"  : 20,
+    "width_mm" : 0.3,
+    "pen"    : [100, 100, 100],
+    "brush"  : [255, 255, 255],
+    "coor_precision_coef" : 10,
+    "max_mip": 3
+},
+{
+    "id"     : "wall2",
+    "code"   : 32180000,
+    "key"    : "280-000-L",
+    "type"   : "Line",
+    "layer"  : 20,
+    "width_mm" : 0.2,
+    "pen"    : [100, 100, 100],
+    "brush"  : [255, 255, 255],
+    "coor_precision_coef" : 10,
+    "max_mip": 3
+},
+{
     "id"     : "cutline",
     "code"   : 71610300,
     "key"    : "376-000-L",
@@ -1025,7 +1098,7 @@
     "width_mm"  : 0.2,
     "pen"    : [168, 120, 80],
     "style"  : "Hatch",
-    "max_mip": 30
+    "max_mip": 5
 },
 {
     "id"     : "embankment",
@@ -1036,7 +1109,7 @@
     "width_mm"  : 0.2,
     "pen"    : [168, 120, 80],
     "style"  : "Hatch",
-    "max_mip": 30
+    "max_mip": 5
 },
 {
     "id"     : "карьер",
