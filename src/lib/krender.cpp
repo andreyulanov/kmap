@@ -449,17 +449,6 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
       p->drawPolygon(pl);
     }
   }
-  if (!obj->shape->image.isNull() &&
-      obj_frame_pix.width() > sh->image.width() * 2 &&
-      obj_frame_pix.height() > sh->image.height() * 2)
-  {
-    auto obj_center = obj_frame_pix.center();
-    auto pos        = QPoint{obj_center.x() - sh->image.width() / 2,
-                      obj_center.y() - sh->image.height() / 2};
-    if (!obj->name.isEmpty())
-      pos -= QPoint(0, obj->shape->getWidthPix() + 5);
-    p->drawImage(pos, sh->image);
-  }
 }
 
 void KRender::paintLineObject(QPainter*          painter,
@@ -481,6 +470,8 @@ void KRender::paintLineObject(QPainter*          painter,
   Qt::PenStyle style = Qt::SolidLine;
   if (sh->style == KShape::Dash)
     style = Qt::DashLine;
+  if (sh->style == KShape::Dots)
+    style = Qt::DotLine;
   int obj_name_width = 0;
   if (!obj->name.isEmpty())
     obj_name_width =
@@ -783,6 +774,20 @@ bool KRender::paintPolygonNames(QPainter* p)
       if (isCluttering(actual_rect))
         continue;
       paintOutlinedText(p, dte);
+
+      if (!dte.shape->image.isNull() &&
+          dte.rect.width() > dte.shape->image.width() * 2 &&
+          dte.rect.height() > dte.shape->image.height() * 2)
+      {
+        auto obj_center = dte.rect.center();
+        auto pos =
+            QPoint{obj_center.x() - dte.shape->image.width() / 2,
+                   obj_center.y() - dte.shape->image.height() / 2};
+        if (!dte.text.isEmpty())
+          pos -= QPoint(0, dte.shape->getWidthPix() + 5);
+        p->drawImage(pos, dte.shape->image);
+      }
+
       text_rect_array.append(dte.rect);
       if (!canContinue())
         return false;
