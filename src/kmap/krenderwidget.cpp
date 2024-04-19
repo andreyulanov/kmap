@@ -366,7 +366,19 @@ bool KRenderWidget::canScroll()
 
 void KRenderWidget::scaleLabel()
 {
-  auto   screen_size = label.size() / r.getRenderWindowSizeCoef();
+  auto     screen_size = label.size() / r.getRenderWindowSizeCoef();
+  double   wide_render_size_coef = 3;
+  QPixmap  wide_pixmap(screen_size * wide_render_size_coef);
+  QPainter p(&wide_pixmap);
+  int      x = screen_size.width() *
+          (wide_render_size_coef - r.getRenderWindowSizeCoef()) / 2;
+  int y = screen_size.height() *
+          (wide_render_size_coef - r.getRenderWindowSizeCoef()) / 2;
+  p.drawPixmap(x, y, label.pixmap(Qt::ReturnByValue));
+  QLabel wide_label;
+  wide_label.setFixedSize(wide_pixmap.size());
+  wide_label.setPixmap(wide_pixmap);
+
   double max_shift_x = screen_size.width() / 2;
   double max_shift_y = screen_size.height() / 2;
 
@@ -383,11 +395,11 @@ void KRenderWidget::scaleLabel()
       (screen_size.height() - scaled_screen_size.height()) / 2};
   scaled_start_pos += zoom_focus_shift;
 
-  auto pos = (label.size() - screen_size) / 2;
+  auto pos = (wide_label.size() - screen_size) / 2;
 
   scaled_start_pos += {pos.width(), pos.height()};
 
-  auto pm = label.pixmap(Qt::ReturnByValue);
+  auto pm = wide_label.pixmap(Qt::ReturnByValue);
 
   auto scaled_pm =
       pm.copy(scaled_start_pos.x() + total_pan_pos.x(),
@@ -398,7 +410,7 @@ void KRenderWidget::scaleLabel()
   scaled_label.setFixedSize(screen_size);
   scaled_label.setPixmap(scaled_pm);
   auto shift =
-      label.size() / r.getRenderWindowSizeCoef() * (coef - 1) * 0.5;
+      wide_label.size() / wide_render_size_coef * (coef - 1) * 0.5;
 
   scaled_label.move(zoom_focus_shift -
                     QPoint{shift.width(), shift.height()});

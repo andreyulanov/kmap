@@ -57,6 +57,7 @@ private:
   QLabel  full_label;
   QLabel  scaled_label;
   KRender r;
+  QLabel  wide_label;
 
   void scan(QString map_dir);
   void mousePressEvent(QMouseEvent*) override;
