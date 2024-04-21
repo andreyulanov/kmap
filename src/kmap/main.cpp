@@ -16,6 +16,7 @@
 #include "knewobjectwidget.h"
 #include "kpackfetcher.h"
 #include "kscalelabel.h"
+#include "ksettings.h"
 #ifdef BUILD_WITH_XMPP
   #include "kxmppclient.h"
   #include "kloginwidget.h"
@@ -309,14 +310,15 @@ int main(int argc, char* argv[])
   client.logger()->setLogFilePath(log_path);
   client.logger()->setLoggingType(QXmppLogger::FileLogging);
 
-  KLoginWidget* loginw =
-      new KLoginWidget(screen_size_pix, bobJid, bobPassword);
-  QObject::connect(loginw, &KLoginWidget::connectToServer, &client,
+  KSettings k_settings;
+
+  KLoginWidget loginw(screen_size_pix, k_settings.jid(), k_settings.password());
+  QObject::connect(&loginw, &KLoginWidget::connectToServer, &client,
                    qOverload<const QString&, const QString&>(
                        &KXmppClient::reconnectToServer));
-  QObject::connect(&controls, &KControls::login, loginw,
-                   &QWidget::show);
-  //  loginw->show();
+  QObject::connect(&loginw, &KLoginWidget::connectToServer,
+                   &k_settings, &KSettings::saveAccount);
+  loginw.show();
 
   KRosterWidget roster_widget(
       client.findExtension<QXmppRosterManager>());

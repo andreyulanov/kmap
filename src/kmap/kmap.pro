@@ -21,6 +21,7 @@ SOURCES += \
  kposgenerator.cpp \
  krenderwidget.cpp \
  kscalelabel.cpp \
+ ksettings.cpp \
  ktrackmanager.cpp \
 main.cpp
 
@@ -39,6 +40,7 @@ HEADERS += \
  kposgenerator.h \
  krenderwidget.h \
  kscalelabel.h \
+ ksettings.h \
  ktrackmanager.h
 
 !android: SOURCES += \
