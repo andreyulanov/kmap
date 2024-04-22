@@ -147,13 +147,13 @@ class KRenderMap: public QObject, public KPack
 
 public:
   static constexpr int max_layer_count = 24;
-  static constexpr int render_count    = 6;
+  static constexpr int render_count    = 4;
 
   QVector<KPackObject*> render_data[max_layer_count];
-  QReadWriteLock       main_lock;
-  QReadWriteLock       tile_lock;
-  QList<RenderAddress> render_start_list;
-  int                  render_object_count;
+  QReadWriteLock        main_lock;
+  QReadWriteLock        tile_lock;
+  QList<RenderAddress>  render_start_list;
+  int                   render_object_count;
 
   void addCollectionToIndex(const KObjectCollection* collection);
 
@@ -179,7 +179,7 @@ class KEditablePack: public KPack
 public:
   KEditablePack(const QString& path);
   void addObjects(const QVector<KPackObject*>& obj_list,
-                  int                         max_objects_per_tile);
+                  int                          max_objects_per_tile);
   void setShapes(QVector<KShape*>);
   void addBorder(KGeoPolygon);
 };
