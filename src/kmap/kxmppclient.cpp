@@ -4,7 +4,7 @@
 #include <QFile>
 
 KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
-    : QXmppClient{parent}
+    : QXmppClient{parent}, transfer_manager{}
 {
     connect(this, &QXmppClient::messageReceived,
             this, &KXmppClient::messageReceived);
@@ -12,19 +12,18 @@ KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
     this->objects_dir = objects_dir;
     configuration().setResource("knav");
 
-    transferManager = new QXmppTransferManager;
-    transferManager->setProxy(proxy);
-    //transferManager->proxyOnly();
-    //transferManager->setSupportedMethods(QXmppTransferJob::Method::InBandMethod);
-    addExtension(transferManager);
+    transfer_manager.setProxy(proxy);
+    //transfer_manager.proxyOnly();
+    //transfer_manager.setSupportedMethods(QXmppTransferJob::Method::InBandMethod);
+    addExtension(&transfer_manager);
 
-    connect(transferManager, &QXmppTransferManager::fileReceived,
+    connect(&transfer_manager, &QXmppTransferManager::fileReceived,
             this, &KXmppClient::slotFileReceived);
 }
 
 KXmppClient::~KXmppClient()
 {
-    delete transferManager;
+    //nothing to do...
 }
 
 void KXmppClient::messageReceived(const QXmppMessage &message)
@@ -38,13 +37,19 @@ void KXmppClient::sendFile( QString jid,
                             QString description)
 {
     qDebug() << "Sending" << filePath << "to" << jid << "with description" << description;
-    if (!isConnected())
+    if (notConnected()) return;
+    transfer_manager.sendFile(jid, filePath, description);
+}
+
+bool KXmppClient::notConnected()
+{
+    bool is_connected = isConnected();
+    if (!is_connected)
     {
-        qWarning() << "Attempt to send a file by disconnected client, aborting...";
+        qWarning() << "Attempt do something with disconnected client, aborting...";
         emit needConnection();
-        return;
     }
-    transferManager->sendFile(jid, filePath, description);
+    return is_connected;
 }
 
 void KXmppClient::reconnectToServer(const QString& jid, const QString& password)

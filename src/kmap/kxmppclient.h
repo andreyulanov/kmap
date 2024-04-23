@@ -29,9 +29,10 @@ signals:
   void fileDownloaded(QString path);
 
 private:
-  QXmppTransferManager* transferManager;
-  QRegularExpression    filesWorthToReceive = QRegularExpression(
+  QXmppTransferManager transfer_manager;
+  QRegularExpression filesWorthToReceive = QRegularExpression(
          "[.]kpo$", QRegularExpression::CaseInsensitiveOption);
+  bool notConnected();
 
   Q_SLOT void slotFileReceived(QXmppTransferJob* job);
   QString     generateReceivedFileName(QXmppTransferJob*);
