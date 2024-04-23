@@ -527,7 +527,7 @@ void KRender::paintLineObject(QPainter*          painter,
           painter->save();
           painter->translate(p);
           painter->rotate(rad2deg(a));
-          int length = getLength(p0, p);
+          int length = getDistance(p0, p);
           int step   = 10;
           for (int l = 0; l < length; l += step)
           {
@@ -571,7 +571,7 @@ void KRender::paintLineObject(QPainter*          painter,
           p0           = p;
           continue;
         }
-        auto length_pix = getLength(p0, p);
+        auto length_pix = getDistance(p0, p);
         nh.length_pix += length_pix;
         p0 = p;
         nh.point_count++;
