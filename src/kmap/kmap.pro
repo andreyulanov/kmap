@@ -65,7 +65,7 @@ kxmppclient.h
 
 INCLUDEPATH += ../lib
 
-!android: LIBS += -lqxmpp
+!android: LIBS += -lQXmppQt5
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

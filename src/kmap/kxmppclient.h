@@ -1,8 +1,8 @@
 #ifndef KXMPPCLIENT_H
 #define KXMPPCLIENT_H
 
-#include <qxmpp/QXmppClient.h>
-#include <qxmpp/QXmppTransferManager.h>
+#include <QXmppQt5/QXmppClient.h>
+#include <QXmppQt5/QXmppTransferManager.h>
 #include <QRegularExpression>
 #include "kobject.h"
 

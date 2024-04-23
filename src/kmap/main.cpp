@@ -22,9 +22,9 @@
   #include "kloginwidget.h"
   #include "krosterwidget.h"
   #include <kportableobjectsender.h>
-  #include <qxmpp/QXmppClient.h>
-  #include <qxmpp/QXmppLogger.h>
-  #include <qxmpp/QXmppRosterManager.h>
+  #include <QXmppQt5/QXmppClient.h>
+  #include <QXmppQt5/QXmppLogger.h>
+  #include <QXmppQt5/QXmppRosterManager.h>
 #endif
 
 #ifdef BUILD_WITH_SENSORS

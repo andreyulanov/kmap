@@ -1,8 +1,8 @@
 #include <QListWidget>
 #include <QDebug>
 #include "krosterwidget.h"
-#include <qxmpp/QXmppRosterManager.h>
-#include <qxmpp/QXmppPresence.h>
+#include <QXmppQt5/QXmppRosterManager.h>
+#include <QXmppQt5/QXmppPresence.h>
 
 KRosterWidget::KRosterWidget(QXmppRosterManager* rosterManager,
                              QWidget *parent)

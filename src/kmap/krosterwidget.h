@@ -8,7 +8,7 @@
 #include <QAbstractItemView>
 #include <QFlags>
 #include <QPushButton>
-#include <qxmpp/QXmppRosterManager.h>
+#include <QXmppQt5/QXmppRosterManager.h>
 
 const int jidColumn = 0;
 const int resourceColumn = 0;

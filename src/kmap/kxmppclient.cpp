@@ -1,6 +1,6 @@
 #include "kxmppclient.h"
-#include <qxmpp/QXmppMessage.h>
-#include <qxmpp/QXmppTransferManager.h>
+#include <QXmppQt5/QXmppMessage.h>
+#include <QXmppQt5/QXmppTransferManager.h>
 #include <QFile>
 
 KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
