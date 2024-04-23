@@ -113,7 +113,8 @@ void KObjectManager::createObject(KShape sh)
   active_object.cl.image        = sh.image;
 }
 
-void KObjectManager::paintObject(QPainter* p, KObject obj)
+void KObjectManager::paintObject(QPainter* p, KObject obj,
+                                 bool highlighted)
 {
   if (obj.polygons.isEmpty())
     return;
@@ -127,50 +128,68 @@ void KObjectManager::paintObject(QPainter* p, KObject obj)
     else
     {
       auto s = img.size();
-      p->drawImage(
-          QPoint{pix.x() - s.width() / 2, pix.y() - s.height() / 2},
-          obj.cl.image);
+      auto pos =
+          QPoint{pix.x() - s.width() / 2, pix.y() - s.height() / 2};
+      if (highlighted)
+      {
+        p->setPen(Qt::NoPen);
+        p->setBrush(Qt::yellow);
+        p->drawEllipse(
+            QRect{pos, obj.cl.image.size()}.adjusted(-5, -5, 5, 5));
+      }
+      p->drawImage(pos, obj.cl.image);
     }
     return;
   }
 
   if (obj.cl.type == KShape::Line)
   {
-    QPen pen = QPen(obj.cl.pen, obj.getWidthPix(pixel_size_mm));
-    p->setPen(pen);
-    QPoint prev_pix;
-    QPoint pix;
-    for (int i = -1; auto point: obj.polygons.first())
+    for (auto polygon: obj.polygons)
     {
-      i++;
-      pix = kcoor2pix(point);
-      if (i > 0)
-        p->drawLine(prev_pix, pix);
-      prev_pix = pix;
+      int      w = obj.getWidthPix(pixel_size_mm);
+      QPolygon polygon_pix;
+      for (auto point: polygon)
+        polygon_pix.append(kcoor2pix(point));
+      if (highlighted)
+        p->setPen(QPen(Qt::yellow, w * 2));
+      else
+      {
+        QPen pen = QPen(obj.cl.pen, w);
+        p->setPen(pen);
+      }
+      p->drawPolyline(polygon_pix);
     }
   }
   if (obj.cl.type == KShape::Polygon)
   {
-    QPen   pen   = QPen(obj.cl.pen, obj.getWidthPix(pixel_size_mm));
+    int    w     = obj.getWidthPix(pixel_size_mm);
+    QPen   pen   = QPen(obj.cl.pen, w);
     QBrush brush = QBrush(obj.cl.brush);
-    p->setPen(pen);
-    p->setBrush(brush);
-
-    QPolygon polygon_pix;
-    for (auto point: obj.polygons.first())
-      polygon_pix.append(kcoor2pix(point));
-
-    if (polygon_pix.count() == 2)
-      p->drawPolyline(polygon_pix);
-    else
-      p->drawPolygon(polygon_pix);
-
-    p->setPen(Qt::white);
-    p->setBrush(Qt::black);
-    for (auto point: polygon_pix)
+    for (auto polygon: obj.polygons)
     {
-      int w = 1.0 / pixel_size_mm;
-      p->drawEllipse(point, w, w);
+      QPolygon polygon_pix;
+      for (auto point: polygon)
+        polygon_pix.append(kcoor2pix(point));
+
+      if (highlighted)
+        p->setPen(QPen(Qt::yellow, w * 2));
+      else
+      {
+        p->setPen(pen);
+        p->setBrush(brush);
+      }
+      if (polygon_pix.count() == 2)
+        p->drawPolyline(polygon_pix);
+      else
+        p->drawPolygon(polygon_pix);
+
+      p->setPen(Qt::white);
+      p->setBrush(Qt::black);
+      for (auto point: polygon_pix)
+      {
+        int w = 1.0 / pixel_size_mm;
+        p->drawEllipse(point, w, w);
+      }
     }
   }
 }
@@ -178,7 +197,12 @@ void KObjectManager::paintObject(QPainter* p, KObject obj)
 void KObjectManager::addPoint(KGeoCoor coor)
 {
   if (active_object.cl.type == KShape::None)
+  {
+    auto coor_pix = kcoor2pix(coor);
+    auto obj_idx  = getObjectIdxNearPoint(coor_pix);
+    selectObject(obj_idx);
     return;
+  }
   auto type = active_object.cl.type;
   if (type == KShape::Point)
   {
@@ -209,6 +233,8 @@ void KObjectManager::addPoint(KGeoCoor coor)
 
 void KObjectManager::paint(QPainter* p)
 {
+  if (selected_object_idx >= 0)
+    paintObject(p, objects.at(selected_object_idx), true);
   for (auto& obj: objects)
     paintObject(p, obj);
   paintObject(p, active_object);
@@ -239,20 +265,21 @@ void KObjectManager::loadFileWithoutUpdate(QFileInfo file_info)
 void KObjectManager::loadFile(QString path)
 {
   loadFileWithoutUpdate(path);
-  emit updated();
+  updated();
 }
 
-KObject KObjectManager::getObjectNearPoint(QPoint p0)
+int KObjectManager::getObjectIdxNearPoint(QPoint p0)
 {
   using namespace kmath;
   auto proximity_pix = proximity_mm / pixel_size_mm;
-  for (auto obj: objects)
+  for (int idx = -1; auto obj: objects)
   {
+    idx++;
     if (obj.cl.type == KShape::Point)
     {
       auto point_pos = kcoor2pix(obj.polygons.first().first());
       if ((point_pos - p0).manhattanLength() < proximity_pix)
-        return obj;
+        return idx;
     }
     if (obj.cl.type == KShape::Line)
     {
@@ -262,14 +289,31 @@ KObject KObjectManager::getObjectNearPoint(QPoint p0)
         for (auto p: polygon)
           polygon_pix.append(kcoor2pix(p));
         if (isNearPolyline(p0, polygon_pix, proximity_pix))
-          return obj;
+          return idx;
+      }
+    }
+    if (obj.cl.type == KShape::Polygon)
+    {
+      for (auto polygon: obj.polygons)
+      {
+        QPolygon polygon_pix;
+        for (auto p: polygon)
+          polygon_pix.append(kcoor2pix(p));
+        if (polygon_pix.containsPoint(p0, Qt::OddEvenFill))
+          return idx;
       }
     }
   }
-  return KObject();
+  return -1;
 }
 
-KObject KObjectManager::getObjectInsidePolygon(QPolygon polygon)
+int KObjectManager::getObjectIdxInsidePolygon(QPolygon polygon)
 {
-  return KObject();
+  return -1;
+}
+
+void KObjectManager::selectObject(int v)
+{
+  selected_object_idx = v;
+  updated();
 }

@@ -16,7 +16,7 @@ namespace kmath
 constexpr double earth_r = 6378137;
 double           deg2rad(double deg);
 double           rad2deg(double rad);
-double           getLength(QPoint p1, QPoint p2);
+double           getDistance(QPoint p1, QPoint p2);
 double           getAngle(QPoint p1, QPoint p2);
 double           sqr(double x);
 bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix);

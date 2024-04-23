@@ -23,7 +23,7 @@ double sqr(double x)
 {
   return x * x;
 }
-double getLength(QPoint p1, QPoint p2)
+double getDistance(QPoint p1, QPoint p2)
 {
   return sqrt(sqr(p1.x() - p2.x()) + sqr(p1.y() - p2.y()));
 }
@@ -34,7 +34,7 @@ double getAngle(QPoint p1, QPoint p2)
 bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
 {
   QPoint p1 = polyline.first();
-  if (getLength(p0, p1) < tolerance_pix)
+  if (getDistance(p0, p1) < tolerance_pix)
     return true;
   int x0 = p0.x();
   int y0 = p0.y();
@@ -44,7 +44,7 @@ bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
     if (idx == 0)
       continue;
 
-    if (getLength(p0, p2) < tolerance_pix)
+    if (getDistance(p0, p2) < tolerance_pix)
       return true;
 
     int x1 = p1.x();
@@ -54,14 +54,15 @@ bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
 
     p1 = p2;
 
-    double l  = sqrt(sqr(x2 - x1) + sqr(y2 - y1));
+    double l  = sqr(x2 - x1) + sqr(y2 - y1);
     double pr = (x0 - x1) * (x2 - x1) + (y0 - y1) * (y2 - y1);
     double cf = pr / l;
     if (cf < 0 || cf > 1)
       continue;
 
-    double d =
-        fabs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)) / l;
+    int    xres = x1 + cf * (x2 - x1);
+    int    yres = y1 + cf * (y2 - y1);
+    double d    = getDistance(p0, {xres, yres});
 
     if (d < tolerance_pix)
       return true;

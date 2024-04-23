@@ -7,8 +7,8 @@
 struct KObjectClass
 {
   QString              name;
-  KShape::Type         type;
-  KShape::Style        style;
+  KShape::Type         type  = KShape::None;
+  KShape::Style        style = KShape::Solid;
   QColor               pen;
   float                pen_width_mm = 0;
   QColor               brush;
@@ -39,6 +39,7 @@ class KObjectManager: public QObject
   QString          objects_dir;
   QVector<KObject> objects;
   KObject          active_object;
+  int              selected_object_idx = -1;
   QString          generateObjectFileName();
 
 signals:
@@ -49,14 +50,16 @@ signals:
 
 public:
   KObjectManager(QString objects_dir, double pixel_size_mm);
-  void    createObject(KShape);
-  void    paintObject(QPainter* p, KObject obj);
-  void    addPoint(KGeoCoor coor);
-  void    paint(QPainter*);
-  void    acceptObject();
-  void    loadFile(QString path);
-  KObject getObjectNearPoint(QPoint);
-  KObject getObjectInsidePolygon(QPolygon);
+  void createObject(KShape);
+  void paintObject(QPainter* p, KObject obj,
+                   bool highlighted = false);
+  void addPoint(KGeoCoor coor);
+  void paint(QPainter*);
+  void acceptObject();
+  void loadFile(QString path);
+  int  getObjectIdxNearPoint(QPoint);
+  int  getObjectIdxInsidePolygon(QPolygon);
+  void selectObject(int v);
 
 private slots:
   // Catches signals without arguments and emmits its overloaded

@@ -312,13 +312,14 @@ int main(int argc, char* argv[])
 
   KSettings k_settings;
 
-  KLoginWidget loginw(screen_size_pix, k_settings.jid(), k_settings.password());
+  KLoginWidget loginw(screen_size_pix, k_settings.jid(),
+                      k_settings.password());
   QObject::connect(&loginw, &KLoginWidget::connectToServer, &client,
                    qOverload<const QString&, const QString&>(
                        &KXmppClient::reconnectToServer));
   QObject::connect(&loginw, &KLoginWidget::connectToServer,
                    &k_settings, &KSettings::saveAccount);
-  loginw.show();
+  //  loginw.show();
 
   KRosterWidget roster_widget(
       client.findExtension<QXmppRosterManager>());
