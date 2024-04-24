@@ -274,13 +274,39 @@ void KObjectManager::startMovingPoint(QPoint p0)
 {
   if (selected_object_idx < 0)
     return;
-  selected_point_idx = getSelectedObjectPointIdxAt(p0);
+  moving_point_idx = getSelectedObjectPointIdxAt(p0);
 }
 
-int KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
+bool KObjectManager::isMovingPoint()
+{
+  return moving_point_idx != QPair{-1, -1};
+}
+
+void KObjectManager::movePoint(QPoint p)
+{
+  if (selected_object_idx < 0 ||
+      selected_object_idx >= objects.count())
+    return;
+
+  auto& obj = objects[selected_object_idx];
+
+  if (moving_point_idx.first < 0 ||
+      moving_point_idx.first >= obj.polygons.count())
+    return;
+
+  auto& polygon = obj.polygons[moving_point_idx.first];
+
+  if (moving_point_idx.second < 0 ||
+      moving_point_idx.second >= polygon.count())
+    return;
+
+  polygon[moving_point_idx.second] = scr2deg(p);
+}
+
+QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
 {
   if (selected_object_idx < 0)
-    return -1;
+    return {-1, -1};
   auto obj           = objects.at(selected_object_idx);
   auto proximity_pix = proximity_mm / pixel_size_mm;
   for (int polygon_idx = -1; auto polygon: obj.polygons)
@@ -290,13 +316,13 @@ int KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
     for (int point_idx = -1; auto p: polygon)
     {
       point_idx++;
-      auto pix = deg2pix(p);
+      auto pix = deg2scr(p);
       auto d   = kmath::getDistance(pix, p0);
       if (d < proximity_pix)
-        return point_idx;
+        return {polygon_idx, point_idx};
     }
   }
-  return -1;
+  return {-1, -1};
 }
 
 int KObjectManager::getObjectIdxAt(QPoint p0)

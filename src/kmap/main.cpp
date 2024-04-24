@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
   KRenderWidget  renderw(mapw_settings);
   KPackFetcher   map_fetcher(mapw_settings.map_dir,
                              renderw.getWorldMap());
-  KShapeManager  kvo_shape_man(mmc_path + "/class");
+  KShapeManager  user_shape_man(mmc_path + "/class");
   KTrackManager  track_man(mmc_path + "/tracks");
   KObjectManager object_man(mmc_path + "/objects", pixel_size_mm);
   KAutoScroll    auto_scroll;
@@ -111,8 +111,8 @@ int main(int argc, char* argv[])
 
   auto path_list = dir.entryList();
   for (auto path: path_list)
-    kvo_shape_man.loadShapes(mmc_path + "/class/" + path,
-                             mmc_path + "/class");
+    user_shape_man.loadShapes(mmc_path + "/class/" + path,
+                              mmc_path + "/class");
 
   QObject::connect(&editw, &KEditWidget::saveTrack, &track_man,
                    &KTrackManager::saveTrack);
@@ -136,6 +136,8 @@ int main(int argc, char* argv[])
   QObject::connect(&auto_scroll, &KAutoScroll::scroll, &renderw,
                    &KRenderWidget::scroll);
 
+  QObject::connect(&renderw, &KRenderWidget::mouseMoved, &object_man,
+                   &KObjectManager::movePoint);
   double edge_mm        = 15;
   double step_mm        = 30;
   double button_size_mm = 15;
@@ -183,11 +185,12 @@ int main(int argc, char* argv[])
                    &KNewObjectWidget::show);
 
   QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
-                   &kvo_shape_man, &KShapeManager::getShapeImageList);
+                   &user_shape_man,
+                   &KShapeManager::getShapeImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
                    &object_man, &KObjectManager::createObject);
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
-                   &kvo_shape_man, &KShapeManager::getShapeById);
+                   &user_shape_man, &KShapeManager::getShapeById);
 
   QObject::connect(&renderw, &KRenderWidget::zoomFinished, &controls,
                    &KControls::checkZoomRepeat);
@@ -219,10 +222,17 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
                    &object_man, &KObjectManager::paint,
                    Qt::DirectConnection);
+  QObject::connect(&renderw, &KRenderWidget::isMovingPoint,
+                   &object_man, &KObjectManager::isMovingPoint,
+                   Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
   QObject::connect(&object_man, &KObjectManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
+  QObject::connect(&object_man, &KObjectManager::deg2scr, &renderw,
+                   &KRenderWidget::deg2scr, Qt::DirectConnection);
+  QObject::connect(&object_man, &KObjectManager::scr2deg, &renderw,
+                   &KRenderWidget::scr2deg, Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2scr,
                    &renderw, &KRenderWidget::deg2scr,
                    Qt::DirectConnection);

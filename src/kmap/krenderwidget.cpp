@@ -357,7 +357,7 @@ void KRenderWidget::zoomOut()
 
 bool KRenderWidget::canScroll()
 {
-  if (is_pinching)
+  if (is_pinching || isMovingPoint())
     return false;
   return !time_since_last_pinch.isValid() ||
          time_since_last_pinch.elapsed() >

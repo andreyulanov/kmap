@@ -40,15 +40,17 @@ class KObjectManager: public QObject
   QVector<KObject> objects;
   KObject          active_object;
   int              selected_object_idx = -1;
-  int              selected_point_idx  = -1;
+  QPair<int, int>  moving_point_idx    = {-1, -1};
   QString          generateObjectFileName();
-  int              getSelectedObjectPointIdxAt(QPoint p0);
+  QPair<int, int>  getSelectedObjectPointIdxAt(QPoint p0);
 
 signals:
-  QPoint deg2pix(KGeoCoor);
-  void   updated();
-  void   finishEdit();
-  void   saved(QString);
+  QPoint   deg2pix(KGeoCoor);
+  QPoint   deg2scr(KGeoCoor);
+  KGeoCoor scr2deg(QPoint);
+  void     updated();
+  void     finishEdit();
+  void     saved(QString);
 
 public:
   KObjectManager(QString objects_dir, double pixel_size_mm);
@@ -59,11 +61,13 @@ public:
   void paint(QPainter*);
   void acceptObject();
   void loadFile(QString path);
-  void startMovingPoint(QPoint);
 
   int  getObjectIdxAt(QPoint);
   int  getObjectIdxInsidePolygon(QPolygon);
   void selectObject(int v);
+  void startMovingPoint(QPoint);
+  void movePoint(QPoint);
+  bool isMovingPoint();
 
 private slots:
   // Catches signals without arguments and emmits its overloaded

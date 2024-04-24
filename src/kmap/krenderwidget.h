@@ -85,6 +85,7 @@ signals:
   void paintUserObjects(QPainter*);
   void tapped(KGeoCoor);
   void startedRender(QRectF);
+  bool isMovingPoint();
 
 public:
   KRenderWidget(Settings settings);
