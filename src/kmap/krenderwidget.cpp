@@ -429,9 +429,9 @@ QPoint KRenderWidget::getTotalShift() const
   return total_shift;
 }
 
-QPoint KRenderWidget::kcoor2pix(const KGeoCoor& deg) const
+QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
 {
-  return r.kcoor2pix(deg);
+  return r.deg2pix(deg);
 }
 
 QPoint KRenderWidget::deg2scr(const KGeoCoor& deg) const

@@ -45,7 +45,7 @@ class KObjectManager: public QObject
   int              getSelectedObjectPointIdxAt(QPoint p0);
 
 signals:
-  QPoint kcoor2pix(KGeoCoor);
+  QPoint deg2pix(KGeoCoor);
   void   updated();
   void   finishEdit();
   void   saved(QString);

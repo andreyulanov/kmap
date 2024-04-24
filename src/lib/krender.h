@@ -137,7 +137,7 @@ public:
   void                        stopAndWait();
   void                        enableLoading(bool);
 
-  QPoint kcoor2pix(KGeoCoor) const;
+  QPoint deg2pix(KGeoCoor) const;
 
   QPoint  meters2pix(QPointF m) const;
   QPointF pix2meters(QPointF pix) const;

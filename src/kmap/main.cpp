@@ -219,10 +219,10 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
                    &object_man, &KObjectManager::paint,
                    Qt::DirectConnection);
-  QObject::connect(&track_man, &KTrackManager::kcoor2pix, &renderw,
-                   &KRenderWidget::kcoor2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::kcoor2pix, &renderw,
-                   &KRenderWidget::kcoor2pix, Qt::DirectConnection);
+  QObject::connect(&track_man, &KTrackManager::deg2pix, &renderw,
+                   &KRenderWidget::deg2pix, Qt::DirectConnection);
+  QObject::connect(&object_man, &KObjectManager::deg2pix, &renderw,
+                   &KRenderWidget::deg2pix, Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2scr,
                    &renderw, &KRenderWidget::deg2scr,
                    Qt::DirectConnection);

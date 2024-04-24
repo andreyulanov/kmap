@@ -122,7 +122,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
   if (obj.cl.type == KShape::Point)
   {
     auto& img = obj.cl.image;
-    auto  pix = kcoor2pix(obj.polygons.first().first());
+    auto  pix = deg2pix(obj.polygons.first().first());
     if (img.isNull())
       p->drawEllipse(pix, 5, 5);
     else
@@ -149,7 +149,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       int      w = obj.getWidthPix(pixel_size_mm);
       QPolygon polygon_pix;
       for (auto point: polygon)
-        polygon_pix.append(kcoor2pix(point));
+        polygon_pix.append(deg2pix(point));
       if (highlighted)
         p->setPen(QPen(Qt::yellow, w * 2, Qt::SolidLine, Qt::RoundCap,
                        Qt::RoundJoin));
@@ -171,7 +171,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
     {
       QPolygon polygon_pix;
       for (auto point: polygon)
-        polygon_pix.append(kcoor2pix(point));
+        polygon_pix.append(deg2pix(point));
 
       if (highlighted)
         p->setPen(QPen(Qt::yellow, w * 2));
@@ -200,7 +200,7 @@ void KObjectManager::addPoint(KGeoCoor coor)
 {
   if (active_object.cl.type == KShape::None)
   {
-    auto coor_pix = kcoor2pix(coor);
+    auto coor_pix = deg2pix(coor);
     auto obj_idx  = getObjectIdxAt(coor_pix);
     selectObject(obj_idx);
     return;
@@ -290,7 +290,7 @@ int KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
     for (int point_idx = -1; auto p: polygon)
     {
       point_idx++;
-      auto pix = kcoor2pix(p);
+      auto pix = deg2pix(p);
       auto d   = kmath::getDistance(pix, p0);
       if (d < proximity_pix)
         return point_idx;
@@ -308,7 +308,7 @@ int KObjectManager::getObjectIdxAt(QPoint p0)
     idx++;
     if (obj.cl.type == KShape::Point)
     {
-      auto point_pos = kcoor2pix(obj.polygons.first().first());
+      auto point_pos = deg2pix(obj.polygons.first().first());
       if ((point_pos - p0).manhattanLength() < proximity_pix)
         return idx;
     }
@@ -318,7 +318,7 @@ int KObjectManager::getObjectIdxAt(QPoint p0)
       {
         QPolygon polygon_pix;
         for (auto p: polygon)
-          polygon_pix.append(kcoor2pix(p));
+          polygon_pix.append(deg2pix(p));
         if (isNearPolyline(p0, polygon_pix, proximity_pix))
           return idx;
       }
@@ -329,7 +329,7 @@ int KObjectManager::getObjectIdxAt(QPoint p0)
       {
         QPolygon polygon_pix;
         for (auto p: polygon)
-          polygon_pix.append(kcoor2pix(p));
+          polygon_pix.append(deg2pix(p));
         if (polygon_pix.containsPoint(p0, Qt::OddEvenFill))
           return idx;
       }
