@@ -121,6 +121,8 @@ int main(int argc, char* argv[])
 
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
                    &auto_scroll, &KAutoScroll::stop);
+  QObject::connect(&renderw, &KRenderWidget::mousePressed,
+                   &object_man, &KObjectManager::startMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::mouseMoved, &auto_scroll,
                    &KAutoScroll::accumulate);
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,

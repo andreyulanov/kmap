@@ -40,7 +40,9 @@ class KObjectManager: public QObject
   QVector<KObject> objects;
   KObject          active_object;
   int              selected_object_idx = -1;
+  int              selected_point_idx  = -1;
   QString          generateObjectFileName();
+  int              getSelectedObjectPointIdxAt(QPoint p0);
 
 signals:
   QPoint kcoor2pix(KGeoCoor);
@@ -57,7 +59,9 @@ public:
   void paint(QPainter*);
   void acceptObject();
   void loadFile(QString path);
-  int  getObjectIdxNearPoint(QPoint);
+  void startMovingPoint(QPoint);
+
+  int  getObjectIdxAt(QPoint);
   int  getObjectIdxInsidePolygon(QPolygon);
   void selectObject(int v);
 
