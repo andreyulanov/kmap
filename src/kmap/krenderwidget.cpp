@@ -146,7 +146,7 @@ void KRenderWidget::scroll(QPoint diff)
 
 void KRenderWidget::scrollTo(const KGeoCoor& coor)
 {
-  auto new_pos_pix = deg2pix(coor);
+  auto new_pos_pix = deg2scr(coor);
   auto diff        = new_pos_pix - QPoint(width() / 2, height() / 2);
   if (fabs(diff.x()) < width() && fabs(diff.y()) < height())
     scroll(diff);
@@ -171,7 +171,7 @@ void KRenderWidget::mouseReleaseEvent(QMouseEvent* e)
     return;
   mouseReleased();
   if ((e->pos() - mouse_pos).manhattanLength() < 10)
-    tapped(pix2deg(e->pos()));
+    tapped(scr2deg(e->pos()));
 }
 
 void KRenderWidget::wheelEvent(QWheelEvent* e)
@@ -434,11 +434,11 @@ QPoint KRenderWidget::kcoor2pix(const KGeoCoor& deg) const
   return r.kcoor2pix(deg);
 }
 
-QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
+QPoint KRenderWidget::deg2scr(const KGeoCoor& deg) const
 {
   auto coef          = r.getRenderWindowSizeCoef();
   auto total_shift   = getTotalShift();
-  auto pos_on_pixmap = r.deg2pix(deg);
+  auto pos_on_pixmap = r.deg2scr(deg);
   auto pos_on_screen = pos_on_pixmap + total_shift;
   if (zoom_mode != None)
   {
@@ -456,7 +456,7 @@ QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
   return pos_on_screen;
 }
 
-KGeoCoor KRenderWidget::pix2deg(const QPoint& pix) const
+KGeoCoor KRenderWidget::scr2deg(const QPoint& pix) const
 {
-  return r.pix2deg(pix - getTotalShift());
+  return r.scr2deg(pix - getTotalShift());
 }

@@ -51,6 +51,6 @@ void KPositionLabel::update()
   p.setBrush(Qt::white);
   p.drawConvexPolygon(pos_poly);
   setPixmap(pm);
-  auto pos_pix = deg2pix(pos_info);
+  auto pos_pix = deg2scr(pos_info);
   move(pos_pix - QPoint{width() / 2, height() / 2});
 }

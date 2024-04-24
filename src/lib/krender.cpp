@@ -8,12 +8,12 @@
 
 using namespace kmath;
 
-QPoint KRender::deg2pix(const KGeoCoor& deg) const
+QPoint KRender::deg2scr(const KGeoCoor& deg) const
 {
   return meters2pix(deg.toMeters());
 }
 
-KGeoCoor KRender::pix2deg(QPoint pix) const
+KGeoCoor KRender::scr2deg(QPoint pix) const
 {
   return KGeoCoor::fromMeters(pix2meters(pix));
 }

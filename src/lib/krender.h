@@ -142,8 +142,8 @@ public:
   QPoint  meters2pix(QPointF m) const;
   QPointF pix2meters(QPointF pix) const;
 
-  QPoint   deg2pix(const KGeoCoor& deg) const;
-  KGeoCoor pix2deg(QPoint pix) const;
+  QPoint   deg2scr(const KGeoCoor& deg) const;
+  KGeoCoor scr2deg(QPoint pix) const;
 
   void pan(QPoint);
   void zoom(double);

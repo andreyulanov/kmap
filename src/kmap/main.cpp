@@ -223,8 +223,8 @@ int main(int argc, char* argv[])
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
   QObject::connect(&object_man, &KObjectManager::kcoor2pix, &renderw,
                    &KRenderWidget::kcoor2pix, Qt::DirectConnection);
-  QObject::connect(&position_label, &KPositionLabel::deg2pix,
-                   &renderw, &KRenderWidget::deg2pix,
+  QObject::connect(&position_label, &KPositionLabel::deg2scr,
+                   &renderw, &KRenderWidget::deg2scr,
                    Qt::DirectConnection);
 
   QObject::connect(&track_man, &KTrackManager::updated, &renderw,

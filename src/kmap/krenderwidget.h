@@ -98,9 +98,9 @@ public:
   void         scrollTo(const KGeoCoor& coor);
   void         zoomIn();
   void         zoomOut();
-  QPoint       deg2pix(const KGeoCoor&) const;
+  QPoint       deg2scr(const KGeoCoor&) const;
   QPoint       kcoor2pix(const KGeoCoor&) const;
-  KGeoCoor     pix2deg(const QPoint&) const;
+  KGeoCoor     scr2deg(const QPoint&) const;
   void         setScrollingEnabled(bool);
   double       getMip();
 };
