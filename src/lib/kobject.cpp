@@ -160,6 +160,16 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
         p->setPen(pen);
       }
       p->drawPolyline(polygon_pix);
+      if (highlighted)
+      {
+        p->setPen(Qt::white);
+        p->setBrush(Qt::black);
+        for (auto point: polygon_pix)
+        {
+          int w = 1.0 / pixel_size_mm;
+          p->drawEllipse(point, w, w);
+        }
+      }
     }
   }
   if (obj.cl.type == KShape::Polygon)
@@ -185,12 +195,15 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       else
         p->drawPolygon(polygon_pix);
 
-      p->setPen(Qt::white);
-      p->setBrush(Qt::black);
-      for (auto point: polygon_pix)
+      if (highlighted)
       {
-        int w = 1.0 / pixel_size_mm;
-        p->drawEllipse(point, w, w);
+        p->setPen(Qt::white);
+        p->setBrush(Qt::black);
+        for (auto point: polygon_pix)
+        {
+          int w = 1.0 / pixel_size_mm;
+          p->drawEllipse(point, w, w);
+        }
       }
     }
   }
@@ -235,11 +248,12 @@ void KObjectManager::addPoint(KGeoCoor coor)
 
 void KObjectManager::paint(QPainter* p)
 {
-  if (selected_object_idx >= 0)
+  if (!active_object.isEmpty())
+    paintObject(p, active_object, true);
+  else if (selected_object_idx >= 0)
     paintObject(p, objects.at(selected_object_idx), true);
   for (auto& obj: objects)
     paintObject(p, obj);
-  paintObject(p, active_object);
 }
 
 void KObjectManager::acceptObject()
@@ -272,7 +286,7 @@ void KObjectManager::loadFile(QString path)
 
 void KObjectManager::startMovingPoint(QPoint p0)
 {
-  if (selected_object_idx < 0)
+  if (selected_object_idx < 0 && active_object.isEmpty())
     return;
   moving_point_idx = getSelectedObjectPointIdxAt(p0);
 }
@@ -289,11 +303,14 @@ bool KObjectManager::canScroll()
 
 void KObjectManager::movePoint(QPoint p)
 {
-  if (selected_object_idx < 0 ||
-      selected_object_idx >= objects.count())
+  if (active_object.isEmpty() &&
+      (selected_object_idx < 0 ||
+       selected_object_idx >= objects.count()))
     return;
 
-  auto& obj = objects[selected_object_idx];
+  auto& obj = active_object;
+  if (obj.isEmpty())
+    obj = objects[selected_object_idx];
 
   if (moving_point_idx.first < 0 ||
       moving_point_idx.first >= obj.polygons.count())
@@ -311,9 +328,11 @@ void KObjectManager::movePoint(QPoint p)
 
 QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
 {
-  if (selected_object_idx < 0)
+  if (selected_object_idx < 0 && active_object.isEmpty())
     return {-1, -1};
-  auto obj           = objects.at(selected_object_idx);
+  auto& obj = active_object;
+  if (obj.isEmpty())
+    obj = objects.at(selected_object_idx);
   auto proximity_pix = proximity_mm / pixel_size_mm;
   for (int polygon_idx = -1; auto polygon: obj.polygons)
   {
