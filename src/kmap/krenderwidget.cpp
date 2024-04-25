@@ -15,6 +15,7 @@ KRenderWidget::KRenderWidget(Settings settings):
   r.setUpdateIntervalMs(settings.update_interval_ms);
   r.setBackgroundColor(settings.background_color);
   r.setRenderWindowSizeCoef(settings.render_window_size_coef);
+  max_zoom_speed = settings.max_zoom_speed;
   r.setPixmapSize(size());
 
   setAttribute(Qt::WA_AcceptTouchEvents);
@@ -86,11 +87,6 @@ void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
   r.setCenterM(deg.toMeters());
   r.setMip(mip);
   r.renderMap();
-}
-
-void KRenderWidget::setMaxZoomSpeed(double v)
-{
-  max_zoom_speed = v;
 }
 
 void KRenderWidget::onRendered(int ms_elapsed)

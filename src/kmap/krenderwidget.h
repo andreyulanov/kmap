@@ -26,6 +26,7 @@ public:
     double  render_window_size_coef = 2;
     QColor  background_color        = QColor(150, 210, 240);
     int     update_interval_ms      = 100;
+    double  max_zoom_speed          = 1.1;
   };
 
 private:
@@ -91,7 +92,6 @@ public:
   void         renderMap();
   void         renderUserObjects();
   void         setViewPoint(const KGeoCoor& deg, double mip);
-  void         setMaxZoomSpeed(double);
   void         addMap(QString path, bool load_now);
   const KPack* getWorldMap();
   void         scroll(QPoint diff);
