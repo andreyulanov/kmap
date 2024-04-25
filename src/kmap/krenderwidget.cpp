@@ -152,11 +152,11 @@ void KRenderWidget::scrollTo(const KGeoCoor& coor)
 
 void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
 {
+  mouseMoved(e->pos());
   if (!checkCanScroll())
     return;
   auto diff = QPoint(mouse_pos - e->pos());
   scroll(diff);
-  mouseMoved(e->pos());
   mouse_pos = e->pos();
 }
 

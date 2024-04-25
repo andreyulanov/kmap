@@ -746,6 +746,29 @@
     ]
 },
 {
+    "id"     : "улица2",
+    "type"   : "Line",
+    "key"    : "478-000-L",
+    "attrname" : "Описание дорожной сети",
+    "layer"  : 17,
+    "width_mm"  : 0.4,
+    "pen"    : [255, 255, 255],
+    "brush"  : [155, 155, 155],
+    "max_mip": 30,
+    "coor_precision_coef" : 10,
+    "attributes":
+    [
+    {
+    "code"   : 3196,
+    "name"   : "oneway"
+    },
+    {
+    "code"   : 50,
+    "name"   : "lanes"
+    }
+    ]
+},
+{
     "id"     : "улица, мост",
     "type"   : "Line",
     "key"    : "190-100-L_b",

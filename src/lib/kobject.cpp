@@ -301,6 +301,7 @@ void KObjectManager::movePoint(QPoint p)
     return;
 
   polygon[moving_point_idx.second] = scr2deg(p);
+  updated();
 }
 
 QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)

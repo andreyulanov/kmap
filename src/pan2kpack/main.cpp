@@ -187,19 +187,27 @@ int main(int argc, char* argv[])
       mapObjectRscKeyUn(info, key_wchar, sizeof(key_wchar));
       auto key = QString::fromUtf16(key_wchar);
 
+      QStringList attr_names;
       QStringList attr_values;
       auto        semantic_count = mapSemanticAmount(info);
       for (int sematic_idx = 1; sematic_idx <= semantic_count;
            sematic_idx++)
       {
         WCHAR str_utf16[1000];
+        if (mapSemanticNameUn(info, sematic_idx, str_utf16,
+                              sizeof(str_utf16)))
+        {
+          attr_names.append(
+              QString::fromUtf16(str_utf16).simplified());
+        }
         if (mapSemanticValueUnicode(info, sematic_idx, str_utf16,
                                     sizeof(str_utf16)))
           attr_values.append(
               QString::fromUtf16(str_utf16).simplified());
       }
 
-      int shape_idx = shape_man.getShapeIdx(code, key, attr_values);
+      int shape_idx =
+          shape_man.getShapeIdx(code, key, attr_names, attr_values);
       if (shape_idx < 0)
       {
         WCHAR   str_utf16[1000];
@@ -222,6 +230,7 @@ int main(int argc, char* argv[])
       }
 
       auto shape = shape_list->at(shape_idx);
+
       if (shape->type == KShape::None)
         continue;
 
