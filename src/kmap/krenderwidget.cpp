@@ -159,8 +159,7 @@ void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
   if (!canScroll())
     return;
   auto diff = QPoint(mouse_pos - e->pos());
-  if (scrolling_enabled)
-    scroll(diff);
+  scroll(diff);
   mouseMoved(e->pos());
   mouse_pos = e->pos();
 }
@@ -408,11 +407,6 @@ void KRenderWidget::scaleLabel()
 double KRenderWidget::getMip()
 {
   return r.getMip();
-}
-
-void KRenderWidget::setScrollingEnabled(bool v)
-{
-  scrolling_enabled = v;
 }
 
 QPoint KRenderWidget::getTotalShift() const

@@ -52,7 +52,6 @@ private:
   QPoint zoom_focus_shift;
 
   bool    zoom_pixmap_rendered = false;
-  bool    scrolling_enabled    = true;
   QLabel  label;
   QLabel  full_label;
   QLabel  scaled_label;
@@ -102,7 +101,6 @@ public:
   QPoint       deg2scr(const KGeoCoor&) const;
   QPoint       deg2pix(const KGeoCoor&) const;
   KGeoCoor     scr2deg(const QPoint&) const;
-  void         setScrollingEnabled(bool);
   double       getMip();
 };
 #endif  // KRENDERWIDGET_H
