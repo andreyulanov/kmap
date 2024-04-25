@@ -162,9 +162,9 @@ void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
 
 void KRenderWidget::mouseReleaseEvent(QMouseEvent* e)
 {
+  mouseReleased();
   if (!checkCanScroll())
     return;
-  mouseReleased();
   if ((e->pos() - mouse_pos).manhattanLength() < 10)
     tapped(scr2deg(e->pos()));
 }

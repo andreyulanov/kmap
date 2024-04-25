@@ -66,6 +66,7 @@ public:
   int  getObjectIdxInsidePolygon(QPolygon);
   void selectObject(int v);
   void startMovingPoint(QPoint);
+  void stopMovingPoint();
   void movePoint(QPoint);
   bool canScroll();
 
