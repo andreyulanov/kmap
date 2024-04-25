@@ -67,7 +67,7 @@ public:
   void selectObject(int v);
   void startMovingPoint(QPoint);
   void movePoint(QPoint);
-  bool isMovingPoint();
+  bool canScroll();
 
 private slots:
   // Catches signals without arguments and emmits its overloaded

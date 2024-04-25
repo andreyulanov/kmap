@@ -109,7 +109,7 @@ void KRenderWidget::onRendered(int ms_elapsed)
 
 void KRenderWidget::mousePressEvent(QMouseEvent* e)
 {
-  if (!canScroll())
+  if (!checkCanScroll())
     return;
   mousePressed(e->pos());
   mouse_pos        = e->pos();
@@ -156,7 +156,7 @@ void KRenderWidget::scrollTo(const KGeoCoor& coor)
 
 void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
 {
-  if (!canScroll())
+  if (!checkCanScroll())
     return;
   auto diff = QPoint(mouse_pos - e->pos());
   scroll(diff);
@@ -166,7 +166,7 @@ void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
 
 void KRenderWidget::mouseReleaseEvent(QMouseEvent* e)
 {
-  if (!canScroll())
+  if (!checkCanScroll())
     return;
   mouseReleased();
   if ((e->pos() - mouse_pos).manhattanLength() < 10)
@@ -354,9 +354,11 @@ void KRenderWidget::zoomOut()
   startZoom(ZoomMode::Out);
 }
 
-bool KRenderWidget::canScroll()
+bool KRenderWidget::checkCanScroll()
 {
-  if (is_pinching || isMovingPoint())
+  if (!canScroll())
+    return false;
+  if (is_pinching)
     return false;
   return !time_since_last_pinch.isValid() ||
          time_since_last_pinch.elapsed() >

@@ -66,7 +66,7 @@ private:
   void checkZoomFinished();
   void updateLabel(const QPixmap*, int ms_elapsed);
   void scaleLabel();
-  bool canScroll();
+  bool checkCanScroll();
 
   void   stepZoom();
   void   onRendered(int ms_elapsed);
@@ -84,7 +84,7 @@ signals:
   void paintUserObjects(QPainter*);
   void tapped(KGeoCoor);
   void startedRender(QRectF);
-  bool isMovingPoint();
+  bool canScroll();
 
 public:
   KRenderWidget(Settings settings);

@@ -222,9 +222,8 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
                    &object_man, &KObjectManager::paint,
                    Qt::DirectConnection);
-  QObject::connect(&renderw, &KRenderWidget::isMovingPoint,
-                   &object_man, &KObjectManager::isMovingPoint,
-                   Qt::DirectConnection);
+  QObject::connect(&renderw, &KRenderWidget::canScroll, &object_man,
+                   &KObjectManager::canScroll, Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
   QObject::connect(&object_man, &KObjectManager::deg2pix, &renderw,

@@ -277,9 +277,9 @@ void KObjectManager::startMovingPoint(QPoint p0)
   moving_point_idx = getSelectedObjectPointIdxAt(p0);
 }
 
-bool KObjectManager::isMovingPoint()
+bool KObjectManager::canScroll()
 {
-  return moving_point_idx != QPair{-1, -1};
+  return moving_point_idx == QPair{-1, -1};
 }
 
 void KObjectManager::movePoint(QPoint p)
