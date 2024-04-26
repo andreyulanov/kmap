@@ -19,6 +19,7 @@ void KObject::save(QString path)
   write(&f, cl.name);
   write(&f, cl.type);
   write(&f, cl.pen);
+  write(&f, cl.pen_width_mm);
   write(&f, cl.brush);
   write(&f, cl.image);
 
@@ -48,6 +49,7 @@ void KObject::load(QString path, double pixel_size_mm)
   read(&f, cl.name);
   read(&f, cl.type);
   read(&f, cl.pen);
+  read(&f, cl.pen_width_mm);
   read(&f, cl.brush);
   QImage img;
   read(&f, img);
@@ -76,7 +78,7 @@ bool KObject::isEmpty()
 
 int KObject::getWidthPix(double pixel_size_mm)
 {
-  return round(KObjectClass::default_width_mm / pixel_size_mm);
+  return round(cl.pen_width_mm / pixel_size_mm);
 }
 
 KObjectManager::KObjectManager(QString _objects_dir,
@@ -136,12 +138,13 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
   if (obj.polygons.isEmpty())
     return;
 
+  auto w = obj.getWidthPix(pixel_size_mm);
   if (obj.cl.type == KShape::Point)
   {
     auto& img = obj.cl.image;
     auto  pix = deg2pix(obj.polygons.first().first());
     if (img.isNull())
-      p->drawEllipse(pix, 5, 5);
+      p->drawEllipse(pix, w, w);
     else
     {
       auto s = img.size();
@@ -151,8 +154,8 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       {
         p->setPen(Qt::NoPen);
         p->setBrush(Qt::yellow);
-        p->drawEllipse(
-            QRect{pos, obj.cl.image.size()}.adjusted(-5, -5, 5, 5));
+        p->drawEllipse(QRect{pos, obj.cl.image.size()}.adjusted(
+            -w / 2, -w / 2, w / 2, w / 2));
       }
       p->drawImage(pos, obj.cl.image);
     }

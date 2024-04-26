@@ -7,8 +7,6 @@
 
 struct KObjectClass
 {
-  static constexpr int default_width_mm = 1.0;
-
   QString       name;
   KShape::Type  type  = KShape::None;
   KShape::Style style = KShape::Solid;
