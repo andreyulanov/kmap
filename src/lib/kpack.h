@@ -19,7 +19,10 @@ double           rad2deg(double rad);
 double           getDistance(QPoint p1, QPoint p2);
 double           getAngle(QPoint p1, QPoint p2);
 double           sqr(double x);
-bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix);
+int              getPolylinePointIdxAt(QPoint p0, QPolygon polyline,
+                                       int tolerance_pix);
+bool isNearPolyline(const QPoint& p0, const QPolygon& polyline,
+                    int tolerance_pix);
 }
 
 class KGeoCoor

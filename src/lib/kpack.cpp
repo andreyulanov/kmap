@@ -31,11 +31,13 @@ double getAngle(QPoint p1, QPoint p2)
 {
   return atan2(p2.y() - p1.y(), p2.x() - p1.x());
 }
-bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
+
+int getPolylinePointIdxAt(QPoint p0, QPolygon polyline,
+                          int tolerance_pix)
 {
   QPoint p1 = polyline.first();
   if (getDistance(p0, p1) < tolerance_pix)
-    return true;
+    return 0;
   int x0 = p0.x();
   int y0 = p0.y();
   for (int idx = -1; auto p2: polyline)
@@ -45,7 +47,7 @@ bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
       continue;
 
     if (getDistance(p0, p2) < tolerance_pix)
-      return true;
+      return idx;
 
     int x1 = p1.x();
     int y1 = p1.y();
@@ -65,10 +67,17 @@ bool isNearPolyline(QPoint p0, QPolygon polyline, int tolerance_pix)
     double d    = getDistance(p0, {xres, yres});
 
     if (d < tolerance_pix)
-      return true;
+      return idx;
   }
-  return false;
+  return -1;
 }
+
+bool isNearPolyline(const QPoint& p0, const QPolygon& polyline,
+                    int tolerance_pix)
+{
+  return getPolylinePointIdxAt(p0, polyline, tolerance_pix) >= 0;
+}
+
 }
 
 double KGeoCoor::longitude() const

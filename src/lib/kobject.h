@@ -57,14 +57,13 @@ public:
   void createObject(KShape);
   void paintObject(QPainter* p, KObject obj,
                    bool highlighted = false);
-  void addPoint(KGeoCoor coor);
+  void onTapped(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();
   void loadFile(QString path);
 
   int  getObjectIdxAt(QPoint);
   int  getObjectIdxInsidePolygon(QPolygon);
-  void selectObject(int v);
   void startMovingPoint(QPoint);
   void stopMovingPoint();
   void movePoint(QPoint);

@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,
                    &object_man, &KObjectManager::stopMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::tapped, &object_man,
-                   &KObjectManager::addPoint);
+                   &KObjectManager::onTapped);
   QObject::connect(&renderw, &KRenderWidget::pinchStarted,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::startedRender,

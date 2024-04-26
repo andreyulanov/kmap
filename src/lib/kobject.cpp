@@ -113,6 +113,7 @@ void KObjectManager::createObject(KShape sh)
   obj.cl.brush        = sh.brush;
   obj.cl.image        = sh.image;
   objects.append(obj);
+  selected_object_idx = objects.count() - 1;
 }
 
 void KObjectManager::paintObject(QPainter* p, KObject obj,
@@ -206,15 +207,32 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
   }
 }
 
-void KObjectManager::addPoint(KGeoCoor coor)
+void KObjectManager::onTapped(KGeoCoor coor)
 {
+  if (selected_object_idx >= 0)
+  {
+    auto& obj = objects[selected_object_idx];
+    if (obj.polygons.isEmpty())
+    {
+      obj.name = "object1";
+      KGeoPolygon polygon;
+      polygon.append(coor);
+      obj.polygons.append(polygon);
+      updated();
+      return;
+    }
+  }
+
+  auto p0            = deg2pix(coor);
+  auto proximity_pix = proximity_mm / pixel_size_mm;
   if (selected_object_idx < 0)
   {
-    auto coor_pix = deg2pix(coor);
-    auto obj_idx  = getObjectIdxAt(coor_pix);
-    selectObject(obj_idx);
+    selected_object_idx = getObjectIdxAt(p0);
+    updated();
     return;
   }
+  if (selected_object_idx < 0)
+    return;
   auto& obj  = objects[selected_object_idx];
   auto  type = obj.cl.type;
   if (type == KShape::Point)
@@ -237,8 +255,27 @@ void KObjectManager::addPoint(KGeoCoor coor)
     }
     else
     {
-      auto& polygon = obj.polygons[0];
-      polygon.append(coor);
+      for (int polygon_idx = -1; auto& polygon: obj.polygons)
+      {
+        polygon_idx++;
+        if (polygon.count() < 4 || type == KShape::Line)
+        {
+          polygon.append(coor);
+          updated();
+          return;
+        }
+        QPolygon polygon_pix;
+        for (auto& p: polygon)
+          polygon_pix.append(deg2pix(p));
+        polygon_pix.append(deg2pix(polygon.first()));
+        auto point_idx = kmath::getPolylinePointIdxAt(p0, polygon_pix,
+                                                      proximity_pix);
+        if (point_idx >= 0)
+        {
+          polygon.insert(point_idx, coor);
+          break;
+        }
+      }
     }
   }
   updated();
@@ -389,10 +426,4 @@ int KObjectManager::getObjectIdxAt(QPoint p0)
 int KObjectManager::getObjectIdxInsidePolygon(QPolygon polygon)
 {
   return -1;
-}
-
-void KObjectManager::selectObject(int v)
-{
-  selected_object_idx = v;
-  updated();
 }
