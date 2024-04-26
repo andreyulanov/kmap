@@ -39,8 +39,9 @@ class KObjectManager: public QObject
   double           pixel_size_mm = 0;
   QString          objects_dir;
   QVector<KObject> objects;
-  int              selected_object_idx = -1;
-  QPair<int, int>  moving_point_idx    = {-1, -1};
+  int              selected_object_idx    = -1;
+  QPair<int, int>  moving_point_idx       = {-1, -1};
+  bool             is_creating_new_object = false;
   QString          generateObjectFileName();
   QPair<int, int>  getSelectedObjectPointIdxAt(QPoint p0);
 

@@ -113,7 +113,8 @@ void KObjectManager::createObject(KShape sh)
   obj.cl.brush        = sh.brush;
   obj.cl.image        = sh.image;
   objects.append(obj);
-  selected_object_idx = objects.count() - 1;
+  selected_object_idx    = objects.count() - 1;
+  is_creating_new_object = true;
 }
 
 void KObjectManager::paintObject(QPainter* p, KObject obj,
@@ -258,7 +259,8 @@ void KObjectManager::onTapped(KGeoCoor coor)
       for (int polygon_idx = -1; auto& polygon: obj.polygons)
       {
         polygon_idx++;
-        if (polygon.count() < 4 || type == KShape::Line)
+        if (polygon.count() < 4 || type == KShape::Line ||
+            is_creating_new_object)
         {
           polygon.append(coor);
           updated();
@@ -297,6 +299,8 @@ void KObjectManager::acceptObject()
     return;
   auto& obj = objects[selected_object_idx];
   obj.save(generateObjectFileName());
+  is_creating_new_object = false;
+  selected_object_idx    = -1;
   updated();
   finishEdit();
 }
