@@ -2,6 +2,7 @@
 #define KOBJECT_H
 
 #include <QFileInfo>
+#include <QUuid>
 #include "kpack.h"
 
 struct KObjectClass
@@ -20,6 +21,7 @@ struct KObjectClass
 struct KObject
 {
   KObjectClass              cl;
+  QUuid                     guid;
   QString                   name;
   QVector<KGeoPolygon>      polygons;
   QMap<QString, QString>    text_attr;
@@ -42,7 +44,7 @@ class KObjectManager: public QObject
   int              selected_object_idx    = -1;
   QPair<int, int>  moving_point_idx       = {-1, -1};
   bool             is_creating_new_object = false;
-  QString          generateObjectFileName();
+  QString          getObjectPath(QUuid object_name);
   QPair<int, int>  getSelectedObjectPointIdxAt(QPoint p0);
 
 signals:
@@ -57,6 +59,7 @@ signals:
 public:
   KObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
+  void removeObject();
   void paintObject(QPainter* p, KObject obj,
                    bool highlighted = false);
   void onTapped(KGeoCoor coor);

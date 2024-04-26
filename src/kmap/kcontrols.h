@@ -41,6 +41,7 @@ private:
   QPushButton center_position;
   QPushButton record;
   QPushButton add;
+  QPushButton remove;
   QPushButton ok;
   QPushButton login_button;
   KGeoCoor    curr_coor;
@@ -63,6 +64,7 @@ signals:
   void selectShape();
   void acceptObject();
   void login();
+  void removeObject();
 
 public:
   KControls(Settings settings);

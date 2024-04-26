@@ -72,6 +72,7 @@ void KControls::startEdit()
   record.hide();
   ok.show();
   add.hide();
+  remove.show();
 }
 
 void KControls::finishEdit()
@@ -79,6 +80,7 @@ void KControls::finishEdit()
   record.show();
   ok.hide();
   add.show();
+  remove.hide();
 }
 
 void KControls::updatePosition(const KGeoCoor& v)
@@ -96,7 +98,8 @@ void KControls::update()
 KControls::KControls(Settings v):
     zoom_in(v.map_widget), zoom_out(v.map_widget),
     center_position(v.map_widget), record(v.map_widget),
-    add(v.map_widget), ok(v.map_widget), login_button(v.map_widget)
+    add(v.map_widget), remove(v.map_widget), ok(v.map_widget),
+    login_button(v.map_widget)
 {
   settings           = v;
   auto mapw          = settings.map_widget;
@@ -143,6 +146,15 @@ KControls::KControls(Settings v):
   connect(&add, &QPushButton::pressed, this, &KControls::selectShape);
   connect(&add, &QPushButton::pressed, &record, &QWidget::hide);
   connect(&add, &QPushButton::pressed, &ok, &QWidget::show);
+
+  initButton(&remove, QPixmap(":/labels/minus.png"),
+             {static_cast<int>(mapw->width() * 0.75),
+              mapw->height() / 2 + step * 2},
+             settings.button_size_mm);
+  connect(&remove, &QPushButton::pressed, this,
+          &KControls::removeObject);
+  remove.hide();
+
   initButton(&ok, QPixmap(":/labels/ok.png"),
              {mapw->width() / 2, mapw->height() / 2 + step * 2},
              settings.button_size_mm);

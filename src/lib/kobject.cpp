@@ -3,6 +3,7 @@
 #include "kserialize.h"
 #include <QDir>
 #include <QDebug>
+#include <QUuid>
 
 void KObject::save(QString path)
 {
@@ -90,17 +91,29 @@ KObjectManager::KObjectManager(QString _objects_dir,
   {
     KObject obj;
     obj.load(fi.absoluteFilePath(), pixel_size_mm);
+    obj.guid = fi.fileName().remove(".kobject");
     objects.append(obj);
   }
   objects_dir   = _objects_dir;
   pixel_size_mm = _pixel_size_mm;
 }
 
-QString KObjectManager::generateObjectFileName()
+QString KObjectManager::getObjectPath(QUuid object_guid)
 {
-  return objects_dir + "/" +
-         QDateTime::currentDateTime().toString("yyyyMMd-hhmmss") +
-         ".kobject";
+  return objects_dir + "/" + object_guid.toString() + ".kobject";
+}
+
+void KObjectManager::removeObject()
+{
+  if (selected_object_idx >= 0)
+  {
+    QFile().remove(
+        getObjectPath(objects.at(selected_object_idx).guid));
+    objects.remove(selected_object_idx);
+    selected_object_idx = -1;
+  }
+  finishEdit();
+  updated();
 }
 
 void KObjectManager::createObject(KShape sh)
@@ -228,7 +241,8 @@ void KObjectManager::onTapped(KGeoCoor coor)
   auto proximity_pix = proximity_mm / pixel_size_mm;
   if (selected_object_idx < 0)
   {
-    selected_object_idx = getObjectIdxAt(p0);
+    selected_object_idx    = getObjectIdxAt(p0);
+    is_creating_new_object = false;
     startEdit();
     updated();
     return;
@@ -299,7 +313,9 @@ void KObjectManager::acceptObject()
   if (selected_object_idx < 0)
     return;
   auto& obj = objects[selected_object_idx];
-  obj.save(generateObjectFileName());
+  if (obj.guid.isNull())
+    obj.guid = QUuid::createUuid();
+  obj.save(getObjectPath(obj.guid.toString()));
   is_creating_new_object = false;
   selected_object_idx    = -1;
   updated();
@@ -369,10 +385,8 @@ QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
 {
   if (selected_object_idx < 0)
     return {-1, -1};
-  auto& obj = objects[selected_object_idx];
-  if (obj.isEmpty())
-    obj = objects.at(selected_object_idx);
-  auto proximity_pix = proximity_mm / pixel_size_mm;
+  auto& obj           = objects[selected_object_idx];
+  auto  proximity_pix = proximity_mm / pixel_size_mm;
   for (int polygon_idx = -1; auto polygon: obj.polygons)
   {
     polygon_idx++;

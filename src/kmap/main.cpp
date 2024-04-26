@@ -186,6 +186,8 @@ int main(int argc, char* argv[])
                    &KTrackManager::isRecording);
   QObject::connect(&controls, &KControls::selectShape, &newobjw,
                    &KNewObjectWidget::show);
+  QObject::connect(&controls, &KControls::removeObject, &object_man,
+                   &KObjectManager::removeObject);
 
   QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
                    &user_shape_man,
