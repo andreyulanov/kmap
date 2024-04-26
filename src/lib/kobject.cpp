@@ -75,7 +75,7 @@ bool KObject::isEmpty()
 
 int KObject::getWidthPix(double pixel_size_mm)
 {
-  return round(KObjectClass::default_image_size_mm / pixel_size_mm);
+  return round(KObjectClass::default_width_mm / pixel_size_mm);
 }
 
 KObjectManager::KObjectManager(QString _objects_dir,
@@ -105,12 +105,14 @@ QString KObjectManager::generateObjectFileName()
 
 void KObjectManager::createObject(KShape sh)
 {
-  active_object.cl.type         = sh.type;
-  active_object.cl.style        = sh.style;
-  active_object.cl.pen_width_mm = sh.width_mm;
-  active_object.cl.pen          = sh.pen;
-  active_object.cl.brush        = sh.brush;
-  active_object.cl.image        = sh.image;
+  KObject obj;
+  obj.cl.type         = sh.type;
+  obj.cl.style        = sh.style;
+  obj.cl.pen_width_mm = sh.width_mm;
+  obj.cl.pen          = sh.pen;
+  obj.cl.brush        = sh.brush;
+  obj.cl.image        = sh.image;
+  objects.append(obj);
 }
 
 void KObjectManager::paintObject(QPainter* p, KObject obj,
@@ -154,11 +156,8 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
         p->setPen(QPen(Qt::yellow, w * 2, Qt::SolidLine, Qt::RoundCap,
                        Qt::RoundJoin));
       else
-      {
-        QPen pen = QPen(obj.cl.pen, w, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin);
-        p->setPen(pen);
-      }
+        p->setPen(QPen(obj.cl.pen, w, Qt::SolidLine, Qt::RoundCap,
+                       Qt::RoundJoin));
       p->drawPolyline(polygon_pix);
       if (highlighted)
       {
@@ -186,10 +185,8 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       if (highlighted)
         p->setPen(QPen(Qt::yellow, w * 2));
       else
-      {
         p->setPen(pen);
-        p->setBrush(brush);
-      }
+      p->setBrush(brush);
       if (polygon_pix.count() == 2)
         p->drawPolyline(polygon_pix);
       else
@@ -211,35 +208,36 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
 
 void KObjectManager::addPoint(KGeoCoor coor)
 {
-  if (active_object.cl.type == KShape::None)
+  if (selected_object_idx < 0)
   {
     auto coor_pix = deg2pix(coor);
     auto obj_idx  = getObjectIdxAt(coor_pix);
     selectObject(obj_idx);
     return;
   }
-  auto type = active_object.cl.type;
+  auto& obj  = objects[selected_object_idx];
+  auto  type = obj.cl.type;
   if (type == KShape::Point)
   {
-    active_object.name = "object1";
+    obj.name = "object1";
     KGeoPolygon poly;
     poly.append(coor);
-    active_object.polygons.append(poly);
+    obj.polygons.append(poly);
     acceptObject();
     return;
   }
   else
   {
-    if (active_object.isEmpty())
+    if (obj.isEmpty())
     {
-      active_object.name = "object1";
+      obj.name = "object1";
       KGeoPolygon polygon;
       polygon.append(coor);
-      active_object.polygons.append(polygon);
+      obj.polygons.append(polygon);
     }
     else
     {
-      auto& polygon = active_object.polygons[0];
+      auto& polygon = obj.polygons[0];
       polygon.append(coor);
     }
   }
@@ -248,20 +246,20 @@ void KObjectManager::addPoint(KGeoCoor coor)
 
 void KObjectManager::paint(QPainter* p)
 {
-  if (!active_object.isEmpty())
-    paintObject(p, active_object, true);
-  else if (selected_object_idx >= 0)
-    paintObject(p, objects.at(selected_object_idx), true);
-  for (auto& obj: objects)
-    paintObject(p, obj);
+  for (int idx = -1; auto& obj: objects)
+  {
+    idx++;
+    bool highligted = idx == selected_object_idx;
+    paintObject(p, obj, highligted);
+  }
 }
 
 void KObjectManager::acceptObject()
 {
-  active_object.save(generateObjectFileName());
-  objects.append(active_object);
-  active_object.polygons.clear();
-  active_object.cl.type = KShape::None;
+  if (selected_object_idx < 0)
+    return;
+  auto& obj = objects[selected_object_idx];
+  obj.save(generateObjectFileName());
   updated();
   finishEdit();
 }
@@ -286,7 +284,7 @@ void KObjectManager::loadFile(QString path)
 
 void KObjectManager::startMovingPoint(QPoint p0)
 {
-  if (selected_object_idx < 0 && active_object.isEmpty())
+  if (selected_object_idx < 0)
     return;
   moving_point_idx = getSelectedObjectPointIdxAt(p0);
 }
@@ -303,12 +301,11 @@ bool KObjectManager::canScroll()
 
 void KObjectManager::movePoint(QPoint p)
 {
-  if (active_object.isEmpty() &&
-      (selected_object_idx < 0 ||
-       selected_object_idx >= objects.count()))
+  if (selected_object_idx < 0 ||
+      selected_object_idx >= objects.count())
     return;
 
-  auto& obj = active_object;
+  auto& obj = objects[selected_object_idx];
   if (obj.isEmpty())
     obj = objects[selected_object_idx];
 
@@ -328,9 +325,9 @@ void KObjectManager::movePoint(QPoint p)
 
 QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
 {
-  if (selected_object_idx < 0 && active_object.isEmpty())
+  if (selected_object_idx < 0)
     return {-1, -1};
-  auto& obj = active_object;
+  auto& obj = objects[selected_object_idx];
   if (obj.isEmpty())
     obj = objects.at(selected_object_idx);
   auto proximity_pix = proximity_mm / pixel_size_mm;

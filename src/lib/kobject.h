@@ -6,14 +6,15 @@
 
 struct KObjectClass
 {
-  QString              name;
-  KShape::Type         type  = KShape::None;
-  KShape::Style        style = KShape::Solid;
-  QColor               pen;
-  float                pen_width_mm = 0;
-  QColor               brush;
-  QImage               image;
-  static constexpr int default_image_size_mm = 3.0;
+  static constexpr int default_width_mm = 1.0;
+
+  QString       name;
+  KShape::Type  type  = KShape::None;
+  KShape::Style style = KShape::Solid;
+  QColor        pen;
+  float         pen_width_mm = 0;
+  QColor        brush;
+  QImage        image;
 };
 
 struct KObject
@@ -38,7 +39,6 @@ class KObjectManager: public QObject
   double           pixel_size_mm = 0;
   QString          objects_dir;
   QVector<KObject> objects;
-  KObject          active_object;
   int              selected_object_idx = -1;
   QPair<int, int>  moving_point_idx    = {-1, -1};
   QString          generateObjectFileName();
