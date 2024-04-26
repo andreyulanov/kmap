@@ -229,6 +229,7 @@ void KObjectManager::onTapped(KGeoCoor coor)
   if (selected_object_idx < 0)
   {
     selected_object_idx = getObjectIdxAt(p0);
+    startEdit();
     updated();
     return;
   }

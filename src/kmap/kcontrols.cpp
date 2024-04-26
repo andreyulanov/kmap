@@ -67,10 +67,18 @@ void KControls::setCurrCoor(const KGeoCoor& v)
   curr_coor = v;
 }
 
+void KControls::startEdit()
+{
+  record.hide();
+  ok.show();
+  add.hide();
+}
+
 void KControls::finishEdit()
 {
   record.show();
   ok.hide();
+  add.show();
 }
 
 void KControls::updatePosition(const KGeoCoor& v)

@@ -243,6 +243,8 @@ int main(int argc, char* argv[])
                    &KRenderWidget::renderUserObjects);
   QObject::connect(&object_man, &KObjectManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
+  QObject::connect(&object_man, &KObjectManager::startEdit, &controls,
+                   &KControls::startEdit);
   QObject::connect(&object_man, &KObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 

@@ -73,6 +73,7 @@ public:
   void enableCentering();
   void onSwitchRecording();
   void onMouseMoved();
+  void startEdit();
   void finishEdit();
 };
 

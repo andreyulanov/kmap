@@ -50,6 +50,7 @@ signals:
   QPoint   deg2scr(KGeoCoor);
   KGeoCoor scr2deg(QPoint);
   void     updated();
+  void     startEdit();
   void     finishEdit();
   void     saved(QString);
 
