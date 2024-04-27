@@ -47,7 +47,7 @@ class KObjectManager: public QObject
   QString          objects_dir;
   QVector<KObject> objects;
   int              edited_object_idx = -1;
-  QVector<int>     selected_objects;
+  QVector<QUuid>   selected_guids;
   QPair<int, int>  moving_point_idx       = {-1, -1};
   bool             is_creating_new_object = false;
   QString          getObjectPath(QUuid object_name);

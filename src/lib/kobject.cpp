@@ -109,17 +109,24 @@ void KObjectManager::removeObject()
 {
   if (edited_object_idx >= 0)
   {
-    QFile().remove(
-        getObjectPath(objects.at(edited_object_idx).guid));
+    QFile().remove(getObjectPath(objects.at(edited_object_idx).guid));
     objects.remove(edited_object_idx);
     edited_object_idx = -1;
   }
-  for (auto idx: selected_objects)
+  for (auto guid: selected_guids)
   {
-    QFile().remove(getObjectPath(objects.at(idx).guid));
-    objects.remove(idx);
+    for (int obj_idx = -1; auto& obj: objects)
+    {
+      obj_idx++;
+      if (obj.guid == guid)
+      {
+        QFile().remove(getObjectPath(objects.at(obj_idx).guid));
+        objects.remove(obj_idx);
+        break;
+      }
+    }
   }
-  selected_objects.clear();
+  selected_guids.clear();
   finishEdit();
   updated();
 }
@@ -134,7 +141,7 @@ void KObjectManager::createObject(KShape sh)
   obj.cl.brush        = sh.brush;
   obj.cl.image        = sh.image;
   objects.append(obj);
-  edited_object_idx    = objects.count() - 1;
+  edited_object_idx      = objects.count() - 1;
   is_creating_new_object = true;
 }
 
@@ -233,6 +240,17 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
 void KObjectManager::onTapped(KGeoCoor coor)
 {
   auto p0 = deg2pix(coor);
+
+  if (!selected_guids.isEmpty())
+  {
+    auto object_idx    = getObjectIdxAt(p0);
+    auto selected_guid = objects.at(object_idx).guid;
+    if (!selected_guids.contains(selected_guid))
+      selected_guids.append(selected_guid);
+    updated();
+    return;
+  }
+
   if (edited_object_idx >= 0)
   {
     auto& obj = objects[edited_object_idx];
@@ -249,9 +267,9 @@ void KObjectManager::onTapped(KGeoCoor coor)
     if (new_selected_object_idx >= 0 &&
         new_selected_object_idx != edited_object_idx)
     {
-      selected_objects.clear();
-      selected_objects.append(edited_object_idx);
-      selected_objects.append(new_selected_object_idx);
+      selected_guids.clear();
+      selected_guids.append(objects.at(edited_object_idx).guid);
+      selected_guids.append(objects.at(new_selected_object_idx).guid);
       edited_object_idx = -1;
       updated();
       return;
@@ -259,12 +277,15 @@ void KObjectManager::onTapped(KGeoCoor coor)
   }
 
   auto proximity_pix = proximity_mm / pixel_size_mm;
-  if (edited_object_idx < 0)
+  if (edited_object_idx < 0 && selected_guids.isEmpty())
   {
-    edited_object_idx    = getObjectIdxAt(p0);
+    edited_object_idx      = getObjectIdxAt(p0);
     is_creating_new_object = false;
-    startEdit();
-    updated();
+    if (edited_object_idx >= 0)
+    {
+      startEdit();
+      updated();
+    }
     return;
   }
   if (edited_object_idx < 0)
@@ -326,7 +347,7 @@ void KObjectManager::paint(QPainter* p)
     PaintMode mode = PaintMode::Normal;
     if (idx == edited_object_idx)
       mode = PaintMode::Edited;
-    else if (selected_objects.contains(idx))
+    else if (selected_guids.contains(obj.guid))
       mode = PaintMode::Selected;
     paintObject(p, obj, mode);
   }
@@ -334,7 +355,7 @@ void KObjectManager::paint(QPainter* p)
 
 void KObjectManager::acceptObject()
 {
-  selected_objects.clear();
+  selected_guids.clear();
   if (edited_object_idx >= 0)
   {
     auto& obj = objects[edited_object_idx];
@@ -342,7 +363,7 @@ void KObjectManager::acceptObject()
       obj.guid = QUuid::createUuid();
     obj.save(getObjectPath(obj.guid.toString()));
     is_creating_new_object = false;
-    edited_object_idx    = -1;
+    edited_object_idx      = -1;
   }
   updated();
   finishEdit();
@@ -385,8 +406,7 @@ bool KObjectManager::canScroll()
 
 void KObjectManager::movePoint(QPoint p)
 {
-  if (edited_object_idx < 0 ||
-      edited_object_idx >= objects.count())
+  if (edited_object_idx < 0 || edited_object_idx >= objects.count())
     return;
 
   auto& obj = objects[edited_object_idx];
