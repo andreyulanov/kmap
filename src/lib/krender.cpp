@@ -1024,10 +1024,10 @@ void KRender::run()
   qDebug() << "mip" << render_mip << ",total render time elapsed"
            << total_render_time.elapsed();
 
-  getting_pixmap_enabled = true;
-  main_pixmap            = render_pixmap;
+  main_pixmap = render_pixmap.copy();
   paintUserObjects(&p0);
 
+  getting_pixmap_enabled = true;
   emit rendered(0);
   if (loading_enabled)
     checkLoad();
@@ -1035,7 +1035,11 @@ void KRender::run()
 
 void KRender::renderUserObjects()
 {
-  render_pixmap = main_pixmap;
+  if (isRunning())
+    return;
+  if (!getting_pixmap_enabled)
+    return;
+  render_pixmap = main_pixmap.copy();
   QPainter p(&render_pixmap);
   paintUserObjects(&p);
   rendered(0);
