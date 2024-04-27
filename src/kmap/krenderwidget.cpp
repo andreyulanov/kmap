@@ -109,6 +109,7 @@ void KRenderWidget::mousePressEvent(QMouseEvent* e)
     return;
   mousePressed(e->pos());
   mouse_pos        = e->pos();
+  start_mouse_pos  = e->pos();
   zoom_focus_shift = QPoint();
 }
 
@@ -165,7 +166,7 @@ void KRenderWidget::mouseReleaseEvent(QMouseEvent* e)
   mouseReleased();
   if (!checkCanScroll())
     return;
-  if ((e->pos() - mouse_pos).manhattanLength() < 10)
+  if ((e->pos() - start_mouse_pos).manhattanLength() < 10)
     tapped(scr2deg(e->pos()));
 }
 

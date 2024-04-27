@@ -48,6 +48,7 @@ private:
   bool          shifted_after_zoom = false;
 
   QPoint mouse_pos;
+  QPoint start_mouse_pos;
   QPoint total_pan_pos;
   double intermediate_zoom_coef = 1;
   QPoint zoom_focus_shift;
