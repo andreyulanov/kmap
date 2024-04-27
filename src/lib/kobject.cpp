@@ -114,6 +114,12 @@ void KObjectManager::removeObject()
     objects.remove(selected_object_idx);
     selected_object_idx = -1;
   }
+  for (auto idx: selected_objects)
+  {
+    QFile().remove(getObjectPath(objects.at(idx).guid));
+    objects.remove(idx);
+  }
+  selected_objects.clear();
   finishEdit();
   updated();
 }
@@ -133,7 +139,7 @@ void KObjectManager::createObject(KShape sh)
 }
 
 void KObjectManager::paintObject(QPainter* p, KObject obj,
-                                 bool highlighted)
+                                 PaintMode paint_mode)
 {
   if (obj.polygons.isEmpty())
     return;
@@ -150,7 +156,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       auto s = img.size();
       auto pos =
           QPoint{pix.x() - s.width() / 2, pix.y() - s.height() / 2};
-      if (highlighted)
+      if (paint_mode != PaintMode::Normal)
       {
         p->setPen(Qt::NoPen);
         p->setBrush(Qt::yellow);
@@ -170,14 +176,14 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       QPolygon polygon_pix;
       for (auto point: polygon)
         polygon_pix.append(deg2pix(point));
-      if (highlighted)
+      if (paint_mode != PaintMode::Normal)
         p->setPen(QPen(Qt::yellow, w * 2, Qt::SolidLine, Qt::RoundCap,
                        Qt::RoundJoin));
       else
         p->setPen(QPen(obj.cl.pen, w, Qt::SolidLine, Qt::RoundCap,
                        Qt::RoundJoin));
       p->drawPolyline(polygon_pix);
-      if (highlighted)
+      if (paint_mode == PaintMode::Edited)
       {
         p->setPen(Qt::white);
         p->setBrush(Qt::black);
@@ -200,7 +206,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       for (auto point: polygon)
         polygon_pix.append(deg2pix(point));
 
-      if (highlighted)
+      if (paint_mode != PaintMode::Normal)
         p->setPen(QPen(Qt::yellow, w * 2));
       else
         p->setPen(pen);
@@ -210,7 +216,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
       else
         p->drawPolygon(polygon_pix);
 
-      if (highlighted)
+      if (paint_mode == PaintMode::Edited)
       {
         p->setPen(Qt::white);
         p->setBrush(Qt::black);
@@ -226,6 +232,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
 
 void KObjectManager::onTapped(KGeoCoor coor)
 {
+  auto p0 = deg2pix(coor);
   if (selected_object_idx >= 0)
   {
     auto& obj = objects[selected_object_idx];
@@ -238,9 +245,19 @@ void KObjectManager::onTapped(KGeoCoor coor)
       updated();
       return;
     }
+    auto new_selected_object_idx = getObjectIdxAt(p0);
+    if (new_selected_object_idx >= 0 &&
+        new_selected_object_idx != selected_object_idx)
+    {
+      selected_objects.clear();
+      selected_objects.append(selected_object_idx);
+      selected_objects.append(new_selected_object_idx);
+      selected_object_idx = -1;
+      updated();
+      return;
+    }
   }
 
-  auto p0            = deg2pix(coor);
   auto proximity_pix = proximity_mm / pixel_size_mm;
   if (selected_object_idx < 0)
   {
@@ -306,21 +323,27 @@ void KObjectManager::paint(QPainter* p)
   for (int idx = -1; auto& obj: objects)
   {
     idx++;
-    bool highligted = idx == selected_object_idx;
-    paintObject(p, obj, highligted);
+    PaintMode mode = PaintMode::Normal;
+    if (idx == selected_object_idx)
+      mode = PaintMode::Edited;
+    else if (selected_objects.contains(idx))
+      mode = PaintMode::Selected;
+    paintObject(p, obj, mode);
   }
 }
 
 void KObjectManager::acceptObject()
 {
-  if (selected_object_idx < 0)
-    return;
-  auto& obj = objects[selected_object_idx];
-  if (obj.guid.isNull())
-    obj.guid = QUuid::createUuid();
-  obj.save(getObjectPath(obj.guid.toString()));
-  is_creating_new_object = false;
-  selected_object_idx    = -1;
+  selected_objects.clear();
+  if (selected_object_idx >= 0)
+  {
+    auto& obj = objects[selected_object_idx];
+    if (obj.guid.isNull())
+      obj.guid = QUuid::createUuid();
+    obj.save(getObjectPath(obj.guid.toString()));
+    is_creating_new_object = false;
+    selected_object_idx    = -1;
+  }
   updated();
   finishEdit();
 }
