@@ -107,12 +107,12 @@ QString KObjectManager::getObjectPath(QUuid object_guid)
 
 void KObjectManager::removeObject()
 {
-  if (selected_object_idx >= 0)
+  if (edited_object_idx >= 0)
   {
     QFile().remove(
-        getObjectPath(objects.at(selected_object_idx).guid));
-    objects.remove(selected_object_idx);
-    selected_object_idx = -1;
+        getObjectPath(objects.at(edited_object_idx).guid));
+    objects.remove(edited_object_idx);
+    edited_object_idx = -1;
   }
   for (auto idx: selected_objects)
   {
@@ -134,7 +134,7 @@ void KObjectManager::createObject(KShape sh)
   obj.cl.brush        = sh.brush;
   obj.cl.image        = sh.image;
   objects.append(obj);
-  selected_object_idx    = objects.count() - 1;
+  edited_object_idx    = objects.count() - 1;
   is_creating_new_object = true;
 }
 
@@ -233,9 +233,9 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
 void KObjectManager::onTapped(KGeoCoor coor)
 {
   auto p0 = deg2pix(coor);
-  if (selected_object_idx >= 0)
+  if (edited_object_idx >= 0)
   {
-    auto& obj = objects[selected_object_idx];
+    auto& obj = objects[edited_object_idx];
     if (obj.polygons.isEmpty())
     {
       obj.name = "object1";
@@ -247,29 +247,29 @@ void KObjectManager::onTapped(KGeoCoor coor)
     }
     auto new_selected_object_idx = getObjectIdxAt(p0);
     if (new_selected_object_idx >= 0 &&
-        new_selected_object_idx != selected_object_idx)
+        new_selected_object_idx != edited_object_idx)
     {
       selected_objects.clear();
-      selected_objects.append(selected_object_idx);
+      selected_objects.append(edited_object_idx);
       selected_objects.append(new_selected_object_idx);
-      selected_object_idx = -1;
+      edited_object_idx = -1;
       updated();
       return;
     }
   }
 
   auto proximity_pix = proximity_mm / pixel_size_mm;
-  if (selected_object_idx < 0)
+  if (edited_object_idx < 0)
   {
-    selected_object_idx    = getObjectIdxAt(p0);
+    edited_object_idx    = getObjectIdxAt(p0);
     is_creating_new_object = false;
     startEdit();
     updated();
     return;
   }
-  if (selected_object_idx < 0)
+  if (edited_object_idx < 0)
     return;
-  auto& obj  = objects[selected_object_idx];
+  auto& obj  = objects[edited_object_idx];
   auto  type = obj.cl.type;
   if (type == KShape::Point)
   {
@@ -324,7 +324,7 @@ void KObjectManager::paint(QPainter* p)
   {
     idx++;
     PaintMode mode = PaintMode::Normal;
-    if (idx == selected_object_idx)
+    if (idx == edited_object_idx)
       mode = PaintMode::Edited;
     else if (selected_objects.contains(idx))
       mode = PaintMode::Selected;
@@ -335,14 +335,14 @@ void KObjectManager::paint(QPainter* p)
 void KObjectManager::acceptObject()
 {
   selected_objects.clear();
-  if (selected_object_idx >= 0)
+  if (edited_object_idx >= 0)
   {
-    auto& obj = objects[selected_object_idx];
+    auto& obj = objects[edited_object_idx];
     if (obj.guid.isNull())
       obj.guid = QUuid::createUuid();
     obj.save(getObjectPath(obj.guid.toString()));
     is_creating_new_object = false;
-    selected_object_idx    = -1;
+    edited_object_idx    = -1;
   }
   updated();
   finishEdit();
@@ -368,7 +368,7 @@ void KObjectManager::loadFile(QString path)
 
 void KObjectManager::startMovingPoint(QPoint p0)
 {
-  if (selected_object_idx < 0)
+  if (edited_object_idx < 0)
     return;
   moving_point_idx = getSelectedObjectPointIdxAt(p0);
 }
@@ -385,13 +385,13 @@ bool KObjectManager::canScroll()
 
 void KObjectManager::movePoint(QPoint p)
 {
-  if (selected_object_idx < 0 ||
-      selected_object_idx >= objects.count())
+  if (edited_object_idx < 0 ||
+      edited_object_idx >= objects.count())
     return;
 
-  auto& obj = objects[selected_object_idx];
+  auto& obj = objects[edited_object_idx];
   if (obj.isEmpty())
-    obj = objects[selected_object_idx];
+    obj = objects[edited_object_idx];
 
   if (moving_point_idx.first < 0 ||
       moving_point_idx.first >= obj.polygons.count())
@@ -409,9 +409,9 @@ void KObjectManager::movePoint(QPoint p)
 
 QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
 {
-  if (selected_object_idx < 0)
+  if (edited_object_idx < 0)
     return {-1, -1};
-  auto& obj           = objects[selected_object_idx];
+  auto& obj           = objects[edited_object_idx];
   auto  proximity_pix = proximity_mm / pixel_size_mm;
   for (int polygon_idx = -1; auto polygon: obj.polygons)
   {
