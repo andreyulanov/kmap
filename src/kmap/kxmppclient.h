@@ -3,8 +3,20 @@
 
 #include <QXmppQt5/QXmppClient.h>
 #include <QXmppQt5/QXmppTransferManager.h>
+#include <QXmppQt5/QXmppUploadRequestManager.h>
+#include <QXmppQt5/QXmppHttpUploadManager.h>
+#include <QXmppQt5/QXmppDiscoveryManager.h>
 #include <QRegularExpression>
 #include "kobject.h"
+
+class KXmppDiscoveryManager : public QXmppDiscoveryManager
+{
+    Q_OBJECT
+public:
+    explicit KXmppDiscoveryManager();
+public slots:
+    void slotItemsReceived (const QXmppDiscoveryIq &);
+};
 
 class KXmppClient: public QXmppClient
 {
@@ -15,13 +27,10 @@ public:
               QObject* parent = nullptr);
   ~KXmppClient();
 
-  QString objects_dir;
-
-  void messageReceived(const QXmppMessage&);
-
 public slots:
   void sendFile(QString jid, QString filePath,
                 QString description = QString());
+  void uploadAndSendFile(QString jid, QString file_path);
   void reconnectToServer(const QString& jid, const QString& password);
 
 signals:
@@ -29,14 +38,23 @@ signals:
   void fileDownloaded(QString path);
 
 private:
+  QString objects_dir;
   QXmppTransferManager transfer_manager;
+  KXmppDiscoveryManager discovery_manager;
   QRegularExpression filesWorthToReceive = QRegularExpression(
          "[.]kpo$", QRegularExpression::CaseInsensitiveOption);
-  bool notConnected();
+  QXmppUploadRequestManager upload_req_manager;
+  QXmppHttpUploadManager upload_manager;
 
-  Q_SLOT void slotFileReceived(QXmppTransferJob* job);
+  bool notConnected();
   QString     generateReceivedFileName(QXmppTransferJob*);
+
+private slots:
+  void slotFileReceived(QXmppTransferJob* job);
+  void slotConnected();
+  void messageReceived(const QXmppMessage&);
 };
+
 
 ///
 /// \brief The KXmppObjectReceiver class provides transfer of a file
@@ -64,10 +82,11 @@ private:
   QFile*            file;
   QXmppTransferJob* job;
 
-  Q_SLOT void slotFinished();
-  Q_SLOT void slotProgress(qint64 done, qint64 total);
-  Q_SLOT void slotState(QXmppTransferJob::State state);
-  Q_SLOT void slotError(QXmppTransferJob::Error error);
+private slots:
+  void slotFinished();
+  void slotProgress(qint64 done, qint64 total);
+  void slotState(QXmppTransferJob::State state);
+  void slotError(QXmppTransferJob::Error error);
 };
 
 #endif  // KXMPPCLIENT_H

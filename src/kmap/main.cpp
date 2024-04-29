@@ -303,7 +303,7 @@ int main(int argc, char* argv[])
   QString log_path      = "client.log";
   // QString jidResource	 	= String("QXmpp");
   QString jidResource = "flowerpot";
-  QString objects_dir = "./objects";
+  QString objects_dir = mmc_path + "/objects";
   QString proxy       = "proxy.macaw.me";
 
   KXmppClient client(objects_dir, proxy);

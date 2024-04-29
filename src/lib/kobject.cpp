@@ -242,12 +242,14 @@ void KObjectManager::paint(QPainter* p)
 
 void KObjectManager::acceptObject()
 {
-  active_object.save(generateObjectFileName());
+  QString file_name = generateObjectFileName();
+  active_object.save(file_name);
   objects.append(active_object);
   active_object.polygons.clear();
   active_object.cl.type = KShape::None;
   updated();
   finishEdit();
+  saved(file_name);
 }
 
 void KObjectManager::loadFileWithoutUpdate(QString path)

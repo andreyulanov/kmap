@@ -1,10 +1,13 @@
 #include "kxmppclient.h"
 #include <QXmppQt5/QXmppMessage.h>
 #include <QXmppQt5/QXmppTransferManager.h>
+#include <QXmppQt5/QXmppGlobal.h>
+#include <QXmppQt5/QXmppDiscoveryManager.h>
+#include <QXmppQt5/QXmppDiscoveryIq.h>
 #include <QFile>
 
 KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
-    : QXmppClient{parent}, transfer_manager{}
+    : QXmppClient{parent}
 {
     connect(this, &QXmppClient::messageReceived,
             this, &KXmppClient::messageReceived);
@@ -14,11 +17,19 @@ KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
 
     transfer_manager.setProxy(proxy);
     //transfer_manager.proxyOnly();
-    //transfer_manager.setSupportedMethods(QXmppTransferJob::Method::InBandMethod);
+    //transfer_Manager.setSupportedMethods(QXmppTransferJob::Method::InBandMethod);
     addExtension(&transfer_manager);
+    QXmppDiscoveryManager* d_manager = findExtension<QXmppDiscoveryManager>();
+    if (d_manager)
+        removeExtension(d_manager);
+    addExtension(&discovery_manager);
+    addExtension(&upload_req_manager);
+    addExtension(&upload_manager);
 
     connect(&transfer_manager, &QXmppTransferManager::fileReceived,
             this, &KXmppClient::slotFileReceived);
+    connect(this, &QXmppClient::connected,
+            this, &KXmppClient::slotConnected);
 }
 
 KXmppClient::~KXmppClient()
@@ -39,17 +50,51 @@ void KXmppClient::sendFile( QString jid,
     qDebug() << "Sending" << filePath << "to" << jid << "with description" << description;
     if (notConnected()) return;
     transfer_manager.sendFile(jid, filePath, description);
+    //uploadAndSendFile(jid, filePath);
+}
+
+void KXmppClient::uploadAndSendFile(QString jid, QString file_path)
+{
+    qDebug() << "Uploading file" << file_path << "to send to" << jid;
+    if (notConnected()) return;
+    QFileInfo file_info(file_path);
+    std::shared_ptr< QXmppHttpUpload > upload = upload_manager.uploadFile(file_info);
+    std::weak_ptr<QXmppHttpUpload> upload_ptr = upload;
+    // this connections cry for refactoring
+    connect(upload.get(), &QXmppHttpUpload::progressChanged, this, [upload_ptr]() {
+        auto upload = upload_ptr.lock();
+        if (upload != nullptr)
+        {
+            qDebug() << "Upload progress:" << upload->bytesSent() << "/" << upload->bytesTotal() << "bytes ("
+                     << upload->progress() * 100 << "% )";
+        }
+    });
+    connect(upload.get(), &QXmppHttpUpload::finished, this, [this, upload_ptr, jid](const QXmppHttpUpload::Result & result) {
+        auto upload = upload_ptr.lock();
+        if (upload != nullptr)
+        {
+            try
+            {
+                qDebug() << "Send to " << jid << "the link" << std::get<QUrl>(result).toString();
+                sendMessage(jid, std::get<QUrl>(result).toString());
+            }
+            catch (const std::bad_variant_access& ex)
+            {
+                qWarning() << "Failed to upload file";
+            }
+        }
+    });
 }
 
 bool KXmppClient::notConnected()
 {
-    bool is_connected = isConnected();
-    if (!is_connected)
+    bool not_connected = !isConnected();
+    if (not_connected)
     {
         qWarning() << "Attempt do something with disconnected client, aborting...";
         emit needConnection();
     }
-    return is_connected;
+    return not_connected;
 }
 
 void KXmppClient::reconnectToServer(const QString& jid, const QString& password)
@@ -138,6 +183,30 @@ void KXmppClient::slotFileReceived(QXmppTransferJob *job)
 
     connect(receiver, &KXmppObjectReceiver::finishedSucessfully,
             this, &KXmppClient::fileDownloaded);
+}
+
+void KXmppClient::slotConnected()
+{
+    QString domain = configuration().domain();
+    QString items = discovery_manager.requestItems(domain);
+    qDebug() << "items:" << items;
+}
+
+KXmppDiscoveryManager::KXmppDiscoveryManager():
+    QXmppDiscoveryManager{}
+{
+
+    connect(this, &QXmppDiscoveryManager::itemsReceived,
+            this, &KXmppDiscoveryManager::slotItemsReceived);
+}
+
+void KXmppDiscoveryManager::slotItemsReceived(const QXmppDiscoveryIq& iq)
+{
+    for (auto item : iq.items())
+    {
+        qDebug() << "request info of" << item.jid();
+        requestInfo(item.jid());
+    }
 }
 
 void KXmppObjectReceiver::slotFinished()
