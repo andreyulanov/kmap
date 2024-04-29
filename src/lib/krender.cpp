@@ -8,12 +8,12 @@
 
 using namespace kmath;
 
-QPoint KRender::deg2pix(const KGeoCoor& deg) const
+QPoint KRender::deg2scr(const KGeoCoor& deg) const
 {
   return meters2pix(deg.toMeters());
 }
 
-KGeoCoor KRender::pix2deg(QPoint pix) const
+KGeoCoor KRender::scr2deg(QPoint pix) const
 {
   return KGeoCoor::fromMeters(pix2meters(pix));
 }
@@ -291,7 +291,7 @@ void KRender::addDrawTextEntry(
     draw_text_array.append(new_dte);
 };
 
-QPoint KRender::kcoor2pix(KGeoCoor kp) const
+QPoint KRender::deg2pix(KGeoCoor kp) const
 {
   auto m = kp.toMeters();
   return {int((m.x() - render_top_left_m.x()) / render_mip),
@@ -312,7 +312,7 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
   p->setPen(QPen(sh->pen, 2));
   p->setBrush(sh->brush);
   auto        kpos       = obj->polygons.first()->first();
-  QPoint      pos        = kcoor2pix(kpos);
+  QPoint      pos        = deg2pix(kpos);
   int         max_length = 0;
   QStringList str_list;
   if (!obj->name.isEmpty())
@@ -352,13 +352,13 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
 
 QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
 {
-  QPoint   prev_point_pix = kcoor2pix(polygon.first());
+  QPoint   prev_point_pix = deg2pix(polygon.first());
   QPolygon pl;
   pl.append(prev_point_pix);
   for (int i = 1; i < polygon.count(); i++)
   {
     auto kpoint    = polygon.at(i);
-    auto point_pix = kcoor2pix(kpoint);
+    auto point_pix = deg2pix(kpoint);
     auto d         = point_pix - prev_point_pix;
     if (d.manhattanLength() > 2 || i == polygon.count() - 1)
     {
@@ -419,8 +419,8 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
         !obj->shape->image.isNull())
     {
 
-      QPoint top_left_pix     = kcoor2pix(obj->frame.top_left);
-      QPoint bottom_right_pix = kcoor2pix(obj->frame.bottom_right);
+      QPoint top_left_pix     = deg2pix(obj->frame.top_left);
+      QPoint bottom_right_pix = deg2pix(obj->frame.bottom_right);
       obj_frame_pix           = {top_left_pix, bottom_right_pix};
 
       auto  c = obj_frame_pix.center();
@@ -1024,10 +1024,10 @@ void KRender::run()
   qDebug() << "mip" << render_mip << ",total render time elapsed"
            << total_render_time.elapsed();
 
-  getting_pixmap_enabled = true;
-  main_pixmap            = render_pixmap;
+  main_pixmap = render_pixmap.copy();
   paintUserObjects(&p0);
 
+  getting_pixmap_enabled = true;
   emit rendered(0);
   if (loading_enabled)
     checkLoad();
@@ -1035,7 +1035,11 @@ void KRender::run()
 
 void KRender::renderUserObjects()
 {
-  render_pixmap = main_pixmap;
+  if (isRunning())
+    return;
+  if (!getting_pixmap_enabled)
+    return;
+  render_pixmap = main_pixmap.copy();
   QPainter p(&render_pixmap);
   paintUserObjects(&p);
   rendered(0);

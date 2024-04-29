@@ -13,7 +13,7 @@ class KPositionLabel: public QLabel
   double   heading = 0;
 
 signals:
-  QPoint deg2pix(const KGeoCoor& deg);
+  QPoint deg2scr(const KGeoCoor& deg);
 
 public:
   KPositionLabel(QWidget* parent);

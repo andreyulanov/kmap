@@ -19,7 +19,7 @@ class KTrackManager: public QObject
                                     const KTrack& track);
 
 signals:
-  QPoint kcoor2pix(KGeoCoor);
+  QPoint deg2pix(KGeoCoor);
   void   updated();
   void   switchRecording();
 

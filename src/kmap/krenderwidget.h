@@ -26,6 +26,7 @@ public:
     double  render_window_size_coef = 2;
     QColor  background_color        = QColor(150, 210, 240);
     int     update_interval_ms      = 100;
+    double  max_zoom_speed          = 1.1;
   };
 
 private:
@@ -47,12 +48,12 @@ private:
   bool          shifted_after_zoom = false;
 
   QPoint mouse_pos;
+  QPoint start_mouse_pos;
   QPoint total_pan_pos;
   double intermediate_zoom_coef = 1;
   QPoint zoom_focus_shift;
 
   bool    zoom_pixmap_rendered = false;
-  bool    scrolling_enabled    = true;
   QLabel  label;
   QLabel  full_label;
   QLabel  scaled_label;
@@ -67,7 +68,7 @@ private:
   void checkZoomFinished();
   void updateLabel(const QPixmap*, int ms_elapsed);
   void scaleLabel();
-  bool canScroll();
+  bool checkCanScroll();
 
   void   stepZoom();
   void   onRendered(int ms_elapsed);
@@ -85,23 +86,22 @@ signals:
   void paintUserObjects(QPainter*);
   void tapped(KGeoCoor);
   void startedRender(QRectF);
+  bool canScroll();
 
 public:
   KRenderWidget(Settings settings);
   void         renderMap();
   void         renderUserObjects();
   void         setViewPoint(const KGeoCoor& deg, double mip);
-  void         setMaxZoomSpeed(double);
   void         addMap(QString path, bool load_now);
   const KPack* getWorldMap();
   void         scroll(QPoint diff);
   void         scrollTo(const KGeoCoor& coor);
   void         zoomIn();
   void         zoomOut();
+  QPoint       deg2scr(const KGeoCoor&) const;
   QPoint       deg2pix(const KGeoCoor&) const;
-  QPoint       kcoor2pix(const KGeoCoor&) const;
-  KGeoCoor     pix2deg(const QPoint&) const;
-  void         setScrollingEnabled(bool);
+  KGeoCoor     scr2deg(const QPoint&) const;
   double       getMip();
 };
 #endif  // KRENDERWIDGET_H

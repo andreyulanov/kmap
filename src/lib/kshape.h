@@ -54,6 +54,7 @@ public:
   QColor              tcolor;
   QImage              image;
   int                 name_code = 0;
+  QString             attrname;
   QString             attrval;
   QVector<KAttribute> attributes;
   void                save(QFile* f);
@@ -82,7 +83,8 @@ public:
   QString          error_str;
   QString          images_dir;
   KShapeManager(QString image_dir = QString());
-  int    getShapeIdx(int code, QString key, QStringList attr_values);
+  int    getShapeIdx(int code, QString key, QStringList attr_names,
+                     QStringList attr_values);
   int    getShapeIdxById(QString id);
   KShape getShapeById(QString id);
   void   loadShapes(QString path, QString images_dir = QString());
