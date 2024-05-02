@@ -209,12 +209,12 @@ bool KRenderWidget::event(QEvent* e)
           auto scale_factor = pg->totalScaleFactor();
           if (zoom_mode == None)
           {
-            if (scale_factor < 0.95)
+            if (scale_factor < 0.99)
             {
               focus_shift = QPoint();
               startZoom(Out, focus_shift);
             }
-            if (scale_factor > 1.05)
+            if (scale_factor > 1.01)
               startZoom(In, focus_shift);
           }
           if (zoom_mode == Out)
@@ -308,7 +308,6 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
   if (zoom_mode != ZoomMode::None)
     return;
 
-  zoom_speed         = max_zoom_speed;
   shifted_after_zoom = false;
 
   r.stopAndWait();
@@ -343,11 +342,13 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
 
 void KRenderWidget::zoomIn()
 {
+  zoom_speed = 1.15;
   startZoom(ZoomMode::In);
 }
 
 void KRenderWidget::zoomOut()
 {
+  zoom_speed = 1.15;
   startZoom(ZoomMode::Out);
 }
 
