@@ -48,15 +48,16 @@ class KRender: public QThread
   int    update_interval_ms           = 0;
   double max_object_size_with_name_mm = 20.0;
 
-  QPointF render_center_m;
-  double  mip        = 1;
-  double  render_mip = 1;
-  QPixmap main_pixmap;
-  QPixmap render_pixmap;
-  bool    rendering_enabled      = false;
-  bool    loading_enabled        = true;
-  bool    getting_pixmap_enabled = false;
-  int     load_thread_count      = 0;
+  QPointF       render_center_m;
+  double        mip        = 1;
+  double        render_mip = 1;
+  QPixmap       main_pixmap;
+  QPixmap       render_pixmap;
+  QElapsedTimer time_since_last_repaint;
+  bool          rendering_enabled      = false;
+  bool          loading_enabled        = true;
+  bool          getting_pixmap_enabled = false;
+  int           load_thread_count      = 0;
 
   QPointF              center_m;
   QSize                pixmap_size   = {100, 100};

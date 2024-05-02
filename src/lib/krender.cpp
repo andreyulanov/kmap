@@ -1039,10 +1039,14 @@ void KRender::renderUserObjects()
     return;
   if (!getting_pixmap_enabled)
     return;
+  if (time_since_last_repaint.isValid() &&
+      time_since_last_repaint.elapsed() < 10)
+    return;
   render_pixmap = main_pixmap.copy();
   QPainter p(&render_pixmap);
   paintUserObjects(&p);
   rendered(0);
+  time_since_last_repaint.start();
 }
 
 void KRender::renderMap()
