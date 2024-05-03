@@ -1,5 +1,6 @@
 linux-buildroot-g++: QT += core gui widgets
 else:QT += core gui widgets positioning sensors network
+QT += qml quick
 CONFIG += c++2a
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
@@ -65,7 +66,15 @@ kxmppclient.h
 
 INCLUDEPATH += ../lib
 
-!android: LIBS += -lQXmppQt5
+# find QXmpp lib
+exists( /usr/lib/libQXmppQt5.so ) {
+      message( "Found QXmpp lib: /usr/lib/libQXmppQt5.so" )
+      LIBS += /usr/lib/libQXmppQt5.so
+} else {
+    message( "There is no file /usr/lib/libQXmppQt5.so" )
+    message( "I'll link with -lqxmpp arg" )
+    unix|win32: LIBS += -lqxmpp
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -85,4 +94,5 @@ DISTFILES += \
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 RESOURCES += \
- images.qrc
+ images.qrc \
+ qml.qrc

@@ -7,6 +7,10 @@
         <file>recordon.jpg</file>
         <file>history.png</file>
         <file>ok.png</file>
+        <file>eye.png</file>
+        <file>hide.png</file>
+        <file>menu.png</file>
+        <file>user.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

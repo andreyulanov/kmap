@@ -1,0 +1,791 @@
+Fri May 3 18:50:02 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 18:50:02 2024 INFO Connecting to macaw.me:5222
+Fri May 3 18:50:03 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 18:50:03 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 18:50:03 2024 RECEIVED <?xml version='1.0'?><stream:stream id='6754360611843109183' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 18:50:03 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 18:50:03 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 18:50:03 2024 DEBUG Starting encryption
+Fri May 3 18:50:03 2024 DEBUG Socket encrypted
+Fri May 3 18:50:03 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 18:50:04 2024 RECEIVED <?xml version='1.0'?><stream:stream id='2436196107390224986' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 18:50:04 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 18:50:04 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 18:50:04 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9YytITC8zMTc0TDBOSlJvR1llcmtYQkxSTDh4Z1pZUHpQSlRHcGxtKzRxYz0=</auth>
+Fri May 3 18:50:04 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1jK0hMLzMxNzRMME5KUm9HWWVya1hCTFJMOHhnWllQelBKVEdwbG0rNHFjPTNsZUpxQXZxNzkyV2krZUJBNUJHQnc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 18:50:04 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9YytITC8zMTc0TDBOSlJvR1llcmtYQkxSTDh4Z1pZUHpQSlRHcGxtKzRxYz0zbGVKcUF2cTc5MldpK2VCQTVCR0J3PT0scD1DbHRJMnRNbVZwSTVEMkZ3OHpRY3F3WGNyQzQ9</response>
+Fri May 3 18:50:04 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj0vTytVY2FvUVZNbDI0TnZTMHpMVjhnNFYvaDQ9</success>
+Fri May 3 18:50:04 2024 DEBUG Authenticated
+Fri May 3 18:50:04 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 18:50:04 2024 RECEIVED <?xml version='1.0'?><stream:stream id='18097199739538203661' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 18:50:04 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 18:50:04 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 18:50:04 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 18:50:04 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 18:50:04 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 18:50:04 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 18:50:05 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIR+kiE5jbEyI=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:50:05 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 18:50:05 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:50:05 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 18:50:05 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:50:05 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:50:05 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:50:05 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 18:50:05 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:50:05 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 18:50:05 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 18:50:05 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:50:05 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 18:52:05 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 18:52:05 2024 INFO Connecting to macaw.me:5222
+Fri May 3 18:52:05 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 18:52:05 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 18:52:06 2024 RECEIVED <?xml version='1.0'?><stream:stream id='13911814942517225021' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 18:52:06 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 18:52:06 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 18:52:06 2024 DEBUG Starting encryption
+Fri May 3 18:52:06 2024 DEBUG Socket encrypted
+Fri May 3 18:52:06 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 18:52:06 2024 RECEIVED <?xml version='1.0'?><stream:stream id='4210817219641877448' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 18:52:06 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 18:52:06 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 18:52:06 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9K3dadlMyVkg5UXJQdFRhdU8xWXp4VExwdHhUNUlIZEgrT3psakZXS1p1az0=</auth>
+Fri May 3 18:52:06 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj0rd1p2UzJWSDlRclB0VGF1TzFZenhUTHB0eFQ1SUhkSCtPemxqRldLWnVrPUVYVEdtM0lkckxRaW5iQmRaVXUzRGc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 18:52:06 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9K3dadlMyVkg5UXJQdFRhdU8xWXp4VExwdHhUNUlIZEgrT3psakZXS1p1az1FWFRHbTNJZHJMUWluYkJkWlV1M0RnPT0scD1OdzhNaFN0SHpydENIRGhJbWdYajk4cFpUU2c9</response>
+Fri May 3 18:52:06 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1Ybnc2OThIaFBGSEFtdVNJVmx5VXpYaGQyRDQ9</success>
+Fri May 3 18:52:06 2024 DEBUG Authenticated
+Fri May 3 18:52:06 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 18:52:07 2024 RECEIVED <?xml version='1.0'?><stream:stream id='408000430122032428' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 18:52:07 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 18:52:07 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 18:52:07 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 18:52:07 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 18:52:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 18:52:07 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 18:52:07 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIjNjbAcH4jmI=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:52:07 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 18:52:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:52:07 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 18:52:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:52:07 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:52:07 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:52:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 18:52:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:52:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 18:52:07 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 18:52:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:52:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 18:53:07 2024 SENT <iq id="qxmpp9" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:53:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:53:07 2024 RECEIVED <a h='3' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:53:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp9'/>
+Fri May 3 18:53:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:53:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="3"/>
+Fri May 3 18:54:07 2024 SENT <iq id="qxmpp11" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:54:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:54:07 2024 RECEIVED <a h='4' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:54:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp11'/>
+Fri May 3 18:54:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:54:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="4"/>
+Fri May 3 18:55:07 2024 SENT <iq id="qxmpp13" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:55:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:55:07 2024 RECEIVED <a h='5' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:55:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp13'/>
+Fri May 3 18:55:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:55:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="5"/>
+Fri May 3 18:56:07 2024 SENT <iq id="qxmpp15" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:56:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:56:07 2024 RECEIVED <a h='6' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:56:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp15'/>
+Fri May 3 18:56:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:56:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="6"/>
+Fri May 3 18:57:07 2024 SENT <iq id="qxmpp17" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:57:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:57:07 2024 RECEIVED <a h='7' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:57:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp17'/>
+Fri May 3 18:57:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:57:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="7"/>
+Fri May 3 18:58:07 2024 SENT <iq id="qxmpp19" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:58:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:58:07 2024 RECEIVED <a h='8' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:58:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp19'/>
+Fri May 3 18:58:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:58:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="8"/>
+Fri May 3 18:59:07 2024 SENT <iq id="qxmpp21" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 18:59:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 18:59:07 2024 RECEIVED <a h='9' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:59:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp21'/>
+Fri May 3 18:59:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 18:59:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="9"/>
+Fri May 3 19:00:07 2024 SENT <iq id="qxmpp23" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:00:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:00:07 2024 RECEIVED <a h='10' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:00:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp23'/>
+Fri May 3 19:00:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:00:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="10"/>
+Fri May 3 19:01:07 2024 SENT <iq id="qxmpp25" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:01:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:01:07 2024 RECEIVED <a h='11' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:01:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp25'/>
+Fri May 3 19:01:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:01:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="11"/>
+Fri May 3 19:02:07 2024 SENT <iq id="qxmpp27" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:02:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:02:07 2024 RECEIVED <a h='12' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:02:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp27'/>
+Fri May 3 19:02:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:02:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="12"/>
+Fri May 3 19:03:07 2024 SENT <iq id="qxmpp29" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:03:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:03:07 2024 RECEIVED <a h='13' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:03:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp29'/>
+Fri May 3 19:03:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:03:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="13"/>
+Fri May 3 19:04:07 2024 SENT <iq id="qxmpp31" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:04:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:04:07 2024 RECEIVED <a h='14' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:04:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp31'/>
+Fri May 3 19:04:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:04:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="14"/>
+Fri May 3 19:05:07 2024 SENT <iq id="qxmpp33" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:05:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:05:07 2024 RECEIVED <a h='15' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:05:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp33'/>
+Fri May 3 19:05:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:05:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="15"/>
+Fri May 3 19:06:07 2024 SENT <iq id="qxmpp35" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:06:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:06:07 2024 RECEIVED <a h='16' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:06:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp35'/>
+Fri May 3 19:06:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:06:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="16"/>
+Fri May 3 19:07:07 2024 SENT <iq id="qxmpp37" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:07:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:07:07 2024 RECEIVED <a h='17' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:07:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp37'/>
+Fri May 3 19:07:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:07:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="17"/>
+Fri May 3 19:08:07 2024 SENT <iq id="qxmpp39" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:08:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:08:07 2024 RECEIVED <a h='18' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:08:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp39'/>
+Fri May 3 19:08:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:08:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="18"/>
+Fri May 3 19:09:07 2024 SENT <iq id="qxmpp41" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:09:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:09:07 2024 RECEIVED <a h='19' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:09:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp41'/>
+Fri May 3 19:09:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:09:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="19"/>
+Fri May 3 19:10:07 2024 SENT <iq id="qxmpp43" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:10:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:10:07 2024 RECEIVED <a h='20' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:10:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp43'/>
+Fri May 3 19:10:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:10:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="20"/>
+Fri May 3 19:11:07 2024 SENT <iq id="qxmpp45" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:11:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:11:07 2024 RECEIVED <a h='21' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:11:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp45'/>
+Fri May 3 19:11:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:11:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="21"/>
+Fri May 3 19:12:07 2024 SENT <iq id="qxmpp47" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 19:12:07 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:12:07 2024 RECEIVED <a h='22' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:12:07 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp47'/>
+Fri May 3 19:12:07 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:12:07 2024 SENT <a xmlns="urn:xmpp:sm:3" h="22"/>
+Fri May 3 19:49:19 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 19:49:19 2024 INFO Connecting to macaw.me:5222
+Fri May 3 19:49:19 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 19:49:19 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 19:49:19 2024 RECEIVED <?xml version='1.0'?><stream:stream id='1969633282468430195' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 19:49:19 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 19:49:19 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 19:49:19 2024 DEBUG Starting encryption
+Fri May 3 19:49:20 2024 DEBUG Socket encrypted
+Fri May 3 19:49:20 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 19:49:20 2024 RECEIVED <?xml version='1.0'?><stream:stream id='13794637072179718342' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 19:49:20 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 19:49:20 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 19:49:20 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9Z2lPNGZmYXlLT24yQ25HWU5FemtLTGZhTUdIWDVqbFZPc1V4aHF2VXVUUT0=</auth>
+Fri May 3 19:49:20 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1naU80ZmZheUtPbjJDbkdZTkV6a0tMZmFNR0hYNWpsVk9zVXhocXZVdVRRPU0xYUJ1bHhKMWlKUG5McHVNenAvamc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 19:49:20 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9Z2lPNGZmYXlLT24yQ25HWU5FemtLTGZhTUdIWDVqbFZPc1V4aHF2VXVUUT1NMWFCdWx4SjFpSlBuTHB1TXpwL2pnPT0scD03VlhQcmVGSGlKc0VmcEhDUFpsdm9NUlRDaWs9</response>
+Fri May 3 19:49:20 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1NempCR214YUtMZTNtQThUTlNQWUl1cnFaN1k9</success>
+Fri May 3 19:49:20 2024 DEBUG Authenticated
+Fri May 3 19:49:20 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 19:49:20 2024 RECEIVED <?xml version='1.0'?><stream:stream id='683213165957249083' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 19:49:20 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 19:49:20 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 19:49:21 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 19:49:21 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 19:49:21 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 19:49:21 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 19:49:21 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIRTlRcNJgHIM=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:21 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 19:49:21 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:49:21 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 19:49:21 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:49:21 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:21 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:21 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 19:49:21 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:21 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 19:49:21 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 19:49:21 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:21 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 19:49:23 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 19:49:23 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:49:23 2024 SENT </stream:stream>
+Fri May 3 19:49:23 2024 DEBUG Socket disconnected
+Fri May 3 19:49:23 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 19:49:23 2024 INFO Connecting to macaw.me:5222
+Fri May 3 19:49:24 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 19:49:24 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 19:49:24 2024 RECEIVED <?xml version='1.0'?><stream:stream id='2936659449157330173' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 19:49:24 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 19:49:24 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 19:49:24 2024 DEBUG Starting encryption
+Fri May 3 19:49:24 2024 DEBUG Socket encrypted
+Fri May 3 19:49:24 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 19:49:24 2024 RECEIVED <?xml version='1.0'?><stream:stream id='15907596920362080400' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 19:49:24 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 19:49:24 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 19:49:24 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9Z0haaVY4WVA2Yk9WWmFXTTY0dUxEZUZVLzc0KzFBWWxzNmxrd1BWUDM4az0=</auth>
+Fri May 3 19:49:24 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1nSFppVjhZUDZiT1ZaYVdNNjR1TERlRlUvNzQrMUFZbHM2bGt3UFZQMzhrPXAzbjhQSHZMWG1DK0QxS0JGYURMY0E9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 19:49:24 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9Z0haaVY4WVA2Yk9WWmFXTTY0dUxEZUZVLzc0KzFBWWxzNmxrd1BWUDM4az1wM244UEh2TFhtQytEMUtCRmFETGNBPT0scD1jeU5IRzdDNVhnUVo1c2pXK0h1aFlUeHMxYnM9</response>
+Fri May 3 19:49:25 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1RT09OM0luZWl4Q1kyZDVVR1RvcTVqczNXQXc9</success>
+Fri May 3 19:49:25 2024 DEBUG Authenticated
+Fri May 3 19:49:25 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 19:49:25 2024 RECEIVED <?xml version='1.0'?><stream:stream id='2334954122326868178' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 19:49:25 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 19:49:25 2024 SENT <iq id="qxmpp10" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 19:49:25 2024 RECEIVED <iq type='result' id='qxmpp10'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 19:49:25 2024 SENT <iq id="qxmpp12" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 19:49:25 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp12'/>
+Fri May 3 19:49:25 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 19:49:25 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAITlPkD0/hEXo=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:25 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 19:49:25 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:49:25 2024 SENT <iq id="qxmpp14" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 19:49:25 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:49:25 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 19:49:25 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 19:49:25 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:25 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:25 2024 RECEIVED <a h='3' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:25 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp14'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 19:49:25 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:25 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 19:49:25 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 19:49:26 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 19:49:26 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 20:03:39 2024 SENT <message to="123" type="chat"><body>456</body></message>
+Fri May 3 20:26:22 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:26:22 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:26:22 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 20:26:22 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:26:22 2024 RECEIVED <?xml version='1.0'?><stream:stream id='7666882844415584333' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:26:22 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:26:22 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 20:26:23 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 20:26:23 2024 DEBUG Starting encryption
+Fri May 3 20:26:23 2024 DEBUG Socket encrypted
+Fri May 3 20:26:23 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:26:23 2024 RECEIVED <?xml version='1.0'?><stream:stream id='17330719395824354021' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:26:23 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:26:23 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 20:26:23 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9d1Z5bkZoeHFud3dYYUtkdENmQVZFQUpjYjkvbVpGVE1sVmV5TGxpeWxUST0=</auth>
+Fri May 3 20:26:23 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj13VnluRmh4cW53d1hhS2R0Q2ZBVkVBSmNiOS9tWkZUTWxWZXlMbGl5bFRJPUtqaW15MXV3Z2g4NUU1VlBnUWg3bkE9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 20:26:23 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9d1Z5bkZoeHFud3dYYUtkdENmQVZFQUpjYjkvbVpGVE1sVmV5TGxpeWxUST1LamlteTF1d2doODVFNVZQZ1FoN25BPT0scD0ybTlDS3V4T0hPZm9GQVBReGJsZ3dmTXBnbnM9</response>
+Fri May 3 20:26:23 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1KTDA5U08zdDhCQmEyaWZzdFBEU3I5dy8wNlU9</success>
+Fri May 3 20:26:23 2024 DEBUG Authenticated
+Fri May 3 20:26:23 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:26:23 2024 RECEIVED <?xml version='1.0'?><stream:stream id='5793352292623121581' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:26:23 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 20:26:23 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 20:26:24 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 20:26:24 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 20:26:24 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 20:26:24 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 20:26:24 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAI5R00Ff+LooE=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:26:24 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 20:26:24 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 20:26:24 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 20:26:24 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 20:26:24 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:26:24 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:26:24 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 20:26:24 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:26:24 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 20:26:24 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 20:26:24 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:26:24 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 20:32:58 2024 DEBUG Looking up server for domain macaw.mead
+Fri May 3 20:32:58 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.mead failed: Non existent domain
+Fri May 3 20:32:58 2024 INFO Connecting to macaw.mead:5222
+Fri May 3 20:32:58 2024 WARNING Socket error: Host not found
+Fri May 3 20:33:08 2024 DEBUG Reconnecting to server
+Fri May 3 20:33:08 2024 DEBUG Looking up server for domain macaw.mead
+Fri May 3 20:33:08 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.mead failed: Non existent domain
+Fri May 3 20:33:08 2024 INFO Connecting to macaw.mead:5222
+Fri May 3 20:33:08 2024 WARNING Socket error: Host not found
+Fri May 3 20:33:18 2024 DEBUG Reconnecting to server
+Fri May 3 20:33:18 2024 DEBUG Looking up server for domain macaw.mead
+Fri May 3 20:33:18 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.mead failed: Non existent domain
+Fri May 3 20:33:18 2024 INFO Connecting to macaw.mead:5222
+Fri May 3 20:33:18 2024 WARNING Socket error: Host not found
+Fri May 3 20:42:40 2024 DEBUG Looking up server for domain macaw.measd
+Fri May 3 20:42:40 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.measd failed: Non existent domain
+Fri May 3 20:42:40 2024 INFO Connecting to macaw.measd:5222
+Fri May 3 20:42:40 2024 WARNING Socket error: Host not found
+Fri May 3 20:42:50 2024 DEBUG Reconnecting to server
+Fri May 3 20:42:50 2024 DEBUG Looking up server for domain macaw.measd
+Fri May 3 20:42:50 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.measd failed: Non existent domain
+Fri May 3 20:42:50 2024 INFO Connecting to macaw.measd:5222
+Fri May 3 20:42:50 2024 WARNING Socket error: Host not found
+Fri May 3 20:43:00 2024 DEBUG Reconnecting to server
+Fri May 3 20:43:00 2024 DEBUG Looking up server for domain macaw.measd
+Fri May 3 20:43:00 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.measd failed: Non existent domain
+Fri May 3 20:43:00 2024 INFO Connecting to macaw.measd:5222
+Fri May 3 20:43:00 2024 WARNING Socket error: Host not found
+Fri May 3 20:43:10 2024 DEBUG Reconnecting to server
+Fri May 3 20:43:10 2024 DEBUG Looking up server for domain macaw.measd
+Fri May 3 20:43:10 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.measd failed: Non existent domain
+Fri May 3 20:43:10 2024 INFO Connecting to macaw.measd:5222
+Fri May 3 20:43:10 2024 WARNING Socket error: Host not found
+Fri May 3 20:43:20 2024 DEBUG Reconnecting to server
+Fri May 3 20:43:20 2024 DEBUG Looking up server for domain macaw.measd
+Fri May 3 20:43:20 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.measd failed: Non existent domain
+Fri May 3 20:43:20 2024 INFO Connecting to macaw.measd:5222
+Fri May 3 20:43:20 2024 WARNING Socket error: Host not found
+Fri May 3 20:50:26 2024 DEBUG Looking up server for domain macaw.mesdf
+Fri May 3 20:50:26 2024 WARNING Lookup for domain _xmpp-client._tcp.macaw.mesdf failed: Non existent domain
+Fri May 3 20:50:26 2024 INFO Connecting to macaw.mesdf:5222
+Fri May 3 20:50:26 2024 WARNING Socket error: Host not found
+Fri May 3 20:50:32 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:50:32 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:50:32 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 20:50:32 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:50:32 2024 RECEIVED <?xml version='1.0'?><stream:stream id='1586013976330606313' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:50:32 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 20:50:32 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 20:50:32 2024 DEBUG Starting encryption
+Fri May 3 20:50:32 2024 DEBUG Socket encrypted
+Fri May 3 20:50:32 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:50:32 2024 RECEIVED <?xml version='1.0'?><stream:stream id='18225345422730572077' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:50:32 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:50:32 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 20:50:32 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9aXRQZ0xFa0JrNWxPa1ViZjZ1Q3k2LytpUUVvcW52K1lLRTRvMmM5V2RTWT0=</auth>
+Fri May 3 20:50:33 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1pdFBnTEVrQms1bE9rVWJmNnVDeTYvK2lRRW9xbnYrWUtFNG8yYzlXZFNZPTJPMXphVU1vYkZYcUttOURxRy9ySFE9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 20:50:33 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9aXRQZ0xFa0JrNWxPa1ViZjZ1Q3k2LytpUUVvcW52K1lLRTRvMmM5V2RTWT0yTzF6YVVNb2JGWHFLbTlEcUcvckhRPT0scD16bmZSTnFRVzFDd216eFBrdDJLS3d5RDZlZ0E9</response>
+Fri May 3 20:50:33 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1YcjJTV2VRU1lmNUNWUzh6Q1pvb205SE9pT1U9</success>
+Fri May 3 20:50:33 2024 DEBUG Authenticated
+Fri May 3 20:50:33 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:50:33 2024 RECEIVED <?xml version='1.0'?><stream:stream id='3543904086563413932' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:50:33 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 20:50:33 2024 SENT <iq id="qxmpp4" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 20:50:33 2024 RECEIVED <iq type='result' id='qxmpp4'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 20:50:33 2024 SENT <iq id="qxmpp6" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 20:50:33 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp6'/>
+Fri May 3 20:50:33 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 20:50:34 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIIC6AB0Dv6i0=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:50:34 2024 SENT <iq id="qxmpp8" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 20:50:34 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 20:50:34 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 20:50:34 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 20:50:34 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:50:36 2024 DEBUG Reconnecting to server
+Fri May 3 20:50:36 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:50:36 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:50:36 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:50:46 2024 DEBUG Reconnecting to server
+Fri May 3 20:50:46 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:50:46 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:50:46 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:50:56 2024 DEBUG Reconnecting to server
+Fri May 3 20:50:56 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:50:56 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:50:56 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:51:06 2024 DEBUG Reconnecting to server
+Fri May 3 20:51:06 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:51:06 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:51:06 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:51:16 2024 DEBUG Reconnecting to server
+Fri May 3 20:51:16 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:51:16 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:51:16 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:51:26 2024 DEBUG Reconnecting to server
+Fri May 3 20:51:26 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:51:26 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:51:26 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:51:33 2024 SENT <iq id="qxmpp9" to="macaw.me" type="get"><ping xmlns="urn:xmpp:ping"/></iq>
+Fri May 3 20:51:33 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 20:51:36 2024 DEBUG Reconnecting to server
+Fri May 3 20:51:36 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:51:36 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:51:36 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:51:46 2024 DEBUG Reconnecting to server
+Fri May 3 20:51:46 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:51:46 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:51:46 2024 WARNING Socket error: Trying to connect while connection is in progress
+Fri May 3 20:51:53 2024 WARNING Ping timeout
+Fri May 3 20:51:53 2024 SENT </stream:stream>
+Fri May 3 20:51:53 2024 DEBUG Socket disconnected
+Fri May 3 20:51:54 2024 DEBUG Reconnecting to server
+Fri May 3 20:51:54 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:51:54 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:51:54 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 20:51:54 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:51:55 2024 RECEIVED <?xml version='1.0'?><stream:stream id='5223524982674552049' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:51:55 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:51:55 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 20:51:55 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 20:51:55 2024 DEBUG Starting encryption
+Fri May 3 20:51:55 2024 DEBUG Socket encrypted
+Fri May 3 20:51:55 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:51:55 2024 RECEIVED <?xml version='1.0'?><stream:stream id='13623457359457440832' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:51:55 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:51:55 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 20:51:55 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9U0xXVG5oNktZN005QU5ocjRpU3lGeDFJa0hqZHdJcSsvSnBxeXYwa3FRbz0=</auth>
+Fri May 3 20:51:55 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1TTFdUbmg2S1k3TTlBTmhyNGlTeUZ4MUlrSGpkd0lxKy9KcHF5djBrcVFvPXAzaUJPTEIyQVc2WFJROVdNUGxOVGc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 20:51:55 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9U0xXVG5oNktZN005QU5ocjRpU3lGeDFJa0hqZHdJcSsvSnBxeXYwa3FRbz1wM2lCT0xCMkFXNlhSUTlXTVBsTlRnPT0scD1jaml5c2ZOaDJwQ01aY3NydFlYcngwUGxqZnM9</response>
+Fri May 3 20:51:55 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1QTHl2Yk9PbUpBVWw1dE1YdnlSYW5pakp0a009</success>
+Fri May 3 20:51:55 2024 DEBUG Authenticated
+Fri May 3 20:51:55 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:51:56 2024 RECEIVED <?xml version='1.0'?><stream:stream id='4667827216704504760' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:51:56 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 20:51:56 2024 SENT <resume h="0" previd=""/>
+Fri May 3 20:52:25 2024 RECEIVED <stream:error><connection-timeout xmlns='urn:ietf:params:xml:ns:xmpp-streams'/><text xml:lang='en' xmlns='urn:ietf:params:xml:ns:xmpp-streams'>Idle connection</text></stream:error>
+Fri May 3 20:52:25 2024 RECEIVED </stream:stream>
+Fri May 3 20:52:25 2024 SENT </stream:stream>
+Fri May 3 20:52:25 2024 DEBUG Socket disconnected
+Fri May 3 20:56:43 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 20:56:43 2024 INFO Connecting to macaw.me:5222
+Fri May 3 20:56:43 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 20:56:43 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:56:44 2024 RECEIVED <?xml version='1.0'?><stream:stream id='14584116462073759227' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:56:44 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:56:44 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 20:56:44 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 20:56:44 2024 DEBUG Starting encryption
+Fri May 3 20:56:44 2024 DEBUG Socket encrypted
+Fri May 3 20:56:44 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:56:44 2024 RECEIVED <?xml version='1.0'?><stream:stream id='482193915046728744' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:56:44 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 20:56:44 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 20:56:44 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9TEcrZlBtY01waUZndWIwUHZnZ01xRHN6TkpzMk84YkRvblFRMlN1S2xvdz0=</auth>
+Fri May 3 20:56:44 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1MRytmUG1jTXBpRmd1YjBQdmdnTXFEc3pOSnMyTzhiRG9uUVEyU3VLbG93PWV6cDlOQkEvcnhReW91Z0pwamxadmc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 20:56:44 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9TEcrZlBtY01waUZndWIwUHZnZ01xRHN6TkpzMk84YkRvblFRMlN1S2xvdz1lenA5TkJBL3J4UXlvdWdKcGpsWnZnPT0scD1pOXZFQkQzdjdHZDNWRVJWWXhVMFFnVHowd289</response>
+Fri May 3 20:56:44 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1wSUZ6ME5Ld1E2N2RmaGU1Q3VSdXdad3lkdEE9</success>
+Fri May 3 20:56:44 2024 DEBUG Authenticated
+Fri May 3 20:56:44 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 20:56:45 2024 RECEIVED <?xml version='1.0'?><stream:stream id='8462891249456561161' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 20:56:45 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 20:56:45 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 20:56:45 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 20:56:45 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 20:56:45 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 20:56:45 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 20:56:45 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIgU1ilij1VoY=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 20:56:45 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 20:56:45 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 20:56:45 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 20:56:45 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:11:00 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 21:11:00 2024 INFO Connecting to macaw.me:5222
+Fri May 3 21:11:00 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 21:11:00 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:11:01 2024 RECEIVED <?xml version='1.0'?><stream:stream id='8901322385808557104' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:11:01 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:11:01 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 21:11:01 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 21:11:01 2024 DEBUG Starting encryption
+Fri May 3 21:11:01 2024 DEBUG Socket encrypted
+Fri May 3 21:11:01 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:11:01 2024 RECEIVED <?xml version='1.0'?><stream:stream id='9024911627785237310' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:11:01 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:11:01 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 21:11:01 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9VTZhdGVIbzYvbXY0eU4xejJ2YTF3ZGFCV3ZjUlN5Z1UrN00rRjZ3a0h1Yz0=</auth>
+Fri May 3 21:11:01 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1VNmF0ZUhvNi9tdjR5TjF6MnZhMXdkYUJXdmNSU3lnVSs3TStGNndrSHVjPWpWSkJYVzZodXVYZi96MTNiS0V0anc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 21:11:01 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9VTZhdGVIbzYvbXY0eU4xejJ2YTF3ZGFCV3ZjUlN5Z1UrN00rRjZ3a0h1Yz1qVkpCWFc2aHV1WGYvejEzYktFdGp3PT0scD1WYmZwSnhBS0VhdmhUbGFpODVZaG9jWm5DcmM9</response>
+Fri May 3 21:11:01 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1USk9wL1N4TkJNa2hVUEZsMGhER29VejZVam89</success>
+Fri May 3 21:11:01 2024 DEBUG Authenticated
+Fri May 3 21:11:01 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:11:02 2024 RECEIVED <?xml version='1.0'?><stream:stream id='13965355547326825786' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:11:02 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 21:11:02 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 21:11:02 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 21:11:02 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 21:11:02 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 21:11:02 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 21:11:02 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAItcIznWA6joE=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:11:02 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 21:11:02 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:11:02 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:11:02 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:11:02 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:11:02 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:11:02 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 21:11:02 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:11:02 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 21:11:02 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 21:11:02 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:11:02 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 21:14:30 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 21:14:30 2024 INFO Connecting to macaw.me:5222
+Fri May 3 21:14:31 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 21:14:31 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:14:31 2024 RECEIVED <?xml version='1.0'?><stream:stream id='16891812590614460687' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:14:31 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 21:14:31 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 21:14:31 2024 DEBUG Starting encryption
+Fri May 3 21:14:31 2024 DEBUG Socket encrypted
+Fri May 3 21:14:31 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:14:31 2024 RECEIVED <?xml version='1.0'?><stream:stream id='15197027356172342280' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:14:31 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:14:31 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 21:14:31 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9Mi9RRmRRbVFPeFNnMmlUOWtYWGg4RjBKVHc2WFFpQitKWVZxMDVEZEhTbz0=</auth>
+Fri May 3 21:14:32 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj0yL1FGZFFtUU94U2cyaVQ5a1hYaDhGMEpUdzZYUWlCK0pZVnEwNURkSFNvPU1ZazhsMXlJQzdublp4dkxOdjZoRFE9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 21:14:32 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9Mi9RRmRRbVFPeFNnMmlUOWtYWGg4RjBKVHc2WFFpQitKWVZxMDVEZEhTbz1NWWs4bDF5SUM3bm5aeHZMTnY2aERRPT0scD13eVVueityaThKMm9WdyttM0lnWnBFUkgrWm89</response>
+Fri May 3 21:14:32 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj0yTElKQkJieFQzVGtXMjRjMjZHTmJFdTBrR3M9</success>
+Fri May 3 21:14:32 2024 DEBUG Authenticated
+Fri May 3 21:14:32 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:14:32 2024 RECEIVED <?xml version='1.0'?><stream:stream id='9988320699277576484' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:14:32 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 21:14:32 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 21:14:32 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 21:14:32 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 21:14:32 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 21:14:32 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 21:14:32 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIYADfHecxKTw=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:14:32 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 21:14:32 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:14:32 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:14:32 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:14:33 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:14:33 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:14:33 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 21:14:33 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:14:33 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 21:14:33 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 21:14:33 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:14:33 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 21:14:34 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:14:34 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:14:34 2024 SENT </stream:stream>
+Fri May 3 21:14:34 2024 DEBUG Socket disconnected
+Fri May 3 21:18:08 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 21:18:08 2024 INFO Connecting to macaw.me:5222
+Fri May 3 21:18:08 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 21:18:08 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:18:08 2024 RECEIVED <?xml version='1.0'?><stream:stream id='2387782935035454435' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:18:08 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 21:18:08 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 21:18:08 2024 DEBUG Starting encryption
+Fri May 3 21:18:09 2024 DEBUG Socket encrypted
+Fri May 3 21:18:09 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:18:09 2024 RECEIVED <?xml version='1.0'?><stream:stream id='9527738324058271434' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:18:09 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:18:09 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 21:18:09 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9LytsaGgzQmN2MGJvMjhEZkIwZzlzeEhicW5pNnJmUzUwSFNaQjFyWlZwcz0=</auth>
+Fri May 3 21:18:09 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj0vK2xoaDNCY3YwYm8yOERmQjBnOXN4SGJxbmk2cmZTNTBIU1pCMXJaVnBzPXRsSzZjeVlvZC9KL0ZaZXNBQzdlRmc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 21:18:09 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9LytsaGgzQmN2MGJvMjhEZkIwZzlzeEhicW5pNnJmUzUwSFNaQjFyWlZwcz10bEs2Y3lZb2QvSi9GWmVzQUM3ZUZnPT0scD0yMERBUFdLeTNlU0Q3UFFPWXgvY1pBSEN4OTA9</response>
+Fri May 3 21:18:09 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj0zOUthQ3FLRXNZYTJjdGpUblhBWE1rY3dOemc9</success>
+Fri May 3 21:18:09 2024 DEBUG Authenticated
+Fri May 3 21:18:09 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:18:09 2024 RECEIVED <?xml version='1.0'?><stream:stream id='7819568636286276230' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:18:09 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 21:18:09 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 21:18:09 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 21:18:09 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 21:18:10 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 21:18:10 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 21:18:10 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIPELw2sTZBJo=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:18:10 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 21:18:10 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:18:10 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:18:10 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:18:10 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:18:10 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:18:10 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 21:18:10 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:18:10 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 21:18:10 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 21:18:10 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:18:10 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 21:18:19 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:18:19 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:18:19 2024 SENT </stream:stream>
+Fri May 3 21:18:19 2024 DEBUG Socket disconnected
+Fri May 3 21:19:34 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 21:19:34 2024 INFO Connecting to macaw.me:5222
+Fri May 3 21:19:35 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 21:19:35 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:19:35 2024 RECEIVED <?xml version='1.0'?><stream:stream id='74287058565382198' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:19:35 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 21:19:35 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 21:19:35 2024 DEBUG Starting encryption
+Fri May 3 21:19:35 2024 DEBUG Socket encrypted
+Fri May 3 21:19:35 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:19:35 2024 RECEIVED <?xml version='1.0'?><stream:stream id='10322697380737075254' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:19:35 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:19:35 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 21:19:35 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9eUgzZW5YcnJRaWJJOHI1S0VHZ0o3RExpallXeWtqTFN3V2VxNjRNTWxLaz0=</auth>
+Fri May 3 21:19:36 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj15SDNlblhyclFpYkk4cjVLRUdnSjdETGlqWVd5a2pMU3dXZXE2NE1NbEtrPWZKQ2tGSUxEVHNLdjBaTVJsc3ZSZ1E9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 21:19:36 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9eUgzZW5YcnJRaWJJOHI1S0VHZ0o3RExpallXeWtqTFN3V2VxNjRNTWxLaz1mSkNrRklMRFRzS3YwWk1SbHN2UmdRPT0scD1Yangxcms2Tk5JYmJmMHhHWUFTcUNOeWFWZTg9</response>
+Fri May 3 21:19:36 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1NS1Y3SVNOY2VQaGF3YXdmWFNScWpWNzdZS3c9</success>
+Fri May 3 21:19:36 2024 DEBUG Authenticated
+Fri May 3 21:19:36 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:19:36 2024 RECEIVED <?xml version='1.0'?><stream:stream id='5109253708673813814' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:19:36 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 21:19:36 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 21:19:36 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 21:19:36 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 21:19:36 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 21:19:36 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 21:19:36 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIkesZVYPU75s=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:19:36 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 21:19:36 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:19:36 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:19:36 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:19:37 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:19:37 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:19:37 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 21:19:37 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:19:37 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 21:19:37 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 21:19:37 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:19:37 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 21:19:39 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:19:39 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:19:39 2024 SENT </stream:stream>
+Fri May 3 21:19:39 2024 DEBUG Socket disconnected
+Fri May 3 21:25:38 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 21:25:38 2024 INFO Connecting to macaw.me:5222
+Fri May 3 21:25:39 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 21:25:39 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:25:39 2024 RECEIVED <?xml version='1.0'?><stream:stream id='7314700796871122061' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'><stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:25:39 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 21:25:39 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 21:25:39 2024 DEBUG Starting encryption
+Fri May 3 21:25:39 2024 DEBUG Socket encrypted
+Fri May 3 21:25:39 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:25:39 2024 RECEIVED <?xml version='1.0'?><stream:stream id='7733144528553078237' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:25:39 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 21:25:39 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 21:25:39 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9NnZwNmNOajltQk9rNnpqckJ6QlpiM01rWW5iZytHdll2QlAxZ2lOdXZJYz0=</auth>
+Fri May 3 21:25:40 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj02dnA2Y05qOW1CT2s2empyQnpCWmIzTWtZbmJnK0d2WXZCUDFnaU51dkljPVVQbzByY2pKdHdOUEhnbk53eHBtenc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 21:25:40 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9NnZwNmNOajltQk9rNnpqckJ6QlpiM01rWW5iZytHdll2QlAxZ2lOdXZJYz1VUG8wcmNqSnR3TlBIZ25Od3hwbXp3PT0scD1GdCsyRzkyeHYyakFsaVEvdzZoajB2ZnVYNWM9</response>
+Fri May 3 21:25:40 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj12VGVJeGJmM0ZsK2NQbDJCUHlhMVhRWnA2ZTg9</success>
+Fri May 3 21:25:40 2024 DEBUG Authenticated
+Fri May 3 21:25:40 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 21:25:40 2024 RECEIVED <?xml version='1.0'?><stream:stream id='8772180280710581772' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 21:25:40 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 21:25:40 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 21:25:40 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 21:25:40 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 21:25:40 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 21:25:40 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 21:25:41 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIUtn40tEcMJI=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:25:41 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 21:25:41 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:25:41 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 21:25:41 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 21:25:41 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:25:41 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:25:41 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 21:25:41 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:25:41 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 21:25:41 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 21:25:41 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 21:25:41 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 22:06:20 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 22:06:20 2024 INFO Connecting to macaw.me:5222
+Fri May 3 22:06:20 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 22:06:20 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 22:06:21 2024 RECEIVED <?xml version='1.0'?><stream:stream id='3615897212407195109' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 22:06:21 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 22:06:21 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 22:06:21 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 22:06:21 2024 DEBUG Starting encryption
+Fri May 3 22:06:21 2024 DEBUG Socket encrypted
+Fri May 3 22:06:21 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 22:06:21 2024 RECEIVED <?xml version='1.0'?><stream:stream id='6767678021463265035' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 22:06:21 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 22:06:21 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 22:06:21 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9MlhweE5jbW4vQitKVUhuUVNSdEsvYzRLT2FJVnlKL1Rra3RMWFQ2cXBmMD0=</auth>
+Fri May 3 22:06:21 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj0yWHB4TmNtbi9CK0pVSG5RU1J0Sy9jNEtPYUlWeUovVGtrdExYVDZxcGYwPXZ5dDR3L0RpWHlKM1ROZHpkbFBEWlE9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 22:06:21 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9MlhweE5jbW4vQitKVUhuUVNSdEsvYzRLT2FJVnlKL1Rra3RMWFQ2cXBmMD12eXQ0dy9EaVh5SjNUTmR6ZGxQRFpRPT0scD1wTjBkdjk2T2ErK2FLdUt5NmtQUVd0TmpRK2s9</response>
+Fri May 3 22:06:22 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj1ZT0tZeEJUSE9rcDFGL3JDeWRpZUxSZ2Z2NTQ9</success>
+Fri May 3 22:06:22 2024 DEBUG Authenticated
+Fri May 3 22:06:22 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 22:06:22 2024 RECEIVED <?xml version='1.0'?><stream:stream id='4416768920868640936' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 22:06:22 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 22:06:22 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 22:06:22 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 22:06:22 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 22:06:22 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 22:06:22 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 22:06:22 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIf0wBiwUSJ1k=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 22:06:22 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 22:06:22 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 22:06:22 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 22:06:22 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 22:06:22 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 22:06:22 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 22:06:22 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 22:06:22 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 22:06:22 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 22:06:22 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 22:06:23 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 22:06:23 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 22:06:25 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 22:06:25 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 22:06:25 2024 SENT </stream:stream>
+Fri May 3 22:06:25 2024 DEBUG Socket disconnected
+Fri May 3 23:22:27 2024 DEBUG Looking up server for domain macaw.me
+Fri May 3 23:22:27 2024 INFO Connecting to macaw.me:5222
+Fri May 3 23:22:27 2024 INFO Socket connected to 45.79.76.58 5222
+Fri May 3 23:22:27 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 23:22:28 2024 RECEIVED <?xml version='1.0'?><stream:stream id='2461981045803466441' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 23:22:28 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 23:22:28 2024 SENT <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+Fri May 3 23:22:28 2024 RECEIVED <proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+Fri May 3 23:22:28 2024 DEBUG Starting encryption
+Fri May 3 23:22:28 2024 DEBUG Socket encrypted
+Fri May 3 23:22:28 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 23:22:28 2024 RECEIVED <?xml version='1.0'?><stream:stream id='3054440975464490096' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 23:22:28 2024 RECEIVED <stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism><mechanism>SCRAM-SHA-1-PLUS</mechanism><mechanism>SCRAM-SHA-1</mechanism><mechanism>X-OAUTH2</mechanism></mechanisms><register xmlns='http://jabber.org/features/iq-register'/></stream:features>
+Fri May 3 23:22:28 2024 INFO SASL mechanism 'SCRAM-SHA-1' selected
+Fri May 3 23:22:28 2024 SENT <auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="SCRAM-SHA-1">biwsbj1rbmF2LmFsaWNlLHI9RW9TcGt1OWJuVy9waXhQZmRLdUtrK3ZiUmh3RjlML2p0V29aM0JhS3poTT0=</auth>
+Fri May 3 23:22:28 2024 RECEIVED <challenge xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>cj1Fb1Nwa3U5Ym5XL3BpeFBmZEt1S2srdmJSaHdGOUwvanRXb1ozQmFLemhNPXpCaHllanoyUWRkbFVCYmZqTy9FUGc9PSxzPS81bXZwTkN0alVCK2RPV20zQzViWXc9PSxpPTQwOTY=</challenge>
+Fri May 3 23:22:28 2024 SENT <response xmlns="urn:ietf:params:xml:ns:xmpp-sasl">Yz1iaXdzLHI9RW9TcGt1OWJuVy9waXhQZmRLdUtrK3ZiUmh3RjlML2p0V29aM0JhS3poTT16Qmh5ZWp6MlFkZGxVQmJmak8vRVBnPT0scD1NQWR2UDBYY3BETFVodlpXM3I5RlJHOGZjUTQ9</response>
+Fri May 3 23:22:29 2024 RECEIVED <success xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dj14Q2ZHV1hTRTFQblNTdVNBY3JJZHNyckV3L289</success>
+Fri May 3 23:22:29 2024 DEBUG Authenticated
+Fri May 3 23:22:29 2024 SENT <?xml version='1.0'?><stream:stream to='macaw.me' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>
+Fri May 3 23:22:29 2024 RECEIVED <?xml version='1.0'?><stream:stream id='10458297416401381144' version='1.0' xml:lang='en' xmlns:stream='http://etherx.jabber.org/streams' from='macaw.me' xmlns='jabber:client'>
+Fri May 3 23:22:29 2024 RECEIVED <stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><c ver='GAUYb6Xwp68TtihkL8Eg06yDfBw=' node='http://www.process-one.net/en/ejabberd/' hash='sha-1' xmlns='http://jabber.org/protocol/caps'/><sm xmlns='urn:xmpp:sm:2'/><sm xmlns='urn:xmpp:sm:3'/><ver xmlns='urn:xmpp:features:rosterver'/><csi xmlns='urn:xmpp:csi:0'/></stream:features>
+Fri May 3 23:22:29 2024 SENT <iq id="qxmpp3" type="set"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>QXmpp</resource></bind></iq>
+Fri May 3 23:22:29 2024 RECEIVED <iq type='result' id='qxmpp3'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>knav.alice@macaw.me/QXmpp</jid></bind></iq>
+Fri May 3 23:22:29 2024 SENT <iq id="qxmpp5" to="macaw.me" type="set"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>
+Fri May 3 23:22:29 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='macaw.me' type='result' id='qxmpp5'/>
+Fri May 3 23:22:29 2024 SENT <enable xmlns="urn:xmpp:sm:3" resume="true"/>
+Fri May 3 23:22:29 2024 RECEIVED <enabled resume='true' max='300' id='g2gCbQAAAAVRWG1wcG0AAAAIN8L60a6L/Us=' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 23:22:29 2024 SENT <iq id="qxmpp7" from="knav.alice@macaw.me/QXmpp" type="get"><query xmlns="jabber:iq:roster"><annotate xmlns="urn:xmpp:mix:roster:0"/></query></iq>
+Fri May 3 23:22:29 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 23:22:29 2024 SENT <presence><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 23:22:29 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 23:22:30 2024 RECEIVED <a h='1' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 23:22:30 2024 RECEIVED <a h='2' xmlns='urn:xmpp:sm:3'/>
+Fri May 3 23:22:30 2024 RECEIVED <iq xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me' type='result' id='qxmpp7'><query xmlns='jabber:iq:roster'><item subscription='both' jid='knav.bob@macaw.me'/></query></iq>
+Fri May 3 23:22:30 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 23:22:30 2024 SENT <a xmlns="urn:xmpp:sm:3" h="1"/>
+Fri May 3 23:22:30 2024 RECEIVED <presence xml:lang='en' to='knav.alice@macaw.me/QXmpp' from='knav.alice@macaw.me/QXmpp'><c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='https://github.com/qxmpp-project/qxmpp' ver='nC+31a8V/umeU6FKaBQ6pb67lJo='/><x xmlns='vcard-temp:x:update'><photo/></x></presence>
+Fri May 3 23:22:30 2024 RECEIVED <r xmlns='urn:xmpp:sm:3'/>
+Fri May 3 23:22:30 2024 SENT <a xmlns="urn:xmpp:sm:3" h="2"/>
+Fri May 3 23:22:33 2024 SENT <presence type="unavailable"><status>Logged out</status><c xmlns="http://jabber.org/protocol/caps" hash="sha-1" node="https://github.com/qxmpp-project/qxmpp" ver="nC+31a8V/umeU6FKaBQ6pb67lJo="/></presence>
+Fri May 3 23:22:33 2024 SENT <r xmlns="urn:xmpp:sm:3"/>
+Fri May 3 23:22:33 2024 SENT </stream:stream>
+Fri May 3 23:22:33 2024 DEBUG Socket disconnected

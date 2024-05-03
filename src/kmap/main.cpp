@@ -5,6 +5,9 @@
 #include <QDir>
 #include <QDebug>
 #include <QProcess>
+#include <QtQuick/QQuickView>
+#include <QtQml/QQmlEngine>
+#include <QQmlContext>
 
 #include "krenderwidget.h"
 #include "kautoscroll.h"
@@ -309,7 +312,8 @@ int main(int argc, char* argv[])
 
 #endif
 
-  renderw.show();
+  //открывает окно с картой
+  // renderw.show();
   renderw.setViewPoint(start_lat_lon, 1);
 
 #ifdef BUILD_WITH_XMPP
@@ -362,5 +366,28 @@ int main(int argc, char* argv[])
   QObject::connect(&object_man, &KObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
 #endif
+
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QQuickView view(QUrl("qrc:/Main.qml"));
+  view.connect(view.engine(), &QQmlEngine::quit, &a, &QCoreApplication::quit);
+  if (view.status() == QQuickView::Error)
+  {
+      auto errors = view.errors();
+
+      for (qsizetype i = 0; i < errors.size(); i++)
+      {
+          qDebug() << errors[i].toString();
+      }
+      qDebug() << "Failed with QQuickView::Error";
+      return -1;
+  }
+  QObject *root_item = (QObject*) view.rootObject();
+  QObject::connect(root_item, SIGNAL(connectToServer(QString, QString)),
+                   &client, SLOT(reconnectToServer(QString, QString)));
+
+  view.engine()->rootContext()->setContextProperty("kClient",&client);
+
+  view.show();
+
   return a.exec();
 }
