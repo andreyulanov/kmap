@@ -15,6 +15,7 @@ KRenderWidget::KRenderWidget(Settings settings):
   r.setUpdateIntervalMs(settings.update_interval_ms);
   r.setBackgroundColor(settings.background_color);
   r.setRenderWindowSizeCoef(settings.render_window_size_coef);
+  max_zoom_speed = settings.max_zoom_speed;
   r.setPixmapSize(size());
 
   setAttribute(Qt::WA_AcceptTouchEvents);
@@ -88,11 +89,6 @@ void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
   r.renderMap();
 }
 
-void KRenderWidget::setMaxZoomSpeed(double v)
-{
-  max_zoom_speed = v;
-}
-
 void KRenderWidget::onRendered(int ms_elapsed)
 {
   if (zoom_mode == None)
@@ -109,10 +105,11 @@ void KRenderWidget::onRendered(int ms_elapsed)
 
 void KRenderWidget::mousePressEvent(QMouseEvent* e)
 {
-  if (!canScroll())
+  if (!checkCanScroll())
     return;
   mousePressed(e->pos());
   mouse_pos        = e->pos();
+  start_mouse_pos  = e->pos();
   zoom_focus_shift = QPoint();
 }
 
@@ -146,7 +143,7 @@ void KRenderWidget::scroll(QPoint diff)
 
 void KRenderWidget::scrollTo(const KGeoCoor& coor)
 {
-  auto new_pos_pix = deg2pix(coor);
+  auto new_pos_pix = deg2scr(coor);
   auto diff        = new_pos_pix - QPoint(width() / 2, height() / 2);
   if (fabs(diff.x()) < width() && fabs(diff.y()) < height())
     scroll(diff);
@@ -156,22 +153,21 @@ void KRenderWidget::scrollTo(const KGeoCoor& coor)
 
 void KRenderWidget::mouseMoveEvent(QMouseEvent* e)
 {
-  if (!canScroll())
+  mouseMoved(e->pos());
+  if (!checkCanScroll())
     return;
   auto diff = QPoint(mouse_pos - e->pos());
-  if (scrolling_enabled)
-    scroll(diff);
-  mouseMoved(e->pos());
+  scroll(diff);
   mouse_pos = e->pos();
 }
 
 void KRenderWidget::mouseReleaseEvent(QMouseEvent* e)
 {
-  if (!canScroll())
-    return;
   mouseReleased();
-  if ((e->pos() - mouse_pos).manhattanLength() < 10)
-    tapped(pix2deg(e->pos()));
+  if (!checkCanScroll())
+    return;
+  if ((e->pos() - start_mouse_pos).manhattanLength() < 10)
+    tapped(scr2deg(e->pos()));
 }
 
 void KRenderWidget::wheelEvent(QWheelEvent* e)
@@ -213,12 +209,12 @@ bool KRenderWidget::event(QEvent* e)
           auto scale_factor = pg->totalScaleFactor();
           if (zoom_mode == None)
           {
-            if (scale_factor < 0.95)
+            if (scale_factor < 0.99)
             {
               focus_shift = QPoint();
               startZoom(Out, focus_shift);
             }
-            if (scale_factor > 1.05)
+            if (scale_factor > 1.01)
               startZoom(In, focus_shift);
           }
           if (zoom_mode == Out)
@@ -312,7 +308,6 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
   if (zoom_mode != ZoomMode::None)
     return;
 
-  zoom_speed         = max_zoom_speed;
   shifted_after_zoom = false;
 
   r.stopAndWait();
@@ -347,16 +342,20 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
 
 void KRenderWidget::zoomIn()
 {
+  zoom_speed = 1.15;
   startZoom(ZoomMode::In);
 }
 
 void KRenderWidget::zoomOut()
 {
+  zoom_speed = 1.15;
   startZoom(ZoomMode::Out);
 }
 
-bool KRenderWidget::canScroll()
+bool KRenderWidget::checkCanScroll()
 {
+  if (!canScroll())
+    return false;
   if (is_pinching)
     return false;
   return !time_since_last_pinch.isValid() ||
@@ -410,11 +409,6 @@ double KRenderWidget::getMip()
   return r.getMip();
 }
 
-void KRenderWidget::setScrollingEnabled(bool v)
-{
-  scrolling_enabled = v;
-}
-
 QPoint KRenderWidget::getTotalShift() const
 {
   auto   coef = r.getRenderWindowSizeCoef();
@@ -429,16 +423,16 @@ QPoint KRenderWidget::getTotalShift() const
   return total_shift;
 }
 
-QPoint KRenderWidget::kcoor2pix(const KGeoCoor& deg) const
+QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
 {
-  return r.kcoor2pix(deg);
+  return r.deg2pix(deg);
 }
 
-QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
+QPoint KRenderWidget::deg2scr(const KGeoCoor& deg) const
 {
   auto coef          = r.getRenderWindowSizeCoef();
   auto total_shift   = getTotalShift();
-  auto pos_on_pixmap = r.deg2pix(deg);
+  auto pos_on_pixmap = r.deg2scr(deg);
   auto pos_on_screen = pos_on_pixmap + total_shift;
   if (zoom_mode != None)
   {
@@ -456,7 +450,7 @@ QPoint KRenderWidget::deg2pix(const KGeoCoor& deg) const
   return pos_on_screen;
 }
 
-KGeoCoor KRenderWidget::pix2deg(const QPoint& pix) const
+KGeoCoor KRenderWidget::scr2deg(const QPoint& pix) const
 {
-  return r.pix2deg(pix - getTotalShift());
+  return r.scr2deg(pix - getTotalShift());
 }

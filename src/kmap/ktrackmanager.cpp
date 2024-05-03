@@ -80,7 +80,7 @@ void KTrackManager::paintTrack(QPainter* p, const QString& name,
     i++;
     QPen pen = QPen(QColor(255 * i / track.count(), 0, 0), 5);
     p->setPen(pen);
-    pix = kcoor2pix(point.coor);
+    pix = deg2pix(point.coor);
     if (i > 0)
       p->drawLine(prev_pix, pix);
     prev_pix = pix;

@@ -142,6 +142,7 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         id_set.insert(sh->id);
         sh->pan_code = obj.value("code").toInt();
         sh->pan_key  = obj.value("key").toString();
+        sh->attrname = obj.value("attrname").toString();
         sh->attrval  = obj.value("attrval").toString();
 
         auto type_str = obj.value("type").toString();
@@ -273,6 +274,7 @@ KShape KShapeManager::getShapeById(QString id)
 }
 
 int KShapeManager::getShapeIdx(int code, QString key,
+                               QStringList attr_names,
                                QStringList attr_values)
 {
   for (int idx = -1; auto& sh: shapes)
@@ -283,13 +285,15 @@ int KShapeManager::getShapeIdx(int code, QString key,
     bool attr_match = true;
 
     if (sh->pan_code == 0 && sh->pan_key.isEmpty() &&
-        sh->attrval.isEmpty())
+        sh->attrname.isEmpty() && sh->attrval.isEmpty())
       continue;
 
     if (sh->pan_code > 0 && sh->pan_code != code)
       code_match = false;
     if (!sh->pan_key.isEmpty() && sh->pan_key != key)
       key_match = false;
+    if (!sh->attrname.isEmpty() && !attr_names.contains(sh->attrname))
+      attr_match = false;
     if (!sh->attrval.isEmpty() && !attr_values.contains(sh->attrval))
       attr_match = false;
 
