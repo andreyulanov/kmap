@@ -822,18 +822,18 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx,
 
   auto render_frame_m = getDrawRectM();
 
-  p->setRenderHint(QPainter::Antialiasing);
   for (int layer_idx = start.layer_idx;
        layer_idx < KRenderMap::max_layer_count; layer_idx++)
   {
     int start_obj_idx = 0;
     if (layer_idx == start.layer_idx)
       start_obj_idx = start.obj_idx;
+    auto& layer     = map->render_data[layer_idx];
+    auto  obj_count = layer.count();
 
-    for (int obj_idx = start_obj_idx;
-         obj_idx < map->render_data[layer_idx].count(); obj_idx++)
+    for (int obj_idx = start_obj_idx; obj_idx < obj_count; obj_idx++)
     {
-      auto obj = map->render_data[layer_idx][obj_idx];
+      auto& obj = layer[obj_idx];
       object_count++;
       if (object_count == map->render_object_count)
         return;
