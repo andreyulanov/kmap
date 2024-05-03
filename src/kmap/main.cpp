@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QProcess>
+#include <QStandardPaths>
 
 #include "krenderwidget.h"
 #include "kautoscroll.h"
@@ -17,6 +18,7 @@
 #include "kpackfetcher.h"
 #include "kscalelabel.h"
 #include "ksettings.h"
+#include "kstoragemanager.h"
 #ifdef BUILD_WITH_XMPP
   #include "kxmppclient.h"
   #include "kloginwidget.h"
@@ -80,10 +82,22 @@ int main(int argc, char* argv[])
     }
   }
   else
-    mmc_path = argv[1];
+  {
+    if (argc > 1)
+        mmc_path = argv[1];
+    else
+    {
+        mmc_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        if (mmc_path.isEmpty())
+        {
+            qCritical("Standard app's data diricory is not writable");
+        }
+    }
+  }
+  kStorageManager storage_man(mmc_path);
 
   KRenderWidget::Settings mapw_settings;
-  mapw_settings.map_dir                 = mmc_path + "/packs";
+  mapw_settings.map_dir                 = storage_man.packsPath();
   mapw_settings.pixel_size_mm           = pixel_size_mm;
   mapw_settings.window_size             = screen_size_pix;
   mapw_settings.render_window_size_coef = 2;
@@ -93,9 +107,9 @@ int main(int argc, char* argv[])
   KRenderWidget  renderw(mapw_settings);
   KPackFetcher   map_fetcher(mapw_settings.map_dir,
                              renderw.getWorldMap());
-  KShapeManager  user_shape_man(mmc_path + "/class");
-  KTrackManager  track_man(mmc_path + "/tracks");
-  KObjectManager object_man(mmc_path + "/objects", pixel_size_mm);
+  KShapeManager  user_shape_man(storage_man.classPath());
+  KTrackManager  track_man(storage_man.tracksPath());
+  KObjectManager object_man(storage_man.objectsPath(), pixel_size_mm);
   KAutoScroll    auto_scroll;
 
   QObject::connect(&map_fetcher, &KPackFetcher::fetched,
@@ -105,15 +119,15 @@ int main(int argc, char* argv[])
                      renderw.renderMap();
                    });
 
-  QDir        dir(mmc_path + "/class");
+  QDir dir(storage_man.classPath());
   QStringList filters;
   filters << "*.json";
   dir.setNameFilters(filters);
 
   auto path_list = dir.entryList();
   for (auto path: path_list)
-    user_shape_man.loadShapes(mmc_path + "/class/" + path,
-                              mmc_path + "/class");
+    user_shape_man.loadShapes(storage_man.classPath() + "/" + path,
+                              storage_man.classPath());
 
   QObject::connect(&editw, &KEditWidget::saveTrack, &track_man,
                    &KTrackManager::saveTrack);
@@ -318,14 +332,12 @@ int main(int argc, char* argv[])
   QString alicePassword = "very-secure-password-for-knav-alice";
   QString bobJid        = "knav.bob@macaw.me";
   QString bobPassword   = "very-secure-password-for-knav-bob";
-  QString log_path      = "client.log";
   // QString jidResource	 	= String("QXmpp");
   QString jidResource = "flowerpot";
-  QString objects_dir = mmc_path + "/objects";
   QString proxy       = "proxy.macaw.me";
 
-  KXmppClient client(objects_dir, proxy);
-  client.logger()->setLogFilePath(log_path);
+  KXmppClient client(storage_man.objectsPath(), proxy);
+  client.logger()->setLogFilePath(storage_man.logsPath() + "/client.log");
   client.logger()->setLoggingType(QXmppLogger::FileLogging);
 
   KSettings k_settings;
