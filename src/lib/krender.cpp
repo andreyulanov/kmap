@@ -822,6 +822,7 @@ void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx,
 
   auto render_frame_m = getDrawRectM();
 
+  p->setRenderHint(QPainter::Antialiasing);
   for (int layer_idx = start.layer_idx;
        layer_idx < KRenderMap::max_layer_count; layer_idx++)
   {
