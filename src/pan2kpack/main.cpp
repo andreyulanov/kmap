@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
   {
     auto world_map_path = output_dir + "/world.kpack";
     world_map           = new KPack(world_map_path);
-    world_map->loadAll();
+    world_map->loadAll(0);
   }
 
   for (auto& map_name: map_name_list)

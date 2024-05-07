@@ -58,7 +58,7 @@ public:
   QString             attrval;
   QVector<KAttribute> attributes;
   void                save(QFile* f);
-  void                load(QFile* f);
+  void                load(QFile* f, double pixel_size_mm);
   bool                operator==(KShape) const;
   int                 getWidthPix();
 };

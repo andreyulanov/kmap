@@ -50,7 +50,7 @@ void KRender::insertMap(int idx, QString path, bool load_now)
   auto map = new KRenderMap(path);
   connect(map, &KRenderMap::loaded, this, &KRender::onLoaded,
           Qt::UniqueConnection);
-  map->loadMain(load_now);
+  map->loadMain(load_now, pixel_size_mm);
   maps.insert(idx, map);
 }
 
@@ -201,9 +201,9 @@ void KRender::checkLoad()
       qDebug() << "loading main, load_thread_count"
                << load_thread_count;
       QtConcurrent::run(
-          [&map]()
+          [this, &map]()
           {
-            map->loadMain(true);
+            map->loadMain(true, pixel_size_mm);
           });
       continue;
     }

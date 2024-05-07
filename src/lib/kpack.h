@@ -125,9 +125,9 @@ public:
   KPack(const QString& path);
   virtual ~KPack();
   void save(QString new_path = "") const;
-  void loadMain(bool load_objects);
+  void loadMain(bool load_objects, double pixel_size_mm);
   void loadTile(int tile_idx, QRectF tile_rect_m);
-  void loadAll();
+  void loadAll(double pixel_size_mm);
   void clear();
   void add(KPack*);
 
@@ -167,7 +167,7 @@ public:
   KRenderMap(const QString& path);
   ~KRenderMap();
   void clear();
-  void loadMain(bool load_objects);
+  void loadMain(bool load_objects, double pixel_size_mm);
   void loadTile(int tile_idx, QRectF tile_rect_m);
   bool intersects(QPolygonF polygon) const;
 };

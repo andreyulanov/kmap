@@ -46,9 +46,10 @@ int KShape::getWidthPix()
   return round(width_mm / pixel_size_mm);
 }
 
-void KShape::load(QFile* f)
+void KShape::load(QFile* f, double _pixel_size_mm)
 {
   using namespace KSerialize;
+  pixel_size_mm = _pixel_size_mm;
   read(f, id);
   read(f, type);
   read(f, style);

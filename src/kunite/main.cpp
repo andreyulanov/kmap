@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 
   QString first_pack_path = QString(argv[1]) + "/" + argv[2];
   KPack*  united_pack     = new KPack(first_pack_path);
-  united_pack->loadAll();
+  united_pack->loadAll(0);
 
   for (auto& fi: fi_list)
   {
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
     qDebug() << "loading" << fi.absoluteFilePath();
     KPack* pack = new KPack(fi.absoluteFilePath());
-    pack->loadAll();
+    pack->loadAll(0);
     united_pack->add(pack);
   }
   qDebug() << "saving united pack...";

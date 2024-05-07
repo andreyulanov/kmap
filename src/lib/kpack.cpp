@@ -637,7 +637,7 @@ void KPack::save(QString new_path) const
   write(&f, small_idx_start_pos);
 }
 
-void KPack::loadMain(bool load_objects)
+void KPack::loadMain(bool load_objects, double pixel_size_mm)
 {
   if (main.status == KObjectCollection::Loading)
     return;
@@ -699,7 +699,7 @@ void KPack::loadMain(bool load_objects)
   for (auto& shape: shapes)
   {
     shape = new KShape;
-    shape->load(&f);
+    shape->load(&f, pixel_size_mm);
   }
 
   int ba_count = 0;
@@ -734,9 +734,9 @@ void KPack::loadMain(bool load_objects)
     part = nullptr;
 }
 
-void KPack::loadAll()
+void KPack::loadAll(double pixel_size_mm)
 {
-  loadMain(true);
+  loadMain(true, pixel_size_mm);
   for (int i = 0; i < tiles.count(); i++)
     loadTile(i, QRect());
 }
@@ -833,9 +833,9 @@ void KRenderMap::clear()
   render_start_list.clear();
 }
 
-void KRenderMap::loadMain(bool load_objects)
+void KRenderMap::loadMain(bool load_objects, double pixel_size_mm)
 {
-  KPack::loadMain(load_objects);
+  KPack::loadMain(load_objects, pixel_size_mm);
   if (load_objects)
   {
     QWriteLocker big_locker(&main_lock);
