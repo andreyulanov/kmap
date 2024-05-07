@@ -241,6 +241,30 @@ void KRender::checkLoad()
   }
 }
 
+void KRender::paintPointName(QPainter* p, const QString& text,
+                             const QColor& tcolor)
+{
+  QRect rect;
+  int   w = render_pixmap.width() / 32;
+  rect.setSize({w, w});
+
+  p->setPen(Qt::white);
+  auto shifts = {-2, 0, 2};
+  int  flags  = Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap |
+              Qt::TextDontClip;
+  for (auto x: shifts)
+    for (auto y: shifts)
+    {
+      p->save();
+      p->translate(x, y);
+      p->drawText(rect, flags, text);
+      p->restore();
+    }
+
+  p->setPen(tcolor);
+  p->drawText(rect, flags, text);
+}
+
 void KRender::paintOutlinedText(QPainter* p, const QString& text,
                                 const QColor& tcolor)
 {
@@ -699,11 +723,11 @@ bool KRender::paintPointNames(QPainter* p)
         auto f = p->font();
         f.setPixelSize(w);
         p->setFont(f);
-        p->translate(QPoint(0, item.shape->image.height() / 2));
+        p->translate(QPoint(0, -item.shape->image.height() / 2));
         for (auto str: item.str_list)
         {
           p->translate(QPoint(0, text_shift));
-          paintOutlinedText(p, str, item.shape->tcolor);
+          paintPointName(p, str, item.shape->tcolor);
         }
         p->restore();
       }
@@ -714,7 +738,8 @@ bool KRender::paintPointNames(QPainter* p)
         p->drawImage(pos2, item.shape->image);
       }
       else
-        p->drawEllipse(pos, 5, 5);
+        p->drawEllipse(pos, int(1.0 / pixel_size_mm),
+                       int(1.0 / pixel_size_mm));
       if (!canContinue())
         return false;
     }
@@ -724,6 +749,11 @@ bool KRender::paintPointNames(QPainter* p)
 bool KRender::paintLineNames(QPainter* p)
 {
   text_rect_array.clear();
+  auto f = p->font();
+  auto w = round(1.5 / pixel_size_mm);
+  f.setPixelSize(w);
+  p->setFont(f);
+
   for (int render_idx = 0; render_idx < KRenderMap::render_count;
        render_idx++)
     for (auto nh: name_holder_array[render_idx])
@@ -806,6 +836,7 @@ void KRender::render(QPainter* p, QVector<KRenderMap*> render_maps,
     KLocker tile_locker(&map->tile_lock, KLocker::Read);
     if (!tile_locker.hasLocked())
       continue;
+
     for (int line_iter = 0; line_iter < 2; line_iter++)
       renderMap(p, map, render_idx, line_iter);
   }

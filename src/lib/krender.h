@@ -129,6 +129,8 @@ public:
   void           setBackgroundColor(QColor);
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);
+  void           paintPointName(QPainter* p, const QString& text,
+                                const QColor& tcolor);
   static void    paintOutlinedText(QPainter* p, const QString& text,
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
