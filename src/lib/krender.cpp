@@ -713,7 +713,7 @@ bool KRender::paintPointNames(QPainter* p)
        render_idx++)
     for (auto item: point_names[render_idx])
     {
-      auto text_shift = item.shape->getWidthPix();
+      auto text_shift = item.shape->image.height();
       auto pos        = item.rect.topLeft();
       auto w          = item.shape->getWidthPix();
       if (w > 0)
