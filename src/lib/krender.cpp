@@ -245,7 +245,7 @@ void KRender::paintPointName(QPainter* p, const QString& text,
                              const QColor& tcolor)
 {
   QRect rect;
-  int   w = render_pixmap.width() / 32;
+  int   w = 20.0 / pixel_size_mm;
   rect.setSize({w, w});
 
   p->setPen(Qt::white);
@@ -293,7 +293,7 @@ void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
       p->restore();
     }
 
-  p->setPen(dte.shape->pen);
+  p->setPen(dte.shape->tcolor);
   p->drawText(dte.rect,
               dte.alignment | Qt::TextWordWrap | Qt::TextDontClip,
               dte.text);
