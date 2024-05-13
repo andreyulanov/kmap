@@ -1486,7 +1486,18 @@
     "image"  : "university.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 3
+    "max_mip": 3,
+    "name_code": 1,
+    "attributes":
+    [
+    {
+    "code"   : 9,
+    "name"   : "name",
+    "visible": true,
+    "max_mip": 0.5
+    }
+    ]
+
 },
 {
     "id"     : "kindergarten",
@@ -1523,7 +1534,17 @@
     "image"  : "monument.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 1
+    "max_mip": 0.5,
+    "name_code": 1,
+    "attributes":
+    [
+    {
+    "code"   : 9,
+    "name"   : "name",
+    "visible": true,
+    "max_mip": 0.5
+    }
+    ]
 },
 {
     "id"     : "food_court",
