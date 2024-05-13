@@ -16,6 +16,8 @@ SOURCES += \
  kautoscroll.cpp \
  kcontrols.cpp \
  keditwidget.cpp \
+    kmucmanager.cpp \
+    kmucroombackend.cpp \
  knewobjectwidget.cpp \
  kpackfetcher.cpp \
  kposgenerator.cpp \
@@ -36,6 +38,8 @@ HEADERS += \
  kautoscroll.h \
  kcontrols.h \
  keditwidget.h \
+    kmucmanager.h \
+    kmucroombackend.h \
  knewobjectwidget.h \
  kpackfetcher.h \
  kposgenerator.h \
