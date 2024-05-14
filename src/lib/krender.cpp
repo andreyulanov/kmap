@@ -282,6 +282,7 @@ void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
 {
   p->setPen(Qt::white);
   auto shifts = {-2, 0, 2};
+
   for (auto x: shifts)
     for (auto y: shifts)
     {
@@ -713,20 +714,19 @@ bool KRender::paintPointNames(QPainter* p)
        render_idx++)
     for (auto item: point_names[render_idx])
     {
-      auto text_shift = item.shape->image.height();
-      auto pos        = item.rect.topLeft();
-      auto w          = item.shape->getWidthPix();
+      auto pos = item.rect.topLeft();
+      auto w   = item.shape->getWidthPix();
       if (w > 0)
       {
         p->save();
         p->translate(pos);
         auto f = p->font();
-        f.setPixelSize(w);
+        f.setPixelSize(w * 0.7);
         p->setFont(f);
-        p->translate(QPoint(0, -item.shape->image.height() / 2));
         for (auto str: item.str_list)
         {
-          p->translate(QPoint(0, text_shift));
+          p->translate(
+              QPoint(item.shape->image.width() * 0.8, -w * 0.3));
           paintPointName(p, str, item.shape->tcolor);
         }
         p->restore();
