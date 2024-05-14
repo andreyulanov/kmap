@@ -429,7 +429,7 @@
     "type"   : "Point",
     "code"   : 47100001,
     "layer"  : 22,
-    "width_mm"  : 3.0,
+    "width_mm"  : 2.0,
     "image"  : "entrance.png",
     "name_code": 3206,
     "attributes":
@@ -442,6 +442,19 @@
     }
     ],
     "max_mip": 0.25
+},
+{
+    "id"     : "playground",
+    "type"   : "Polygon",
+    "code"   : 53600000,
+    "key"    : "D-53600000-S",
+    "attrval": "playground",
+    "layer"  : 20,
+    "width_mm"  : 2.0,
+    "pen"    : [100, 150, 100],
+    "brush"  : [200, 255, 200],
+    "image"  : "playground.png",
+    "max_mip": 3
 },
 {
     "id"     : "объект социально-культурного назначения",
@@ -1025,7 +1038,8 @@
     "pen"    : [100, 100, 100],
     "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
-    "max_mip": 3
+    "max_mip": 3,
+    "name_code": 1
 },
 {
     "id"     : "wall",
@@ -1110,7 +1124,7 @@
     "code"   : 61124000,
     "type"   : "Line",
     "layer"  : 22,
-    "width_mm"  : 0.5,
+    "width_mm"  : 0.3,
     "pen"    : [100, 100, 100],
     "brush"  : [200, 200, 200],
     "max_mip": 10
@@ -1211,18 +1225,6 @@
     "pen"    : [100, 100, 100],
     "brush"  : [200, 200, 200],
     "image"  : "parking.png",
-    "max_mip": 3
-},
-{
-    "id"     : "playground",
-    "type"   : "Polygon",
-    "key"    : "D-53600000-S",
-    "attrval": "playground",
-    "layer"  : 20,
-    "width_mm"  : 2.0,
-    "pen"    : [100, 150, 100],
-    "brush"  : [200, 255, 200],
-    "image"  : "playground.png",
     "max_mip": 3
 },
 {
