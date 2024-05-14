@@ -16,6 +16,8 @@ KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
     configuration().setResource("knav");
 
     transfer_manager.setProxy(proxy);
+    muc_manager.setInvitationReaction(KMUCManager::InvitationReaction::Add);
+    muc_manager.setAddingReaction(KMUCManager::AddingReaction::Join);
     //transfer_manager.proxyOnly();
     //transfer_Manager.setSupportedMethods(QXmppTransferJob::Method::InBandMethod);
     addExtension(&transfer_manager);
@@ -25,6 +27,8 @@ KXmppClient::KXmppClient(QString objects_dir, QString proxy, QObject *parent)
     addExtension(&discovery_manager);
     addExtension(&upload_req_manager);
     addExtension(&upload_manager);
+    addExtension(&muc_manager);
+
 
     connect(&transfer_manager, &QXmppTransferManager::fileReceived,
             this, &KXmppClient::slotFileReceived);
@@ -188,14 +192,12 @@ void KXmppClient::slotFileReceived(QXmppTransferJob *job)
 void KXmppClient::slotConnected()
 {
     QString domain = configuration().domain();
-    QString items = discovery_manager.requestItems(domain);
-    qDebug() << "items:" << items;
+    discovery_manager.requestItems(domain);
 }
 
 KXmppDiscoveryManager::KXmppDiscoveryManager():
     QXmppDiscoveryManager{}
 {
-
     connect(this, &QXmppDiscoveryManager::itemsReceived,
             this, &KXmppDiscoveryManager::slotItemsReceived);
 }
@@ -204,7 +206,6 @@ void KXmppDiscoveryManager::slotItemsReceived(const QXmppDiscoveryIq& iq)
 {
     for (auto item : iq.items())
     {
-        qDebug() << "request info of" << item.jid();
         requestInfo(item.jid());
     }
 }

@@ -8,6 +8,7 @@
 #include <QXmppQt5/QXmppDiscoveryManager.h>
 #include <QRegularExpression>
 #include "kobject.h"
+#include "kmucmanager.h"
 
 class KXmppDiscoveryManager : public QXmppDiscoveryManager
 {
@@ -39,12 +40,13 @@ signals:
 
 private:
   QString objects_dir;
-  QXmppTransferManager transfer_manager;
-  KXmppDiscoveryManager discovery_manager;
-  QRegularExpression filesWorthToReceive = QRegularExpression(
+  QXmppTransferManager 		transfer_manager;
+  KXmppDiscoveryManager 	discovery_manager;
+  KMUCManager				muc_manager;
+  QXmppUploadRequestManager	upload_req_manager;
+  QXmppHttpUploadManager	upload_manager;
+  QRegularExpression 		filesWorthToReceive = QRegularExpression(
          "[.]kpo$", QRegularExpression::CaseInsensitiveOption);
-  QXmppUploadRequestManager upload_req_manager;
-  QXmppHttpUploadManager upload_manager;
 
   bool notConnected();
   QString     generateReceivedFileName(QXmppTransferJob*);
