@@ -22,8 +22,7 @@ struct KObject
   QUuid                     guid;
   QString                   name;
   QVector<KGeoPolygon>      polygons;
-  QMap<QString, QString>    text_attr;
-  QMap<QString, QByteArray> data_attr;
+  QMap<QString, QByteArray> attr;
   void                      save(QString path);
   void                      load(QString path, double pixel_size_mm);
   bool                      isEmpty();

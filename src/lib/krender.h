@@ -62,12 +62,12 @@ class KRender: public QThread
   QPointF              center_m;
   QSize                pixmap_size   = {100, 100};
   double               pixel_size_mm = 0.1;
-  KRenderMapCollection maps;
+  KRenderPackCollection maps;
   QFont                font;
 
-  QVector<PointName>     point_names[KRenderMap::render_count];
-  QVector<DrawTextEntry> draw_text_array[KRenderMap::render_count];
-  QVector<NameHolder>    name_holder_array[KRenderMap::render_count];
+  QVector<PointName>     point_names[KRenderPack::render_count];
+  QVector<DrawTextEntry> draw_text_array[KRenderPack::render_count];
+  QVector<NameHolder>    name_holder_array[KRenderPack::render_count];
   QVector<QRect>         text_rect_array;
   QSizeF                 size_m;
   QPointF                render_top_left_m;
@@ -77,9 +77,9 @@ class KRender: public QThread
   void run();
   void start() = delete;
   void insertMap(int idx, QString path, bool load_now);
-  void renderMap(QPainter* p, KRenderMap* map, int render_idx,
+  void renderMap(QPainter* p, KRenderPack* map, int render_idx,
                  int line_iter);
-  void render(QPainter* p, QVector<KRenderMap*> render_maps,
+  void render(QPainter* p, QVector<KRenderPack*> render_maps,
               int render_idx);
 
   bool checkMipRange(const KPackObject* obj);
@@ -105,7 +105,7 @@ class KRender: public QThread
   void     paintLineObject(QPainter* painter, const KPackObject* obj,
                            int render_idx, int line_iter);
   QRectF   getDrawRectM() const;
-  bool     needToLoadMap(const KRenderMap*, const QRectF& draw_rect);
+  bool     needToLoadMap(const KRenderPack*, const QRectF& draw_rect);
   void     checkLoad();
   void     checkUnload();
   void     onLoaded();
@@ -134,7 +134,7 @@ public:
   static void    paintOutlinedText(QPainter* p, const QString& text,
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
-  const KRenderMapCollection* getMaps() const;
+  const KRenderPackCollection* getMaps() const;
   void                        renderMap();
   void                        renderUserObjects();
   void                        stopAndWait();

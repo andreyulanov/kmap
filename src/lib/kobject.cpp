@@ -31,8 +31,7 @@ void KObject::save(QString path)
     for (auto point: polygon)
       write(&f, point);
   }
-  write(&f, text_attr);
-  write(&f, data_attr);
+  write(&f, attr);
 }
 
 void KObject::load(QString path, double pixel_size_mm)
@@ -67,8 +66,7 @@ void KObject::load(QString path, double pixel_size_mm)
     for (auto& point: polygon)
       read(&f, point);
   }
-  read(&f, text_attr);
-  read(&f, data_attr);
+  read(&f, attr);
 }
 
 bool KObject::isEmpty()
@@ -361,9 +359,9 @@ void KObjectManager::acceptObject()
     auto& obj = objects[edited_object_idx];
     if (obj.guid.isNull())
       obj.guid = QUuid::createUuid();
-	QString file_name = getObjectPath(obj.guid.toString());
+    QString file_name = getObjectPath(obj.guid.toString());
     obj.save(file_name);
-  	saved(file_name);
+    saved(file_name);
     is_creating_new_object = false;
     edited_object_idx      = -1;
   }
