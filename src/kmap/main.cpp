@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
                              renderw.getWorldMap());
   KShapeManager  user_shape_man(storage_man.classPath());
   KTrackManager  track_man(storage_man.tracksPath());
-  KObjectManager object_man(storage_man.objectsPath(), pixel_size_mm);
+  KPortableObjectManager object_man(storage_man.objectsPath(), pixel_size_mm);
   KAutoScroll    auto_scroll;
 
   QObject::connect(&map_fetcher, &KPackFetcher::fetched,
@@ -137,15 +137,15 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
-                   &object_man, &KObjectManager::startMovingPoint);
+                   &object_man, &KPortableObjectManager::startMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::mouseMoved, &auto_scroll,
                    &KAutoScroll::accumulate);
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,
                    &auto_scroll, &KAutoScroll::start);
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,
-                   &object_man, &KObjectManager::stopMovingPoint);
+                   &object_man, &KPortableObjectManager::stopMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::tapped, &object_man,
-                   &KObjectManager::onTapped);
+                   &KPortableObjectManager::onTapped);
   QObject::connect(&renderw, &KRenderWidget::pinchStarted,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::startedRender,
@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
                    &KRenderWidget::scroll);
 
   QObject::connect(&renderw, &KRenderWidget::mouseMoved, &object_man,
-                   &KObjectManager::movePoint);
+                   &KPortableObjectManager::movePoint);
   double edge_mm        = 15;
   double step_mm        = 30;
   double button_size_mm = 15;
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
   QObject::connect(&controls, &KControls::switchRecording, &track_man,
                    &KTrackManager::onSwitchRecording);
   QObject::connect(&controls, &KControls::acceptObject, &object_man,
-                   &KObjectManager::acceptObject);
+                   &KPortableObjectManager::acceptObject);
   QObject::connect(&track_man, &KTrackManager::switchRecording,
                    [&track_man, &editw]()
                    {
@@ -201,13 +201,13 @@ int main(int argc, char* argv[])
   QObject::connect(&controls, &KControls::selectShape, &newobjw,
                    &KNewObjectWidget::show);
   QObject::connect(&controls, &KControls::removeObject, &object_man,
-                   &KObjectManager::removeObject);
+                   &KPortableObjectManager::removeObject);
 
   QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
                    &user_shape_man,
                    &KShapeManager::getShapeImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
-                   &object_man, &KObjectManager::createObject);
+                   &object_man, &KPortableObjectManager::createObject);
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
                    &user_shape_man, &KShapeManager::getShapeById);
 
@@ -239,17 +239,17 @@ int main(int argc, char* argv[])
                    &track_man, &KTrackManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
-                   &object_man, &KObjectManager::paint,
+                   &object_man, &KPortableObjectManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&renderw, &KRenderWidget::canScroll, &object_man,
-                   &KObjectManager::canScroll, Qt::DirectConnection);
+                   &KPortableObjectManager::canScroll, Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::deg2pix, &renderw,
+  QObject::connect(&object_man, &KPortableObjectManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::deg2scr, &renderw,
+  QObject::connect(&object_man, &KPortableObjectManager::deg2scr, &renderw,
                    &KRenderWidget::deg2scr, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::scr2deg, &renderw,
+  QObject::connect(&object_man, &KPortableObjectManager::scr2deg, &renderw,
                    &KRenderWidget::scr2deg, Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2scr,
                    &renderw, &KRenderWidget::deg2scr,
@@ -257,11 +257,11 @@ int main(int argc, char* argv[])
 
   QObject::connect(&track_man, &KTrackManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KObjectManager::updated, &renderw,
+  QObject::connect(&object_man, &KPortableObjectManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KObjectManager::startEdit, &controls,
+  QObject::connect(&object_man, &KPortableObjectManager::startEdit, &controls,
                    &KControls::startEdit);
-  QObject::connect(&object_man, &KObjectManager::finishEdit,
+  QObject::connect(&object_man, &KPortableObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 
   QGeoPositionInfoSource* geo =
@@ -366,12 +366,12 @@ int main(int argc, char* argv[])
                    &sender,
                    &KPortableObjectSender::turnOffSendOnReady);
   QObject::connect(&client, &KXmppClient::fileDownloaded, &object_man,
-                   qOverload<QString>(&KObjectManager::loadFile));
+                   qOverload<QString>(&KPortableObjectManager::loadFile));
   QObject::connect(&sender, &KPortableObjectSender::send, &client,
                    &KXmppClient::sendFile);
   QObject::connect(&roster_widget, &KRosterWidget::jidSelected,
                    &sender, &KPortableObjectSender::setJid);
-  QObject::connect(&object_man, &KObjectManager::saved, &sender,
+  QObject::connect(&object_man, &KPortableObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
 #endif
   return a.exec();

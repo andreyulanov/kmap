@@ -5,7 +5,7 @@
 #include <QUuid>
 #include "kpack.h"
 
-struct KObject
+struct KPortableObject
 {
   KShape                    shape;
   QUuid                     guid;
@@ -18,7 +18,7 @@ struct KObject
   int                       getWidthPix(double pixel_size_mm);
 };
 
-class KObjectManager: public QObject
+class KPortableObjectManager: public QObject
 {
   Q_OBJECT
 
@@ -33,7 +33,7 @@ class KObjectManager: public QObject
 
   double           pixel_size_mm = 0;
   QString          objects_dir;
-  QVector<KObject> objects;
+  QVector<KPortableObject> objects;
   int              edited_object_idx = -1;
   QVector<QUuid>   selected_guids;
   QPair<int, int>  moving_point_idx       = {-1, -1};
@@ -51,10 +51,10 @@ signals:
   void     saved(QString);
 
 public:
-  KObjectManager(QString objects_dir, double pixel_size_mm);
+  KPortableObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
   void removeObject();
-  void paintObject(QPainter* p, KObject obj, PaintMode paint_mode);
+  void paintObject(QPainter* p, KPortableObject obj, PaintMode paint_mode);
   void onTapped(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();

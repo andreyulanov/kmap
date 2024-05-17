@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QUuid>
 
-void KObject::save(QString path)
+void KPortableObject::save(QString path)
 {
   QFile f(path);
   if (!f.open(QIODevice::WriteOnly))
@@ -29,7 +29,7 @@ void KObject::save(QString path)
   write(&f, attr);
 }
 
-void KObject::load(QString path, double pixel_size_mm)
+void KPortableObject::load(QString path, double pixel_size_mm)
 {
   QFile f(path);
   if (!f.open(QIODevice::ReadOnly))
@@ -56,18 +56,18 @@ void KObject::load(QString path, double pixel_size_mm)
   read(&f, attr);
 }
 
-bool KObject::isEmpty()
+bool KPortableObject::isEmpty()
 {
   return polygons.isEmpty();
 }
 
-int KObject::getWidthPix(double pixel_size_mm)
+int KPortableObject::getWidthPix(double pixel_size_mm)
 {
   return round(shape.width_mm / pixel_size_mm);
 }
 
-KObjectManager::KObjectManager(QString _objects_dir,
-                               double  _pixel_size_mm)
+KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
+                                               double  _pixel_size_mm)
 {
   pixel_size_mm = _pixel_size_mm;
   QDir dir(_objects_dir);
@@ -76,21 +76,21 @@ KObjectManager::KObjectManager(QString _objects_dir,
   auto fi_list = dir.entryInfoList(QDir::Files, QDir::Name);
   for (auto fi: fi_list)
   {
-    KObject obj;
+    KPortableObject obj;
     obj.load(fi.absoluteFilePath(), pixel_size_mm);
-    obj.guid = fi.fileName().remove(".kobject");
+    obj.guid = fi.fileName().remove(".kp");
     objects.append(obj);
   }
   objects_dir   = _objects_dir;
   pixel_size_mm = _pixel_size_mm;
 }
 
-QString KObjectManager::getObjectPath(QUuid object_guid)
+QString KPortableObjectManager::getObjectPath(QUuid object_guid)
 {
-  return objects_dir + "/" + object_guid.toString() + ".kobject";
+  return objects_dir + "/" + object_guid.toString() + ".kp";
 }
 
-void KObjectManager::removeObject()
+void KPortableObjectManager::removeObject()
 {
   if (edited_object_idx >= 0)
   {
@@ -116,17 +116,18 @@ void KObjectManager::removeObject()
   updated();
 }
 
-void KObjectManager::createObject(KShape sh)
+void KPortableObjectManager::createObject(KShape sh)
 {
-  KObject obj;
+  KPortableObject obj;
   obj.shape = sh;
   objects.append(obj);
   edited_object_idx      = objects.count() - 1;
   is_creating_new_object = true;
 }
 
-void KObjectManager::paintObject(QPainter* p, KObject obj,
-                                 PaintMode paint_mode)
+void KPortableObjectManager::paintObject(QPainter*       p,
+                                         KPortableObject obj,
+                                         PaintMode       paint_mode)
 {
   if (obj.polygons.isEmpty())
     return;
@@ -217,7 +218,7 @@ void KObjectManager::paintObject(QPainter* p, KObject obj,
   }
 }
 
-void KObjectManager::onTapped(KGeoCoor coor)
+void KPortableObjectManager::onTapped(KGeoCoor coor)
 {
   auto p0 = deg2pix(coor);
 
@@ -319,7 +320,7 @@ void KObjectManager::onTapped(KGeoCoor coor)
   updated();
 }
 
-void KObjectManager::paint(QPainter* p)
+void KPortableObjectManager::paint(QPainter* p)
 {
   for (int idx = -1; auto& obj: objects)
   {
@@ -333,7 +334,7 @@ void KObjectManager::paint(QPainter* p)
   }
 }
 
-void KObjectManager::acceptObject()
+void KPortableObjectManager::acceptObject()
 {
   selected_guids.clear();
   if (edited_object_idx >= 0)
@@ -351,42 +352,43 @@ void KObjectManager::acceptObject()
   finishEdit();
 }
 
-void KObjectManager::loadFileWithoutUpdate(QString path)
+void KPortableObjectManager::loadFileWithoutUpdate(QString path)
 {
-  KObject object;
+  KPortableObject object;
   object.load(path, pixel_size_mm);
   objects.append(object);
 }
 
-void KObjectManager::loadFileWithoutUpdate(QFileInfo file_info)
+void KPortableObjectManager::loadFileWithoutUpdate(
+    QFileInfo file_info)
 {
   loadFile(file_info.absoluteFilePath());
 }
 
-void KObjectManager::loadFile(QString path)
+void KPortableObjectManager::loadFile(QString path)
 {
   loadFileWithoutUpdate(path);
   updated();
 }
 
-void KObjectManager::startMovingPoint(QPoint p0)
+void KPortableObjectManager::startMovingPoint(QPoint p0)
 {
   if (edited_object_idx < 0)
     return;
   moving_point_idx = getSelectedObjectPointIdxAt(p0);
 }
 
-void KObjectManager::stopMovingPoint()
+void KPortableObjectManager::stopMovingPoint()
 {
   moving_point_idx = {-1, -1};
 }
 
-bool KObjectManager::canScroll()
+bool KPortableObjectManager::canScroll()
 {
   return moving_point_idx == QPair{-1, -1};
 }
 
-void KObjectManager::movePoint(QPoint p)
+void KPortableObjectManager::movePoint(QPoint p)
 {
   if (edited_object_idx < 0 || edited_object_idx >= objects.count())
     return;
@@ -409,7 +411,8 @@ void KObjectManager::movePoint(QPoint p)
   updated();
 }
 
-QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
+QPair<int, int>
+KPortableObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
 {
   if (edited_object_idx < 0)
     return {-1, -1};
@@ -431,7 +434,7 @@ QPair<int, int> KObjectManager::getSelectedObjectPointIdxAt(QPoint p0)
   return {-1, -1};
 }
 
-int KObjectManager::getObjectIdxAt(QPoint p0)
+int KPortableObjectManager::getObjectIdxAt(QPoint p0)
 {
   using namespace kmath;
   auto proximity_pix = proximity_mm / pixel_size_mm;
@@ -470,7 +473,8 @@ int KObjectManager::getObjectIdxAt(QPoint p0)
   return -1;
 }
 
-int KObjectManager::getObjectIdxInsidePolygon(QPolygon polygon)
+int KPortableObjectManager::getObjectIdxInsidePolygon(
+    QPolygon polygon)
 {
   return -1;
 }
