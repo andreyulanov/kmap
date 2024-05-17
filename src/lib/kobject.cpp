@@ -16,13 +16,8 @@ void KObject::save(QString path)
 
   using namespace KSerialize;
 
-  write(&f, shape.id);
-  write(&f, shape.type);
-  write(&f, shape.pen);
-  write(&f, shape.width_mm);
-  write(&f, shape.brush);
-  write(&f, shape.image);
-
+  shape.save(&f);
+  write(&f, guid);
   write(&f, name);
   write(&f, polygons.count());
   for (auto polygon: polygons)
@@ -45,16 +40,8 @@ void KObject::load(QString path, double pixel_size_mm)
 
   using namespace KSerialize;
 
-  read(&f, shape.id);
-  read(&f, shape.type);
-  read(&f, shape.pen);
-  read(&f, shape.width_mm);
-  read(&f, shape.brush);
-  QImage img;
-  read(&f, img);
-  if (!img.isNull())
-    shape.image = img.scaledToWidth(getWidthPix(pixel_size_mm),
-                                    Qt::SmoothTransformation);
+  shape.load(&f, pixel_size_mm);
+  read(&f, guid);
   read(&f, name);
   int n;
   read(&f, n);
