@@ -432,15 +432,6 @@
     "width_mm"  : 2.0,
     "image"  : "entrance.png",
     "name_code": 3206,
-    "attributes":
-    [
-    {
-    "code"   : 3109,
-    "name"   : "flats",
-    "visible": true,
-    "max_mip": 0.1
-    }
-    ],
     "max_mip": 0.25
 },
 {

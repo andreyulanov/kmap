@@ -31,14 +31,6 @@ void KShape::save(QFile* f)
   write(f, (uchar)tcolor.blue());
   write(f, (uchar)tcolor.alpha());
   write(f, image);
-  write(f, int(attributes.count()));
-  for (auto attr: attributes)
-  {
-    write(f, attr.name);
-    write(f, attr.code);
-    write(f, attr.visible);
-    write(f, attr.max_mip);
-  }
 }
 
 int KShape::getWidthPix()
@@ -79,17 +71,6 @@ void KShape::load(QFile* f, double _pixel_size_mm)
   if (!img.isNull())
     image =
         img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
-  int n;
-  read(f, n);
-  for (int i = 0; i < n; i++)
-  {
-    KAttribute attr;
-    read(f, attr.name);
-    read(f, attr.code);
-    read(f, attr.visible);
-    read(f, attr.max_mip);
-    attributes.append(attr);
-  }
 }
 
 void KShapeManager::loadShapes(QString path, QString images_dir)
