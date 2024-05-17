@@ -78,7 +78,7 @@ KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
   {
     KPortableObject obj;
     obj.load(fi.absoluteFilePath(), pixel_size_mm);
-    obj.guid = fi.fileName().remove(".kom");
+    obj.guid = fi.fileName().remove(".km");
     objects.append(obj);
   }
   objects_dir   = _objects_dir;
@@ -87,7 +87,7 @@ KPortableObjectManager::KPortableObjectManager(QString _objects_dir,
 
 QString KPortableObjectManager::getObjectPath(QUuid object_guid)
 {
-  return objects_dir + "/" + object_guid.toString() + ".kom";
+  return objects_dir + "/" + object_guid.toString() + ".km";
 }
 
 void KPortableObjectManager::removeObject()
