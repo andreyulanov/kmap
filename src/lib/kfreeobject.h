@@ -1,11 +1,11 @@
-#ifndef KOBJECT_H
-#define KOBJECT_H
+#ifndef KFREEOBJECT_H
+#define KFREEOBJECT_H
 
 #include <QFileInfo>
 #include <QUuid>
 #include "kpack.h"
 
-struct KPortableObject
+struct KFreeObject
 {
   KShape                    shape;
   QUuid                     guid;
@@ -18,7 +18,7 @@ struct KPortableObject
   int                       getWidthPix(double pixel_size_mm);
 };
 
-class KPortableObjectManager: public QObject
+class KFreeObjectManager: public QObject
 {
   Q_OBJECT
 
@@ -33,7 +33,7 @@ class KPortableObjectManager: public QObject
 
   double           pixel_size_mm = 0;
   QString          objects_dir;
-  QVector<KPortableObject> objects;
+  QVector<KFreeObject> objects;
   int              edited_object_idx = -1;
   QVector<QUuid>   selected_guids;
   QPair<int, int>  moving_point_idx       = {-1, -1};
@@ -51,10 +51,10 @@ signals:
   void     saved(QString);
 
 public:
-  KPortableObjectManager(QString objects_dir, double pixel_size_mm);
+  KFreeObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
   void removeObject();
-  void paintObject(QPainter* p, KPortableObject obj, PaintMode paint_mode);
+  void paintObject(QPainter* p, KFreeObject obj, PaintMode paint_mode);
   void onTapped(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();
@@ -74,4 +74,4 @@ private slots:
   void loadFileWithoutUpdate(QString path);
 };
 
-#endif  // KOBJECT_H
+#endif  // KFREEOBJECT_H

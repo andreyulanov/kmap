@@ -8,7 +8,7 @@
 #include <QGestureEvent>
 #include <QWheelEvent>
 #include "krender.h"
-#include "kobject.h"
+#include "kfreeobject.h"
 #include <QOpenGLWidget>
 
 class KRenderWidget: public QWidget
