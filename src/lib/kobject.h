@@ -5,20 +5,9 @@
 #include <QUuid>
 #include "kpack.h"
 
-struct KObjectClass
-{
-  QString       name;
-  KShape::Type  type  = KShape::None;
-  KShape::Style style = KShape::Solid;
-  QColor        pen;
-  float         pen_width_mm = 0;
-  QColor        brush;
-  QImage        image;
-};
-
 struct KObject
 {
-  KObjectClass              cl;
+  KShape                    shape;
   QUuid                     guid;
   QString                   name;
   QVector<KGeoPolygon>      polygons;
