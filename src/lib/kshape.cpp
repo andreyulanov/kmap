@@ -7,7 +7,7 @@
 #include <QJsonObject>
 #include <QMetaEnum>
 
-void KShapeData::save(QFile* f)
+void KShape::save(QFile* f)
 {
   using namespace KSerialize;
   write(f, id);
@@ -33,12 +33,12 @@ void KShapeData::save(QFile* f)
   write(f, image);
 }
 
-int KShapeData::getWidthPix()
+int KShape::getWidthPix()
 {
   return round(width_mm / pixel_size_mm);
 }
 
-void KShapeData::load(QFile* f, double _pixel_size_mm)
+void KShape::load(QFile* f, double _pixel_size_mm)
 {
   using namespace KSerialize;
   pixel_size_mm = _pixel_size_mm;
