@@ -38,28 +38,22 @@ public:
     Dots
   };
   Q_ENUM(Style)
-  QString             id;
-  Type                type                = None;
-  Style               style               = Solid;
-  uchar               layer               = 0;
-  float               width_mm            = 0.2;
-  float               pixel_size_mm       = 0.1;
-  float               min_mip             = 0;
-  float               max_mip             = 100;
-  int                 coor_precision_coef = 1;
-  QColor              pen;
-  QColor              brush;
-  QColor              tcolor;
-  QImage              image;
-  void                save(QFile* f);
-  void                load(QFile* f, double pixel_size_mm);
-  int                 getWidthPix();
-  int                 pan_code = 0;
-  QString             pan_key;
-  int                 name_code = 0;
-  QString             attrname;
-  QString             attrval;
-  QVector<KAttribute> attributes;
+  QString id;
+  Type    type                = None;
+  Style   style               = Solid;
+  uchar   layer               = 0;
+  float   width_mm            = 0.2;
+  float   pixel_size_mm       = 0.1;
+  float   min_mip             = 0;
+  float   max_mip             = 100;
+  int     coor_precision_coef = 1;
+  QColor  pen;
+  QColor  brush;
+  QColor  tcolor;
+  QImage  image;
+  void    save(QFile* f);
+  void    load(QFile* f, double pixel_size_mm);
+  int     getWidthPix();
 };
 
 struct KShapeImage
