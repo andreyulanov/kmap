@@ -235,6 +235,11 @@ KShapeManager::KShapeManager(QString _images_dir)
   images_dir = _images_dir;
 }
 
+KShapeManager::~KShapeManager()
+{
+  qDeleteAll(shapes);
+}
+
 int KShapeManager::getShapeIdxById(QString id)
 {
   for (int i = -1; auto sh: shapes)

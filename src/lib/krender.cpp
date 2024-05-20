@@ -159,7 +159,7 @@ void KRender::checkUnload()
 }
 
 bool KRender::needToLoadMap(const KRenderPack* map,
-                            const QRectF&     draw_rect_m)
+                            const QRectF&      draw_rect_m)
 {
   if (map->getMainMip() > 0 && render_mip > map->getMainMip())
     return false;
@@ -345,16 +345,6 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
     str_list += obj->name;
     max_length = obj->name.count();
   }
-
-  for (auto attr: obj->shape->attributes)
-    if (attr.visible && render_mip < attr.max_mip)
-    {
-      auto str = obj->attributes.value(attr.name);
-      if (str == obj->name)
-        continue;
-      str_list += str;
-      max_length = std::max(max_length, str.count());
-    }
 
   auto rect =
       QRect{pos.x(), pos.y(), max_length * obj->shape->getWidthPix(),

@@ -79,6 +79,7 @@ struct KShapeManager: public QObject
   QString          error_str;
   QString          images_dir;
   KShapeManager(QString image_dir = QString());
+  virtual ~KShapeManager();
   int    getShapeIdx(int code, QString key, QStringList attr_names,
                      QStringList attr_values);
   int    getShapeIdxById(QString id);
