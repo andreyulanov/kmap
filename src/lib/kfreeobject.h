@@ -1,36 +1,24 @@
-#ifndef KOBJECT_H
-#define KOBJECT_H
+#ifndef KFREEOBJECT_H
+#define KFREEOBJECT_H
 
 #include <QFileInfo>
 #include <QUuid>
 #include "kpack.h"
 
-struct KObjectClass
+struct KFreeObject
 {
-  QString       name;
-  KShape::Type  type  = KShape::None;
-  KShape::Style style = KShape::Solid;
-  QColor        pen;
-  float         pen_width_mm = 0;
-  QColor        brush;
-  QImage        image;
-};
-
-struct KObject
-{
-  KObjectClass              cl;
+  KShape                    shape;
   QUuid                     guid;
   QString                   name;
   QVector<KGeoPolygon>      polygons;
-  QMap<QString, QString>    text_attr;
-  QMap<QString, QByteArray> data_attr;
+  QMap<QString, QByteArray> attr;
   void                      save(QString path);
   void                      load(QString path, double pixel_size_mm);
   bool                      isEmpty();
   int                       getWidthPix(double pixel_size_mm);
 };
 
-class KObjectManager: public QObject
+class KFreeObjectManager: public QObject
 {
   Q_OBJECT
 
@@ -45,7 +33,7 @@ class KObjectManager: public QObject
 
   double           pixel_size_mm = 0;
   QString          objects_dir;
-  QVector<KObject> objects;
+  QVector<KFreeObject> objects;
   int              edited_object_idx = -1;
   QVector<QUuid>   selected_guids;
   QPair<int, int>  moving_point_idx       = {-1, -1};
@@ -63,10 +51,10 @@ signals:
   void     saved(QString);
 
 public:
-  KObjectManager(QString objects_dir, double pixel_size_mm);
+  KFreeObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
   void removeObject();
-  void paintObject(QPainter* p, KObject obj, PaintMode paint_mode);
+  void paintObject(QPainter* p, KFreeObject obj, PaintMode paint_mode);
   void onTapped(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();
@@ -86,4 +74,4 @@ private slots:
   void loadFileWithoutUpdate(QString path);
 };
 
-#endif  // KOBJECT_H
+#endif  // KFREEOBJECT_H

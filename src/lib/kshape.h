@@ -38,29 +38,22 @@ public:
     Dots
   };
   Q_ENUM(Style)
-  QString             id;
-  int                 pan_code = 0;
-  QString             pan_key;
-  Type                type                = None;
-  Style               style               = Solid;
-  uchar               layer               = 0;
-  float               width_mm            = 0.2;
-  float               pixel_size_mm       = 0.1;
-  float               min_mip             = 0;
-  float               max_mip             = 100;
-  int                 coor_precision_coef = 1;
-  QColor              pen;
-  QColor              brush;
-  QColor              tcolor;
-  QImage              image;
-  int                 name_code = 0;
-  QString             attrname;
-  QString             attrval;
-  QVector<KAttribute> attributes;
-  void                save(QFile* f);
-  void                load(QFile* f, double pixel_size_mm);
-  bool                operator==(KShape) const;
-  int                 getWidthPix();
+  QString id;
+  Type    type                = None;
+  Style   style               = Solid;
+  uchar   layer               = 0;
+  float   width_mm            = 0.2;
+  float   pixel_size_mm       = 0.1;
+  float   min_mip             = 0;
+  float   max_mip             = 100;
+  int     coor_precision_coef = 1;
+  QColor  pen;
+  QColor  brush;
+  QColor  tcolor;
+  QImage  image;
+  void    save(QFile* f);
+  void    load(QFile* f, double pixel_size_mm);
+  int     getWidthPix();
 };
 
 struct KShapeImage
@@ -73,9 +66,6 @@ typedef QVector<KShapeImage> KShapeImageList;
 
 struct KShapeManager: public QObject
 {
-  Q_OBJECT
-
-public:
   double           main_mip                    = 0;
   double           tile_mip                    = 0;
   int              default_coor_precision_coef = 1;
@@ -83,6 +73,7 @@ public:
   QString          error_str;
   QString          images_dir;
   KShapeManager(QString image_dir = QString());
+  virtual ~KShapeManager();
   int    getShapeIdx(int code, QString key, QStringList attr_names,
                      QStringList attr_values);
   int    getShapeIdxById(QString id);

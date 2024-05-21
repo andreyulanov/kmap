@@ -507,7 +507,7 @@ const QVector<KObjectCollection*> KPack::getTiles() const
   return tiles;
 }
 
-bool KRenderMap::intersects(QPolygonF polygon_m) const
+bool KRenderPack::intersects(QPolygonF polygon_m) const
 {
   if (borders_m.isEmpty())
     return polygon_m.intersects(frame.toRectM());
@@ -809,16 +809,16 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   }
 }
 
-KRenderMap::KRenderMap(const QString& path): KPack(path)
+KRenderPack::KRenderPack(const QString& path): KPack(path)
 {
 }
 
-KRenderMap::~KRenderMap()
+KRenderPack::~KRenderPack()
 {
   clear();
 }
 
-void KRenderMap::clear()
+void KRenderPack::clear()
 {
   KLocker big_locker(&main_lock, KLocker::Write);
   if (!big_locker.hasLocked())
@@ -833,7 +833,7 @@ void KRenderMap::clear()
   render_start_list.clear();
 }
 
-void KRenderMap::loadMain(bool load_objects, double pixel_size_mm)
+void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
 {
   KPack::loadMain(load_objects, pixel_size_mm);
   if (load_objects)
@@ -845,7 +845,7 @@ void KRenderMap::loadMain(bool load_objects, double pixel_size_mm)
   }
 }
 
-void KRenderMap::loadTile(int tile_idx, QRectF tile_rect_m)
+void KRenderPack::loadTile(int tile_idx, QRectF tile_rect_m)
 {
   KPack::loadTile(tile_idx, tile_rect_m);
   QWriteLocker small_locker(&tile_lock);
@@ -901,7 +901,7 @@ void KEditablePack::addObjects(const QVector<KPackObject*>& obj_list,
   }
 }
 
-void KRenderMap::addCollectionToIndex(
+void KRenderPack::addCollectionToIndex(
     const KObjectCollection* collection)
 {
   for (auto& obj: *collection)
@@ -933,7 +933,7 @@ void KRenderMap::addCollectionToIndex(
   }
 }
 
-KRenderMapCollection::~KRenderMapCollection()
+KRenderPackCollection::~KRenderPackCollection()
 {
   qDeleteAll(*this);
 }

@@ -144,7 +144,7 @@ public:
   const QVector<KObjectCollection*> getTiles() const;
 };
 
-class KRenderMap: public QObject, public KPack
+class KRenderPack: public QObject, public KPack
 {
   Q_OBJECT
 
@@ -164,17 +164,17 @@ signals:
   void loaded();
 
 public:
-  KRenderMap(const QString& path);
-  ~KRenderMap();
+  KRenderPack(const QString& path);
+  ~KRenderPack();
   void clear();
   void loadMain(bool load_objects, double pixel_size_mm);
   void loadTile(int tile_idx, QRectF tile_rect_m);
   bool intersects(QPolygonF polygon) const;
 };
 
-struct KRenderMapCollection: public QVector<KRenderMap*>
+struct KRenderPackCollection: public QVector<KRenderPack*>
 {
-  virtual ~KRenderMapCollection();
+  virtual ~KRenderPackCollection();
 };
 
 class KEditablePack: public KPack

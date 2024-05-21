@@ -10,8 +10,8 @@ QT += qml quick
 
 SOURCES += \
  ../lib/kdatetime.cpp \
+ ../lib/kfreeobject.cpp \
 ../lib/klocker.cpp \
- ../lib/kobject.cpp \
  ../lib/kpack.cpp \
 ../lib/krender.cpp \
 ../lib/kshape.cpp \
@@ -32,8 +32,8 @@ main.cpp
 
 HEADERS += \
  ../lib/kdatetime.h \
+ ../lib/kfreeobject.h \
 ../lib/klocker.h \
- ../lib/kobject.h \
  ../lib/kpack.h \
 ../lib/krender.h \
 ../lib/kshape.h \

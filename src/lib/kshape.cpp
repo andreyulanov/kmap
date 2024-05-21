@@ -31,14 +31,6 @@ void KShape::save(QFile* f)
   write(f, (uchar)tcolor.blue());
   write(f, (uchar)tcolor.alpha());
   write(f, image);
-  write(f, int(attributes.count()));
-  for (auto attr: attributes)
-  {
-    write(f, attr.name);
-    write(f, attr.code);
-    write(f, attr.visible);
-    write(f, attr.max_mip);
-  }
 }
 
 int KShape::getWidthPix()
@@ -79,17 +71,6 @@ void KShape::load(QFile* f, double _pixel_size_mm)
   if (!img.isNull())
     image =
         img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
-  int n;
-  read(f, n);
-  for (int i = 0; i < n; i++)
-  {
-    KAttribute attr;
-    read(f, attr.name);
-    read(f, attr.code);
-    read(f, attr.visible);
-    read(f, attr.max_mip);
-    attributes.append(attr);
-  }
 }
 
 void KShapeManager::loadShapes(QString path, QString images_dir)
@@ -141,10 +122,6 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           return;
         }
         id_set.insert(sh->id);
-        sh->pan_code = obj.value("code").toInt();
-        sh->pan_key  = obj.value("key").toString();
-        sh->attrname = obj.value("attrname").toString();
-        sh->attrval  = obj.value("attrval").toString();
 
         auto type_str = obj.value("type").toString();
         if (!type_str.isEmpty())
@@ -207,7 +184,6 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
 
         sh->min_mip     = obj.value("min_mip").toDouble();
         sh->max_mip     = obj.value("max_mip").toDouble();
-        sh->name_code   = obj.value("name_code").toInt();
         auto image_name = obj.value("image").toString();
         if (!image_name.isEmpty())
         {
@@ -218,24 +194,6 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           else
             sh->image = image.scaledToWidth(sh->getWidthPix(),
                                             Qt::SmoothTransformation);
-        }
-
-        auto attributes = obj.value("attributes");
-        if (attributes.isArray())
-        {
-          auto attr_array = attributes.toArray();
-          for (auto attr_entry: attr_array)
-          {
-            auto attr_obj = attr_entry.toObject();
-            if (obj.isEmpty())
-              continue;
-            KAttribute attr;
-            attr.code    = attr_obj.value("code").toInt();
-            attr.name    = attr_obj.value("name").toString();
-            attr.visible = attr_obj.value("visible").toBool();
-            attr.max_mip = attr_obj.value("max_mip").toDouble();
-            sh->attributes.append(attr);
-          }
         }
 
         sh->coor_precision_coef =
@@ -252,6 +210,11 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
 KShapeManager::KShapeManager(QString _images_dir)
 {
   images_dir = _images_dir;
+}
+
+KShapeManager::~KShapeManager()
+{
+  qDeleteAll(shapes);
 }
 
 int KShapeManager::getShapeIdxById(QString id)
@@ -272,36 +235,6 @@ KShape KShapeManager::getShapeById(QString id)
     return *shapes.at(idx);
   else
     return KShape();
-}
-
-int KShapeManager::getShapeIdx(int code, QString key,
-                               QStringList attr_names,
-                               QStringList attr_values)
-{
-  for (int idx = -1; auto& sh: shapes)
-  {
-    idx++;
-    bool code_match = true;
-    bool key_match  = true;
-    bool attr_match = true;
-
-    if (sh->pan_code == 0 && sh->pan_key.isEmpty() &&
-        sh->attrname.isEmpty() && sh->attrval.isEmpty())
-      continue;
-
-    if (sh->pan_code > 0 && sh->pan_code != code)
-      code_match = false;
-    if (!sh->pan_key.isEmpty() && sh->pan_key != key)
-      key_match = false;
-    if (!sh->attrname.isEmpty() && !attr_names.contains(sh->attrname))
-      attr_match = false;
-    if (!sh->attrval.isEmpty() && !attr_values.contains(sh->attrval))
-      attr_match = false;
-
-    if (code_match && key_match && attr_match)
-      return idx;
-  }
-  return -1;
 }
 
 QVector<KShape> KShapeManager::getShapes()
