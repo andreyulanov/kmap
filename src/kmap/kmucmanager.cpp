@@ -29,8 +29,10 @@ void KMUCManager::slotInvitationReaction(const QString &roomJid, const QString &
 }
 void KMUCManager::slotRoomAdded(QXmppMucRoom *room)
 {
+    if (room == nullptr) return;
     if (adding_reacton == KMUCManager::AddingReaction::Join)
     {
+        qDebug() << "Muc room " << room->jid() << "added, join...";
         room->join();
     }
 }

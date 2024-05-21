@@ -3,6 +3,8 @@ else:QT += core gui widgets positioning sensors network
 CONFIG += c++2a
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
+QT += qml quick
+
 !linux-buildroot-g++: DEFINES += BUILD_WITH_SENSORS
 !android: DEFINES += BUILD_WITH_XMPP
 
@@ -79,6 +81,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+ KMuc.qml \
  android/AndroidManifest.xml \
  android/build.gradle \
  android/gradle.properties \
@@ -91,4 +94,9 @@ DISTFILES += \
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 RESOURCES += \
- images.qrc
+ images.qrc \
+ qml.qrc
+
+CONFIG += qmltypes
+QML_IMPORT_NAME = ksys.kmap.backend
+QML_IMPORT_MAJOR_VERSION = 1

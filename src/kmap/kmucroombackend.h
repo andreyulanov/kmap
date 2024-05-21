@@ -3,26 +3,59 @@
 
 #include <QObject>
 #include <QString>
+#include <QAbstractListModel>
 #include <QtQml/qqml.h>
+#include <QXmppQt5/QXmppMucManager.h>
 #include <QRegularExpression>
 
-class KMucRoomBackEnd : public QObject
+class KMucRoomsController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString room_jid READ roomJid WRITE setRoomJid NOTIFY roomJidChanged)
-    QML_ELEMENT
 
 public:
-    explicit KMucRoomBackEnd(QObject *parent = nullptr);
+    explicit KMucRoomsController(QObject *parent = nullptr);
     QString roomJid();
     void setRoomJid(QString _room_jid);
+    Q_INVOKABLE void add();
+public slots:
+    void showRoom(QXmppMucRoom*);
 signals:
     void roomJidChanged();
+    void invalidJid();
+    void addRoom(QString room_jid);
 private:
     QString room_jid;
+    bool isJidValid();
     inline static const QRegularExpression jid_regexp{"[^@/<>'\"]*@[^@/<>'\"]*(/[^@/<>'\"])*"}; // FIXME
-    // this regex far from perfect for more
-    // see https://datatracker.ietf.org/doc/html/rfc6122#section-2
+    // this regex far from the perfect one.
+    // For more see https://datatracker.ietf.org/doc/html/rfc6122#section-2
+};
+
+
+/// TODO: update rooms if their subject or name changed
+class KMucRoomsModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    enum Roles {
+        JidRole = Qt::UserRole + 1,
+        NameRole,
+        SubjectRole
+    };
+
+    KMucRoomsModel(QXmppMucManager* _manager, QObject *parent = 0);
+
+    virtual int rowCount(const QModelIndex &parent) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual QHash<int, QByteArray> roleNames() const;
+
+    void setManager(QXmppMucManager* _manager);
+private:
+    QXmppMucManager* manager = nullptr;
+private slots:
+    void roomAddedSlot(QXmppMucRoom*);
 };
 
 

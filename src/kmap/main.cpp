@@ -6,6 +6,9 @@
 #include <QDebug>
 #include <QProcess>
 #include <QStandardPaths>
+#include <QtQuick/QQuickView>
+#include <QtQml/QQmlEngine>
+#include <QQmlContext>
 
 #include "krenderwidget.h"
 #include "kautoscroll.h"
@@ -19,6 +22,7 @@
 #include "kscalelabel.h"
 #include "ksettings.h"
 #include "kstoragemanager.h"
+#include "kmucroombackend.h"
 #ifdef BUILD_WITH_XMPP
   #include "kxmppclient.h"
   #include "kloginwidget.h"
@@ -373,6 +377,21 @@ int main(int argc, char* argv[])
                    &sender, &KPortableObjectSender::setJid);
   QObject::connect(&object_man, &KObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
+
+  QQuickView muc_view;
+  QQmlContext* muc_context = muc_view.engine()->rootContext();
+  KMucRoomsController muc_controller;
+  KMucRoomsModel muc_rooms_model(client.findExtension<QXmppMucManager>());
+  muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
+  muc_context->setContextProperty("_mucBackEnd", &muc_controller);
+  muc_view.setSource(QUrl("qrc:KMuc.qml"));
+  //muc_view.show();
+  QObject::connect(&muc_controller, &KMucRoomsController::addRoom,[client_p = &client](QString room_jid)
+  {
+      qDebug() << "adding muc room" << room_jid;
+      client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
+  });
+
 #endif
   return a.exec();
 }
