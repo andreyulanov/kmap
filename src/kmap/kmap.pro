@@ -9,6 +9,7 @@ QT += qml quick
 !android: DEFINES += BUILD_WITH_XMPP
 
 SOURCES += \
+ ../lib/kbase.cpp \
  ../lib/kdatetime.cpp \
  ../lib/kfreeobject.cpp \
 ../lib/klocker.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 main.cpp
 
 HEADERS += \
+ ../lib/kbase.h \
  ../lib/kdatetime.h \
  ../lib/kfreeobject.h \
 ../lib/klocker.h \
