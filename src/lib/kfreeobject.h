@@ -3,7 +3,8 @@
 
 #include <QFileInfo>
 #include <QUuid>
-#include "kpack.h"
+#include <QMap>
+#include "kshape.h"
 
 struct KFreeObject
 {
@@ -31,15 +32,15 @@ class KFreeObjectManager: public QObject
     Edited
   };
 
-  double           pixel_size_mm = 0;
-  QString          objects_dir;
+  double               pixel_size_mm = 0;
+  QString              objects_dir;
   QVector<KFreeObject> objects;
-  int              edited_object_idx = -1;
-  QVector<QUuid>   selected_guids;
-  QPair<int, int>  moving_point_idx       = {-1, -1};
-  bool             is_creating_new_object = false;
-  QString          getObjectPath(QUuid object_name);
-  QPair<int, int>  getSelectedObjectPointIdxAt(QPoint p0);
+  int                  edited_object_idx = -1;
+  QVector<QUuid>       selected_guids;
+  QPair<int, int>      moving_point_idx       = {-1, -1};
+  bool                 is_creating_new_object = false;
+  QString              getObjectPath(QUuid object_name);
+  QPair<int, int>      getSelectedObjectPointIdxAt(QPoint p0);
 
 signals:
   QPoint   deg2pix(KGeoCoor);
@@ -54,7 +55,8 @@ public:
   KFreeObjectManager(QString objects_dir, double pixel_size_mm);
   void createObject(KShape);
   void removeObject();
-  void paintObject(QPainter* p, KFreeObject obj, PaintMode paint_mode);
+  void paintObject(QPainter* p, KFreeObject obj,
+                   PaintMode paint_mode);
   void onTapped(KGeoCoor coor);
   void paint(QPainter*);
   void acceptObject();

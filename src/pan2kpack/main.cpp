@@ -9,6 +9,14 @@
 #include <QDir>
 #include <QDebug>
 
+struct KAttribute
+{
+  QString name;
+  int     code;
+  bool    visible;
+  double  max_mip;
+};
+
 bool isVectorMap(QString path)
 {
   int dot_pos = path.lastIndexOf('.');

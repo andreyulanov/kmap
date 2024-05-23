@@ -5,13 +5,69 @@
 #include <QColor>
 #include <QPixmap>
 #include <QFile>
+#include <QPainter>
+#include "kdatetime.h"
 
-struct KAttribute
+namespace kmath
 {
-  QString name;
-  int     code;
-  bool    visible;
-  double  max_mip;
+constexpr double earth_r = 6378137;
+double           deg2rad(double deg);
+double           rad2deg(double rad);
+double           getDistance(QPoint p1, QPoint p2);
+double           getAngle(QPoint p1, QPoint p2);
+double           sqr(double x);
+int              getPolylinePointIdxAt(QPoint p0, QPolygon polyline,
+                                       int tolerance_pix);
+bool isNearPolyline(const QPoint& p0, const QPolygon& polyline,
+                    int tolerance_pix);
+}
+
+class KGeoCoor
+{
+  friend struct KGeoRect;
+  friend struct KGeoPolygon;
+  int                     lat            = 0;
+  int                     lon            = 0;
+  static constexpr double wrap_longitude = -168.5;
+
+public:
+  KGeoCoor();
+  KGeoCoor(int lat, int lon);
+  static KGeoCoor fromDegs(double lat, double lon);
+  static KGeoCoor fromMeters(QPointF m);
+  QPointF         toMeters() const;
+  double          longitude() const;
+  double          latitude() const;
+  bool            isValid();
+  KGeoCoor        inc(KGeoCoor step) const;
+  KGeoCoor        wrapped() const;
+  bool            needToWrap();
+};
+
+struct KPosition
+{
+  KGeoCoor  coor;
+  float     altitude;
+  KDateTime dt;
+};
+
+struct KGeoRect
+{
+  KGeoCoor top_left;
+  KGeoCoor bottom_right;
+  KGeoRect united(const KGeoRect&) const;
+  bool     isNull() const;
+  QRectF   toMeters() const;
+  QSizeF   getSizeMeters() const;
+  QRectF   toRectM() const;
+};
+
+struct KGeoPolygon: public QVector<KGeoCoor>
+{
+  KGeoRect getFrame();
+  void     save(QByteArray& ba, int coor_precision_coef);
+  void load(const QByteArray& ba, int& pos, int coor_precision_coef);
+  QPolygonF toPolygonM();
 };
 
 struct KShape
@@ -74,8 +130,6 @@ struct KShapeManager: public QObject
   QString          images_dir;
   KShapeManager(QString image_dir = QString());
   virtual ~KShapeManager();
-  int    getShapeIdx(int code, QString key, QStringList attr_names,
-                     QStringList attr_values);
   int    getShapeIdxById(QString id);
   KShape getShapeById(QString id);
   void   loadShapes(QString path, QString images_dir = QString());
