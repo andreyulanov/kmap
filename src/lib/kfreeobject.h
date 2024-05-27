@@ -4,19 +4,38 @@
 #include <QFileInfo>
 #include <QUuid>
 #include <QMap>
+#include <QVariant>
 #include "kshape.h"
 
 struct KFreeObject
 {
-  KShape                    shape;
-  QUuid                     guid;
-  QString                   name;
-  QVector<KGeoPolygon>      polygons;
-  QMap<QString, QByteArray> attr;
-  void                      save(QString path);
-  void                      load(QString path, double pixel_size_mm);
-  bool                      isEmpty();
-  int                       getWidthPix(double pixel_size_mm);
+  struct Attribute
+  {
+    enum Type : uchar
+    {
+      Int,
+      Double,
+      String,
+      File
+    };
+
+    Type       type;
+    QString    name;
+    float      min_mip;
+    float      max_mip;
+    QByteArray data;
+  };
+
+  QUuid guid;
+
+  KShape               shape;
+  QVector<KGeoPolygon> polygons;
+  QVector<Attribute>   attributes;
+
+  void save(QString path);
+  void load(QString path, double pixel_size_mm);
+  bool isEmpty();
+  int  getWidthPix(double pixel_size_mm);
 };
 
 class KFreeObjectManager: public QObject

@@ -17,8 +17,6 @@ void KFreeObject::save(QString path)
   using namespace KSerialize;
 
   shape.save(&f);
-  write(&f, guid);
-  write(&f, name);
   write(&f, polygons.count());
   for (auto polygon: polygons)
   {
@@ -26,7 +24,15 @@ void KFreeObject::save(QString path)
     for (auto point: polygon)
       write(&f, point);
   }
-  write(&f, attr);
+  write(&f, attributes.count());
+  for (auto attr: attributes)
+  {
+    write(&f, attr.type);
+    write(&f, attr.name);
+    write(&f, attr.min_mip);
+    write(&f, attr.max_mip);
+    write(&f, attr.data);
+  }
 }
 
 void KFreeObject::load(QString path, double pixel_size_mm)
@@ -41,8 +47,6 @@ void KFreeObject::load(QString path, double pixel_size_mm)
   using namespace KSerialize;
 
   shape.load(&f, pixel_size_mm);
-  read(&f, guid);
-  read(&f, name);
   int n;
   read(&f, n);
   polygons.resize(n);
@@ -53,7 +57,16 @@ void KFreeObject::load(QString path, double pixel_size_mm)
     for (auto& point: polygon)
       read(&f, point);
   }
-  read(&f, attr);
+  read(&f, n);
+  attributes.resize(n);
+  for (auto& attr: attributes)
+  {
+    read(&f, attr.type);
+    read(&f, attr.name);
+    read(&f, attr.min_mip);
+    read(&f, attr.max_mip);
+    read(&f, attr.data);
+  }
 }
 
 bool KFreeObject::isEmpty()
@@ -236,7 +249,6 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
     auto& obj = objects[edited_object_idx];
     if (obj.polygons.isEmpty())
     {
-      obj.name = "object1";
       KGeoPolygon polygon;
       polygon.append(coor);
       obj.polygons.append(polygon);
@@ -274,7 +286,6 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
   auto  type = obj.shape.type;
   if (type == KShape::Point)
   {
-    obj.name = "object1";
     KGeoPolygon poly;
     poly.append(coor);
     obj.polygons.append(poly);
@@ -285,7 +296,6 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
   {
     if (obj.isEmpty())
     {
-      obj.name = "object1";
       KGeoPolygon polygon;
       polygon.append(coor);
       obj.polygons.append(polygon);
