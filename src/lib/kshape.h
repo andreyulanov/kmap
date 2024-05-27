@@ -53,21 +53,36 @@ struct KShapeImage
 
 typedef QVector<KShapeImage> KShapeImageList;
 
-struct KShapeManager: public QObject
+class KShapeManager: public QObject
 {
   double           main_mip                    = 0;
   double           tile_mip                    = 0;
   int              default_coor_precision_coef = 1;
-  QVector<KShape*> shapes;
-  QString          error_str;
   QString          images_dir;
+  QVector<KShape*> shapes;
+
+protected:
+  QString error_str;
+
+public:
   KShapeManager(QString image_dir = QString());
   virtual ~KShapeManager();
   int    getShapeIdxById(QString id);
   KShape getShapeById(QString id);
   void   loadShapes(QString path, QString images_dir = QString());
-  KShapeImageList getShapeImageList();
-  QVector<KShape> getShapes();
+  KShapeImageList  getShapeImageList();
+  QVector<KShape*> getShapes();
+
+  void   setMainMip(double);
+  double getMainMip();
+
+  void   setTileMip(double);
+  double getTileMip();
+
+  void   setDefaultCoorPrecisionCoef(double);
+  double getDefaultCoorPrecisionCoef();
+
+  QString getErrorStr();
 };
 
 #endif  // KSHAPE_H

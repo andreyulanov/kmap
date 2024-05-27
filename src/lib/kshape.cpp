@@ -237,15 +237,9 @@ KShape KShapeManager::getShapeById(QString id)
     return KShape();
 }
 
-QVector<KShape> KShapeManager::getShapes()
+QVector<KShape*> KShapeManager::getShapes()
 {
-  QVector<KShape> ret;
-  for (auto sh1: shapes)
-  {
-    auto sh2 = *sh1;
-    ret.append(sh2);
-  }
-  return ret;
+  return shapes;
 }
 
 KShapeImageList KShapeManager::getShapeImageList()
@@ -254,4 +248,39 @@ KShapeImageList KShapeManager::getShapeImageList()
   for (auto sh: shapes)
     ret.append({sh->id, sh->image});
   return ret;
+}
+
+void KShapeManager::setMainMip(double v)
+{
+  main_mip = v;
+}
+
+double KShapeManager::getMainMip()
+{
+  return main_mip;
+}
+
+void KShapeManager::setTileMip(double v)
+{
+  tile_mip = v;
+}
+
+double KShapeManager::getTileMip()
+{
+  return tile_mip;
+}
+
+void KShapeManager::setDefaultCoorPrecisionCoef(double v)
+{
+  default_coor_precision_coef = v;
+}
+
+double KShapeManager::getDefaultCoorPrecisionCoef()
+{
+  return default_coor_precision_coef;
+}
+
+QString KShapeManager::getErrorStr()
+{
+  return error_str;
 }

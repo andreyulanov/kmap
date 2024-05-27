@@ -100,23 +100,23 @@ void KPanShapeManager::loadShapes(QString path, QString images_dir)
         auto obj = json_val.toObject();
         if (obj.isEmpty())
           continue;
-        auto _main_mip = obj.value("main_mip").toDouble();
-        if (_main_mip > 0)
+        auto main_mip = obj.value("main_mip").toDouble();
+        if (main_mip > 0)
         {
-          main_mip = _main_mip;
+          setMainMip(main_mip);
           continue;
         }
-        auto _tile_mip = obj.value("tile_mip").toDouble();
-        if (_tile_mip > 0)
+        auto tile_mip = obj.value("tile_mip").toDouble();
+        if (tile_mip > 0)
         {
-          tile_mip = _tile_mip;
+          setTileMip(tile_mip);
           continue;
         }
-        auto _coor_precision_coef =
+        auto default_coor_precision_coef =
             obj.value("default_coor_precision_coef").toInt();
-        if (_coor_precision_coef > 0)
+        if (default_coor_precision_coef > 0)
         {
-          default_coor_precision_coef = _coor_precision_coef;
+          setDefaultCoorPrecisionCoef(default_coor_precision_coef);
           continue;
         }
 
@@ -277,21 +277,21 @@ int main(int argc, char* argv[])
   KShapeManager shape_man(argv[1]);
   shape_man.loadShapes(QString(argv[1]) + "/" + argv[2],
                        QString(argv[1]) + "/images");
-  auto shape_list = &shape_man.shapes;
+  auto shape_list = shape_man.getShapes();
 
   KPanShapeManager pan_shape_man(argv[1]);
   pan_shape_man.loadShapes(QString(argv[1]) + "/" + argv[2],
                            QString(argv[1]) + "/images");
   auto pan_shape_list = &pan_shape_man.pan_shapes;
 
-  auto str = pan_shape_man.error_str;
+  auto str = pan_shape_man.getErrorStr();
   if (!str.isEmpty())
   {
     qDebug() << "ERROR: shape manager error:" << str;
     return -1;
   }
 
-  if (shape_list->isEmpty())
+  if (shape_list.isEmpty())
   {
     qDebug() << "ERROR: empty shape list!";
     return -1;
@@ -374,9 +374,9 @@ int main(int argc, char* argv[])
                     "borders!";
     }
 
-    map.setShapes(*shape_list);
-    map.setMainMip(shape_man.main_mip);
-    map.setTileMip(shape_man.tile_mip);
+    map.setShapes(shape_list);
+    map.setMainMip(shape_man.getMainMip());
+    map.setTileMip(shape_man.getTileMip());
     QVector<KPackObject*> obj_list;
     DFRAME                df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
@@ -482,7 +482,7 @@ int main(int argc, char* argv[])
       KPackObject* obj = new KPackObject;
       obj->name        = name;
 
-      obj->shape = (*shape_list)[shape_idx];
+      obj->shape = shape_list[shape_idx];
 
       for (auto attr: pan_shape->attributes)
       {
@@ -576,7 +576,7 @@ int main(int argc, char* argv[])
           if (obj->polygons.count() > 20)
           {
             auto idx   = shape_man.getShapeIdxById("complex_water");
-            obj->shape = (*shape_list)[idx];
+            obj->shape = shape_list[idx];
           }
         }
 
