@@ -66,13 +66,16 @@ struct KPanShape: public KShape
   QVector<KAttribute> attributes;
 };
 
-struct KPanShapeManager: public KShapeManager
+class KPanShapeManager: public KShapeManager
 {
-  KPanShapeManager(QString image_dir = QString());
   QVector<KPanShape*> pan_shapes;
+
+public:
+  KPanShapeManager(QString image_dir = QString());
   void loadShapes(QString path, QString images_dir = QString());
   int  getShapeIdx(int code, QString key, QStringList attr_names,
                    QStringList attr_values);
+  QVector<KPanShape*> getShapes();
 };
 
 KPanShapeManager::KPanShapeManager(QString image_dir):
@@ -237,6 +240,11 @@ void KPanShapeManager::loadShapes(QString path, QString images_dir)
   }
 }
 
+QVector<KPanShape*> KPanShapeManager::getShapes()
+{
+  return pan_shapes;
+}
+
 int KPanShapeManager::getShapeIdx(int code, QString key,
                                   QStringList attr_names,
                                   QStringList attr_values)
@@ -282,7 +290,7 @@ int main(int argc, char* argv[])
   KPanShapeManager pan_shape_man(argv[1]);
   pan_shape_man.loadShapes(QString(argv[1]) + "/" + argv[2],
                            QString(argv[1]) + "/images");
-  auto pan_shape_list = &pan_shape_man.pan_shapes;
+  auto pan_shape_list = pan_shape_man.getShapes();
 
   auto str = pan_shape_man.getErrorStr();
   if (!str.isEmpty())
@@ -454,7 +462,7 @@ int main(int argc, char* argv[])
           continue;
       }
 
-      auto pan_shape = pan_shape_list->at(shape_idx);
+      auto pan_shape = pan_shape_list.at(shape_idx);
 
       if (pan_shape->type == KShape::None)
         continue;
