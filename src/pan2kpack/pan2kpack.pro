@@ -11,6 +11,7 @@ SOURCES += \
     ../lib/klocker.cpp \
     ../lib/kpack.cpp \
     ../lib/kclass.cpp \
+    kpanclassmanager.cpp \
     main.cpp
 
 HEADERS += \
@@ -19,6 +20,8 @@ HEADERS += \
     ../lib/kpack.h \
     ../lib/kserialize.h \
     ../lib/kclass.h \
+ kpanclass.h \
+ kpanclassmanager.h
 
 
 
