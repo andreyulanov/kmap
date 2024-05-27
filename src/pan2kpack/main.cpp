@@ -69,7 +69,7 @@ struct KPanShape: public KShape
 struct KPanShapeManager: public KShapeManager
 {
   KPanShapeManager(QString image_dir = QString());
-  QVector<KPanShape*> shapes;
+  QVector<KPanShape*> pan_shapes;
   void loadShapes(QString path, QString images_dir = QString());
   int  getShapeIdx(int code, QString key, QStringList attr_names,
                    QStringList attr_values);
@@ -231,7 +231,7 @@ void KPanShapeManager::loadShapes(QString path, QString images_dir)
         if (sh->coor_precision_coef == 0)
           sh->coor_precision_coef = default_coor_precision_coef;
 
-        shapes.append(sh);
+        pan_shapes.append(sh);
       }
     }
   }
@@ -241,7 +241,7 @@ int KPanShapeManager::getShapeIdx(int code, QString key,
                                   QStringList attr_names,
                                   QStringList attr_values)
 {
-  for (int idx = -1; auto& sh: shapes)
+  for (int idx = -1; auto& sh: pan_shapes)
   {
     idx++;
     bool code_match = true;
@@ -282,7 +282,7 @@ int main(int argc, char* argv[])
   KPanShapeManager pan_shape_man(argv[1]);
   pan_shape_man.loadShapes(QString(argv[1]) + "/" + argv[2],
                            QString(argv[1]) + "/images");
-  auto pan_shape_list = &pan_shape_man.shapes;
+  auto pan_shape_list = &pan_shape_man.pan_shapes;
 
   auto str = pan_shape_man.error_str;
   if (!str.isEmpty())
