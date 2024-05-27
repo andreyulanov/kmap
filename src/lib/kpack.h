@@ -12,15 +12,15 @@
 
 struct KPackObject
 {
-  KClass*                   shape;
+  KClass*                   cl;
   QString                   name;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
   QRectF                    tile_frame_m;
   QVector<KGeoPolygon*>     polygons;
   KGeoCoor                  getCenter();
-  void save(const QVector<KClass*>* shape_list, QByteArray& ba);
-  void load(QVector<KClass*>* shape_list, int& pos,
+  void save(const QVector<KClass*>* class_list, QByteArray& ba);
+  void load(QVector<KClass*>* class_list, int& pos,
             const QByteArray& ba);
   virtual ~KPackObject();
 };
@@ -51,7 +51,7 @@ class KPack
   double  tile_mip = 0;
 
 protected:
-  QVector<KClass*>            shapes;
+  QVector<KClass*>            classes;
   KGeoRect                    frame;
   QVector<QPolygonF>          borders_m;
   QVector<KGeoPolygon>        borders;
@@ -120,7 +120,7 @@ public:
   KEditablePack(const QString& path);
   void addObjects(const QVector<KPackObject*>& obj_list,
                   int                          max_objects_per_tile);
-  void setShapes(QVector<KClass*>);
+  void setClasses(QVector<KClass*>);
   void addBorder(KGeoPolygon);
 };
 

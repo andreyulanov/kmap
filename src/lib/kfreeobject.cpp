@@ -16,7 +16,7 @@ void KFreeObject::save(QString path)
 
   using namespace KSerialize;
 
-  shape.save(&f);
+  cl.save(&f);
   write(&f, polygons.count());
   for (auto polygon: polygons)
   {
@@ -46,7 +46,7 @@ void KFreeObject::load(QString path, double pixel_size_mm)
 
   using namespace KSerialize;
 
-  shape.load(&f, pixel_size_mm);
+  cl.load(&f, pixel_size_mm);
   int n;
   read(&f, n);
   polygons.resize(n);
@@ -76,7 +76,7 @@ bool KFreeObject::isEmpty()
 
 int KFreeObject::getWidthPix(double pixel_size_mm)
 {
-  return round(shape.width_mm / pixel_size_mm);
+  return round(cl.width_mm / pixel_size_mm);
 }
 
 KFreeObjectManager::KFreeObjectManager(QString _objects_dir,
@@ -132,7 +132,7 @@ void KFreeObjectManager::removeObject()
 void KFreeObjectManager::createObject(KClass sh)
 {
   KFreeObject obj;
-  obj.shape = sh;
+  obj.cl = sh;
   objects.append(obj);
   edited_object_idx      = objects.count() - 1;
   is_creating_new_object = true;
@@ -145,9 +145,9 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
     return;
 
   auto w = obj.getWidthPix(pixel_size_mm);
-  if (obj.shape.type == KClass::Point)
+  if (obj.cl.type == KClass::Point)
   {
-    auto& img = obj.shape.image;
+    auto& img = obj.cl.image;
     auto  pix = deg2pix(obj.polygons.first().first());
     if (img.isNull())
       p->drawEllipse(pix, w, w);
@@ -160,15 +160,15 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
       {
         p->setPen(Qt::NoPen);
         p->setBrush(Qt::yellow);
-        p->drawEllipse(QRect{pos, obj.shape.image.size()}.adjusted(
+        p->drawEllipse(QRect{pos, obj.cl.image.size()}.adjusted(
             -w / 2, -w / 2, w / 2, w / 2));
       }
-      p->drawImage(pos, obj.shape.image);
+      p->drawImage(pos, obj.cl.image);
     }
     return;
   }
 
-  if (obj.shape.type == KClass::Line)
+  if (obj.cl.type == KClass::Line)
   {
     for (auto polygon: obj.polygons)
     {
@@ -180,7 +180,7 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
         p->setPen(QPen(Qt::yellow, w * 2, Qt::SolidLine, Qt::RoundCap,
                        Qt::RoundJoin));
       else
-        p->setPen(QPen(obj.shape.pen, w, Qt::SolidLine, Qt::RoundCap,
+        p->setPen(QPen(obj.cl.pen, w, Qt::SolidLine, Qt::RoundCap,
                        Qt::RoundJoin));
       p->drawPolyline(polygon_pix);
       if (paint_mode == PaintMode::Edited)
@@ -195,11 +195,11 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
       }
     }
   }
-  if (obj.shape.type == KClass::Polygon)
+  if (obj.cl.type == KClass::Polygon)
   {
     int    w     = obj.getWidthPix(pixel_size_mm);
-    QPen   pen   = QPen(obj.shape.pen, w);
-    QBrush brush = QBrush(obj.shape.brush);
+    QPen   pen   = QPen(obj.cl.pen, w);
+    QBrush brush = QBrush(obj.cl.brush);
     for (auto polygon: obj.polygons)
     {
       QPolygon polygon_pix;
@@ -283,7 +283,7 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
   if (edited_object_idx < 0)
     return;
   auto& obj  = objects[edited_object_idx];
-  auto  type = obj.shape.type;
+  auto  type = obj.cl.type;
   if (type == KClass::Point)
   {
     KGeoPolygon poly;
@@ -449,13 +449,13 @@ int KFreeObjectManager::getObjectIdxAt(QPoint p0)
   for (int idx = -1; auto obj: objects)
   {
     idx++;
-    if (obj.shape.type == KClass::Point)
+    if (obj.cl.type == KClass::Point)
     {
       auto point_pos = deg2pix(obj.polygons.first().first());
       if ((point_pos - p0).manhattanLength() < proximity_pix)
         return idx;
     }
-    if (obj.shape.type == KClass::Line)
+    if (obj.cl.type == KClass::Line)
     {
       for (auto polygon: obj.polygons)
       {
@@ -466,7 +466,7 @@ int KFreeObjectManager::getObjectIdxAt(QPoint p0)
           return idx;
       }
     }
-    if (obj.shape.type == KClass::Polygon)
+    if (obj.cl.type == KClass::Polygon)
     {
       for (auto polygon: obj.polygons)
       {

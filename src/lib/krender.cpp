@@ -294,7 +294,7 @@ void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
       p->restore();
     }
 
-  p->setPen(dte.shape->tcolor);
+  p->setPen(dte.cl->tcolor);
   p->drawText(dte.rect,
               dte.alignment | Qt::TextWordWrap | Qt::TextDontClip,
               dte.text);
@@ -333,7 +333,7 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
   if (!render_frame_m.contains(coor_m))
     return;
 
-  auto sh = obj->shape;
+  auto sh = obj->cl;
   p->setPen(QPen(sh->pen, 2));
   p->setBrush(sh->brush);
   auto        kpos       = obj->polygons.first()->first();
@@ -347,8 +347,8 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
   }
 
   auto rect =
-      QRect{pos.x(), pos.y(), max_length * obj->shape->getWidthPix(),
-            str_list.count() * obj->shape->getWidthPix()};
+      QRect{pos.x(), pos.y(), max_length * obj->cl->getWidthPix(),
+            str_list.count() * obj->cl->getWidthPix()};
 
   bool intersects = false;
   for (auto item: point_names[render_idx])
@@ -401,7 +401,7 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
                              pow(obj_frame_m.height(), 2));
   int    obj_span_pix = obj_span_m / render_mip;
 
-  auto sh = obj->shape;
+  auto sh = obj->cl;
   if (sh->pen == Qt::black)
     p->setPen(Qt::NoPen);
   else
@@ -431,7 +431,7 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
                                  pixmap_size.height() / 2) &&
          obj_span_pix >
              max_object_size_with_name_mm / pixel_size_mm) ||
-        !obj->shape->image.isNull())
+        !obj->cl->image.isNull())
     {
 
       QPoint top_left_pix     = deg2pix(obj->frame.top_left);
@@ -480,7 +480,7 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  auto sh = obj->shape;
+  auto sh = obj->cl;
 
   Qt::PenStyle style = Qt::SolidLine;
   if (sh->style == KClass::Dash)
@@ -655,16 +655,14 @@ bool KRender::isCluttering(const QRect& rect)
 
 bool KRender::checkMipRange(const KPackObject* obj)
 {
-  return (obj->shape->min_mip == 0 ||
-          render_mip >= obj->shape->min_mip) &&
-         (obj->shape->max_mip == 0 ||
-          render_mip <= obj->shape->max_mip);
+  return (obj->cl->min_mip == 0 || render_mip >= obj->cl->min_mip) &&
+         (obj->cl->max_mip == 0 || render_mip <= obj->cl->max_mip);
 }
 
 bool KRender::paintObject(QPainter* p, const KPackObject* obj,
                           int render_idx, int line_iter)
 {
-  switch (obj->shape->type)
+  switch (obj->cl->type)
   {
   case KClass::Point:
     paintPointObject(p, obj, render_idx);
@@ -705,7 +703,7 @@ bool KRender::paintPointNames(QPainter* p)
     for (auto item: point_names[render_idx])
     {
       auto pos = item.rect.topLeft();
-      auto w   = item.shape->getWidthPix();
+      auto w   = item.cl->getWidthPix();
       if (w > 0)
       {
         p->save();
@@ -716,16 +714,16 @@ bool KRender::paintPointNames(QPainter* p)
         for (auto str: item.str_list)
         {
           p->translate(
-              QPoint(item.shape->image.width() * 0.8, -w * 0.3));
-          paintPointName(p, str, item.shape->tcolor);
+              QPoint(item.cl->image.width() * 0.8, -w * 0.3));
+          paintPointName(p, str, item.cl->tcolor);
         }
         p->restore();
       }
-      if (item.shape)
+      if (item.cl)
       {
-        auto pos2 = QPoint{pos.x() - item.shape->image.width() / 2,
-                           pos.y() - item.shape->image.height() / 2};
-        p->drawImage(pos2, item.shape->image);
+        auto pos2 = QPoint{pos.x() - item.cl->image.width() / 2,
+                           pos.y() - item.cl->image.height() / 2};
+        p->drawImage(pos2, item.cl->image);
       }
       else
         p->drawEllipse(pos, int(1.0 / pixel_size_mm),
@@ -768,7 +766,7 @@ bool KRender::paintLineNames(QPainter* p)
 
       p->setTransform(tr);
       text_rect_array.append(mapped_rect);
-      paintOutlinedText(p, nh.obj->name, nh.obj->shape->tcolor);
+      paintOutlinedText(p, nh.obj->name, nh.obj->cl->tcolor);
       p->restore();
       if (!canContinue())
         return false;
@@ -795,17 +793,17 @@ bool KRender::paintPolygonNames(QPainter* p)
         continue;
       paintOutlinedText(p, dte);
 
-      if (!dte.shape->image.isNull() &&
-          dte.rect.width() > dte.shape->image.width() * 2 &&
-          dte.rect.height() > dte.shape->image.height() * 2)
+      if (!dte.cl->image.isNull() &&
+          dte.rect.width() > dte.cl->image.width() * 2 &&
+          dte.rect.height() > dte.cl->image.height() * 2)
       {
         auto obj_center = dte.rect.center();
         auto pos =
-            QPoint{obj_center.x() - dte.shape->image.width() / 2,
-                   obj_center.y() - dte.shape->image.height() / 2};
+            QPoint{obj_center.x() - dte.cl->image.width() / 2,
+                   obj_center.y() - dte.cl->image.height() / 2};
         if (!dte.text.isEmpty())
-          pos -= QPoint(0, dte.shape->getWidthPix() + 5);
-        p->drawImage(pos, dte.shape->image);
+          pos -= QPoint(0, dte.cl->getWidthPix() + 5);
+        p->drawImage(pos, dte.cl->image);
       }
 
       text_rect_array.append(dte.rect);
@@ -862,11 +860,11 @@ void KRender::renderMap(QPainter* p, KRenderPack* map, int render_idx,
       if (!obj)
         continue;
 
-      if (obj->shape->type != KClass::Line && line_iter == 1)
+      if (obj->cl->type != KClass::Line && line_iter == 1)
         continue;
 
-      if (obj->shape->type == KClass::Line && line_iter == 0 &&
-          obj->shape->brush == Qt::black)
+      if (obj->cl->type == KClass::Line && line_iter == 0 &&
+          obj->cl->brush == Qt::black)
         continue;
 
       if (!checkMipRange(obj))

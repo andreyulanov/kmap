@@ -28,7 +28,7 @@ struct KFreeObject
 
   QUuid guid;
 
-  KClass               shape;
+  KClass               cl;
   QVector<KGeoPolygon> polygons;
   QVector<Attribute>   attributes;
 

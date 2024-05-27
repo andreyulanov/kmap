@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 
   auto path_list = dir.entryList();
   for (auto path: path_list)
-    user_shape_man.loadShapes(storage_man.classPath() + "/" + path,
+    user_shape_man.loadClasses(storage_man.classPath() + "/" + path,
                               storage_man.classPath());
 
   QObject::connect(&editw, &KEditWidget::saveTrack, &track_man,
@@ -209,11 +209,11 @@ int main(int argc, char* argv[])
 
   QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
                    &user_shape_man,
-                   &KClassManager::getShapeImageList);
+                   &KClassManager::getClassImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
                    &object_man, &KFreeObjectManager::createObject);
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
-                   &user_shape_man, &KClassManager::getShapeById);
+                   &user_shape_man, &KClassManager::getClassById);
 
   QObject::connect(&renderw, &KRenderWidget::zoomFinished, &controls,
                    &KControls::checkZoomRepeat);

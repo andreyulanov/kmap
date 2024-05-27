@@ -73,7 +73,7 @@ void KClass::load(QFile* f, double _pixel_size_mm)
         img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
 }
 
-void KClassManager::loadShapes(QString path, QString images_dir)
+void KClassManager::loadClasses(QString path, QString images_dir)
 {
   QFile         f(path);
   QSet<QString> id_set;
@@ -217,7 +217,7 @@ KClassManager::~KClassManager()
   qDeleteAll(classes);
 }
 
-int KClassManager::getShapeIdxById(QString id)
+int KClassManager::getClassIdxById(QString id)
 {
   for (int i = -1; auto sh: classes)
   {
@@ -228,21 +228,21 @@ int KClassManager::getShapeIdxById(QString id)
   return -1;
 }
 
-KClass KClassManager::getShapeById(QString id)
+KClass KClassManager::getClassById(QString id)
 {
-  auto idx = getShapeIdxById(id);
+  auto idx = getClassIdxById(id);
   if (idx >= 0)
     return *classes.at(idx);
   else
     return KClass();
 }
 
-QVector<KClass*> KClassManager::getShapes()
+QVector<KClass*> KClassManager::getClasses()
 {
   return classes;
 }
 
-KShapeImageList KClassManager::getShapeImageList()
+KClassImageList KClassManager::getClassImageList()
 {
   QVector<KClassImage> ret;
   for (auto sh: classes)

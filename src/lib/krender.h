@@ -14,7 +14,7 @@ class KRender: public QThread
   struct DrawTextEntry
   {
     QString       text;
-    KClass*       shape;
+    KClass*       cl;
     QRect         rect;
     QRect         actual_rect;
     Qt::Alignment alignment;
@@ -37,7 +37,7 @@ class KRender: public QThread
   {
     QRect       rect;
     QStringList str_list;
-    KClass*     shape;
+    KClass*     cl;
   };
 
   Q_OBJECT

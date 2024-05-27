@@ -51,7 +51,7 @@ struct KClassImage
   QImage  image;
 };
 
-typedef QVector<KClassImage> KShapeImageList;
+typedef QVector<KClassImage> KClassImageList;
 
 class KClassManager: public QObject
 {
@@ -67,11 +67,11 @@ protected:
 public:
   KClassManager(QString image_dir = QString());
   virtual ~KClassManager();
-  int    getShapeIdxById(QString id);
-  KClass getShapeById(QString id);
-  void   loadShapes(QString path, QString images_dir = QString());
-  KShapeImageList  getShapeImageList();
-  QVector<KClass*> getShapes();
+  int    getClassIdxById(QString id);
+  KClass getClassById(QString id);
+  void   loadClasses(QString path, QString images_dir = QString());
+  KClassImageList  getClassImageList();
+  QVector<KClass*> getClasses();
 
   void   setMainMip(double);
   double getMainMip();

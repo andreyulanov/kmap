@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-void KPackObject::load(QVector<KClass*>* shape_list, int& pos,
+void KPackObject::load(QVector<KClass*>* class_list, int& pos,
                        const QByteArray& ba)
 {
   using namespace KSerialize;
@@ -21,7 +21,7 @@ void KPackObject::load(QVector<KClass*>* shape_list, int& pos,
 
   int shape_idx;
   read(ba, pos, shape_idx);
-  shape = (*shape_list)[shape_idx];
+  cl = (*class_list)[shape_idx];
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -50,7 +50,7 @@ void KPackObject::load(QVector<KClass*>* shape_list, int& pos,
     for (std::size_t i = 0; auto& polygon: polygons)
     {
       polygon = new KGeoPolygon;
-      polygon->load(ba, pos, shape->coor_precision_coef);
+      polygon->load(ba, pos, cl->coor_precision_coef);
       if (i++ == 0)
         frame = polygon->getFrame();
       else
@@ -61,7 +61,7 @@ void KPackObject::load(QVector<KClass*>* shape_list, int& pos,
   {
     polygons.resize(1);
     auto polygon = new KGeoPolygon;
-    polygon->load(ba, pos, shape->coor_precision_coef);
+    polygon->load(ba, pos, cl->coor_precision_coef);
     polygons[0] = polygon;
     frame       = polygon->getFrame();
   }
@@ -82,7 +82,7 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-void KPackObject::save(const QVector<KClass*>* shape_list,
+void KPackObject::save(const QVector<KClass*>* class_list,
                        QByteArray&             ba)
 {
   using namespace KSerialize;
@@ -92,7 +92,7 @@ void KPackObject::save(const QVector<KClass*>* shape_list,
 
   write(ba, attributes);
 
-  auto shape_idx = shape_list->indexOf(shape);
+  auto shape_idx = class_list->indexOf(cl);
   write(ba, shape_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));
@@ -104,12 +104,12 @@ void KPackObject::save(const QVector<KClass*>* shape_list,
   }
 
   if (polygons.count() == 1)
-    polygons[0]->save(ba, shape->coor_precision_coef);
+    polygons[0]->save(ba, cl->coor_precision_coef);
   else
   {
     write(ba, polygons.count());
     for (auto& polygon: polygons)
-      polygon->save(ba, shape->coor_precision_coef);
+      polygon->save(ba, cl->coor_precision_coef);
   }
 }
 
@@ -184,13 +184,13 @@ void KPack::add(KPack* m)
   frame = frame.united(m->frame);
   for (auto new_obj: m->main)
   {
-    auto new_sh = new_obj->shape;
+    auto new_sh = new_obj->cl;
     bool found  = false;
-    for (auto sh: shapes)
+    for (auto sh: classes)
       if (new_sh->id == sh->id)
       {
-        new_obj->shape = sh;
-        found          = true;
+        new_obj->cl = sh;
+        found       = true;
         break;
       }
     if (!found)
@@ -218,8 +218,8 @@ void KPack::clear()
     }
   }
   tiles.clear();
-  shapes.clear();
-  qDeleteAll(shapes);
+  classes.clear();
+  qDeleteAll(classes);
   main.status = KObjectCollection::Null;
 }
 
@@ -256,8 +256,8 @@ void KPack::save(QString new_path) const
 
   write(&f, main_mip);
   write(&f, tile_mip);
-  write(&f, shapes.count());
-  for (auto& shape: shapes)
+  write(&f, classes.count());
+  for (auto& shape: classes)
     shape->save(&f);
 
   QByteArray ba;
@@ -269,7 +269,7 @@ void KPack::save(QString new_path) const
   ba.clear();
 
   for (auto& obj: main)
-    obj->save(&shapes, ba);
+    obj->save(&classes, ba);
   ba = qCompress(ba, 9);
   write(&f, ba.count());
   f.write(ba.data(), ba.count());
@@ -284,7 +284,7 @@ void KPack::save(QString new_path) const
       write(&f, part->count());
       ba.clear();
       for (auto& obj: *part)
-        obj->save(&shapes, ba);
+        obj->save(&classes, ba);
       ba = qCompress(ba, 9);
       write(&f, ba.count());
       f.write(ba.data(), ba.count());
@@ -357,8 +357,8 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   main.status = KObjectCollection::Loading;
   int shape_count;
   read(&f, shape_count);
-  shapes.resize(shape_count);
-  for (auto& shape: shapes)
+  classes.resize(shape_count);
+  for (auto& shape: classes)
   {
     shape = new KClass;
     shape->load(&f, pixel_size_mm);
@@ -387,7 +387,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   for (auto& obj: main)
   {
     obj = new KPackObject;
-    obj->load(&shapes, pos, ba);
+    obj->load(&classes, pos, ba);
   }
   int small_count;
   read(&f, small_count);
@@ -466,7 +466,7 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   for (auto& obj: *tiles[tile_idx])
   {
     obj = new KPackObject;
-    obj->load(&shapes, pos, ba);
+    obj->load(&classes, pos, ba);
     obj->tile_frame_m = tile_rect_m;
   }
 }
@@ -520,9 +520,9 @@ KEditablePack::KEditablePack(const QString& path): KPack(path)
 {
 }
 
-void KEditablePack::setShapes(QVector<KClass*> v)
+void KEditablePack::setClasses(QVector<KClass*> v)
 {
-  shapes = v;
+  classes = v;
 }
 
 void KEditablePack::addBorder(KGeoPolygon v)
@@ -543,8 +543,7 @@ void KEditablePack::addObjects(const QVector<KPackObject*>& obj_list,
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& obj: obj_list)
   {
-    if (obj->shape->max_mip == 0 ||
-        obj->shape->max_mip > getTileMip())
+    if (obj->cl->max_mip == 0 || obj->cl->max_mip > getTileMip())
       main.append(obj);
     else
     {
@@ -567,7 +566,7 @@ void KRenderPack::addCollectionToIndex(
     const KObjectCollection* collection)
 {
   for (auto& obj: *collection)
-    render_data[obj->shape->layer].append(obj);
+    render_data[obj->cl->layer].append(obj);
 
   int total_object_count = 0;
   for (auto layer: render_data)
