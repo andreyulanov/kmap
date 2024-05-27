@@ -15,6 +15,7 @@
 #include "kcontrols.h"
 #include "keditwidget.h"
 #include "kpack.h"
+#include "kclassmanager.h"
 #include "kposgenerator.h"
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"

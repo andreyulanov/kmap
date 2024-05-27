@@ -2,6 +2,7 @@
 #define KPANCLASSMANAGER_H
 
 #include "kpanclass.h"
+#include "kclassmanager.h"
 
 class KPanClassManager: public KClassManager
 {

@@ -11,6 +11,7 @@ QT += qml quick
 SOURCES += \
  ../lib/kbase.cpp \
  ../lib/kclass.cpp \
+ ../lib/kclassmanager.cpp \
  ../lib/kdatetime.cpp \
  ../lib/kfreeobject.cpp \
 ../lib/klocker.cpp \
@@ -34,6 +35,7 @@ main.cpp
 HEADERS += \
  ../lib/kbase.h \
  ../lib/kclass.h \
+ ../lib/kclassmanager.h \
  ../lib/kdatetime.h \
  ../lib/kfreeobject.h \
 ../lib/klocker.h \
