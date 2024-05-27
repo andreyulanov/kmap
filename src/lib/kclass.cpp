@@ -1,4 +1,4 @@
-#include "kshape.h"
+#include "kclass.h"
 #include "kserialize.h"
 #include <math.h>
 #include <QFile>
@@ -7,7 +7,7 @@
 #include <QJsonObject>
 #include <QMetaEnum>
 
-void KShape::save(QFile* f)
+void KClass::save(QFile* f)
 {
   using namespace KSerialize;
   write(f, id);
@@ -33,12 +33,12 @@ void KShape::save(QFile* f)
   write(f, image);
 }
 
-int KShape::getWidthPix()
+int KClass::getWidthPix()
 {
   return round(width_mm / pixel_size_mm);
 }
 
-void KShape::load(QFile* f, double _pixel_size_mm)
+void KClass::load(QFile* f, double _pixel_size_mm)
 {
   using namespace KSerialize;
   pixel_size_mm = _pixel_size_mm;
@@ -73,7 +73,7 @@ void KShape::load(QFile* f, double _pixel_size_mm)
         img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
 }
 
-void KShapeManager::loadShapes(QString path, QString images_dir)
+void KClassManager::loadShapes(QString path, QString images_dir)
 {
   QFile         f(path);
   QSet<QString> id_set;
@@ -113,7 +113,7 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           continue;
         }
 
-        auto sh = new KShape;
+        auto sh = new KClass;
 
         sh->id = obj.value("id").toString();
         if (id_set.contains(sh->id))
@@ -127,8 +127,8 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         if (!type_str.isEmpty())
         {
           bool ok  = false;
-          sh->type = static_cast<KShape::Type>(
-              QMetaEnum::fromType<KShape::Type>().keyToValue(
+          sh->type = static_cast<KClass::Type>(
+              QMetaEnum::fromType<KClass::Type>().keyToValue(
                   type_str.toUtf8(), &ok));
           if (!ok)
           {
@@ -137,13 +137,13 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           }
         }
 
-        sh->style      = KShape::Solid;
+        sh->style      = KClass::Solid;
         auto style_str = obj.value("style").toString();
         if (!style_str.isEmpty())
         {
           bool ok   = false;
-          sh->style = static_cast<KShape::Style>(
-              QMetaEnum::fromType<KShape::Style>().keyToValue(
+          sh->style = static_cast<KClass::Style>(
+              QMetaEnum::fromType<KClass::Style>().keyToValue(
                   style_str.toUtf8(), &ok));
           if (!ok)
           {
@@ -201,25 +201,25 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         if (sh->coor_precision_coef == 0)
           sh->coor_precision_coef = default_coor_precision_coef;
 
-        shapes.append(sh);
+        classes.append(sh);
       }
     }
   }
 }
 
-KShapeManager::KShapeManager(QString _images_dir)
+KClassManager::KClassManager(QString _images_dir)
 {
   images_dir = _images_dir;
 }
 
-KShapeManager::~KShapeManager()
+KClassManager::~KClassManager()
 {
-  qDeleteAll(shapes);
+  qDeleteAll(classes);
 }
 
-int KShapeManager::getShapeIdxById(QString id)
+int KClassManager::getShapeIdxById(QString id)
 {
-  for (int i = -1; auto sh: shapes)
+  for (int i = -1; auto sh: classes)
   {
     i++;
     if (sh->id == id)
@@ -228,59 +228,59 @@ int KShapeManager::getShapeIdxById(QString id)
   return -1;
 }
 
-KShape KShapeManager::getShapeById(QString id)
+KClass KClassManager::getShapeById(QString id)
 {
   auto idx = getShapeIdxById(id);
   if (idx >= 0)
-    return *shapes.at(idx);
+    return *classes.at(idx);
   else
-    return KShape();
+    return KClass();
 }
 
-QVector<KShape*> KShapeManager::getShapes()
+QVector<KClass*> KClassManager::getShapes()
 {
-  return shapes;
+  return classes;
 }
 
-KShapeImageList KShapeManager::getShapeImageList()
+KShapeImageList KClassManager::getShapeImageList()
 {
-  QVector<KShapeImage> ret;
-  for (auto sh: shapes)
+  QVector<KClassImage> ret;
+  for (auto sh: classes)
     ret.append({sh->id, sh->image});
   return ret;
 }
 
-void KShapeManager::setMainMip(double v)
+void KClassManager::setMainMip(double v)
 {
   main_mip = v;
 }
 
-double KShapeManager::getMainMip()
+double KClassManager::getMainMip()
 {
   return main_mip;
 }
 
-void KShapeManager::setTileMip(double v)
+void KClassManager::setTileMip(double v)
 {
   tile_mip = v;
 }
 
-double KShapeManager::getTileMip()
+double KClassManager::getTileMip()
 {
   return tile_mip;
 }
 
-void KShapeManager::setDefaultCoorPrecisionCoef(double v)
+void KClassManager::setDefaultCoorPrecisionCoef(double v)
 {
   default_coor_precision_coef = v;
 }
 
-double KShapeManager::getDefaultCoorPrecisionCoef()
+double KClassManager::getDefaultCoorPrecisionCoef()
 {
   return default_coor_precision_coef;
 }
 
-QString KShapeManager::getErrorStr()
+QString KClassManager::getErrorStr()
 {
   return error_str;
 }

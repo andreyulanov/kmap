@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-void KPackObject::load(QVector<KShape*>* shape_list, int& pos,
+void KPackObject::load(QVector<KClass*>* shape_list, int& pos,
                        const QByteArray& ba)
 {
   using namespace KSerialize;
@@ -82,7 +82,7 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-void KPackObject::save(const QVector<KShape*>* shape_list,
+void KPackObject::save(const QVector<KClass*>* shape_list,
                        QByteArray&             ba)
 {
   using namespace KSerialize;
@@ -360,7 +360,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   shapes.resize(shape_count);
   for (auto& shape: shapes)
   {
-    shape = new KShape;
+    shape = new KClass;
     shape->load(&f, pixel_size_mm);
   }
 
@@ -520,7 +520,7 @@ KEditablePack::KEditablePack(const QString& path): KPack(path)
 {
 }
 
-void KEditablePack::setShapes(QVector<KShape*> v)
+void KEditablePack::setShapes(QVector<KClass*> v)
 {
   shapes = v;
 }

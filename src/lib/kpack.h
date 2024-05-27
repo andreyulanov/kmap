@@ -8,19 +8,19 @@
 #include <QMap>
 #include <QElapsedTimer>
 #include <QVariant>
-#include "kshape.h"
+#include "kclass.h"
 
 struct KPackObject
 {
-  KShape*                   shape;
+  KClass*                   shape;
   QString                   name;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
   QRectF                    tile_frame_m;
   QVector<KGeoPolygon*>     polygons;
   KGeoCoor                  getCenter();
-  void save(const QVector<KShape*>* shape_list, QByteArray& ba);
-  void load(QVector<KShape*>* shape_list, int& pos,
+  void save(const QVector<KClass*>* shape_list, QByteArray& ba);
+  void load(QVector<KClass*>* shape_list, int& pos,
             const QByteArray& ba);
   virtual ~KPackObject();
 };
@@ -51,7 +51,7 @@ class KPack
   double  tile_mip = 0;
 
 protected:
-  QVector<KShape*>            shapes;
+  QVector<KClass*>            shapes;
   KGeoRect                    frame;
   QVector<QPolygonF>          borders_m;
   QVector<KGeoPolygon>        borders;
@@ -120,7 +120,7 @@ public:
   KEditablePack(const QString& path);
   void addObjects(const QVector<KPackObject*>& obj_list,
                   int                          max_objects_per_tile);
-  void setShapes(QVector<KShape*>);
+  void setShapes(QVector<KClass*>);
   void addBorder(KGeoPolygon);
 };
 

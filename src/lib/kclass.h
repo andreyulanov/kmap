@@ -1,9 +1,9 @@
-#ifndef KSHAPE_H
-#define KSHAPE_H
+#ifndef KCLASS_H
+#define KCLASS_H
 
 #include "kbase.h"
 
-struct KShape
+struct KClass
 {
   Q_GADGET
 public:
@@ -45,33 +45,33 @@ public:
   int     getWidthPix();
 };
 
-struct KShapeImage
+struct KClassImage
 {
   QString id;
   QImage  image;
 };
 
-typedef QVector<KShapeImage> KShapeImageList;
+typedef QVector<KClassImage> KShapeImageList;
 
-class KShapeManager: public QObject
+class KClassManager: public QObject
 {
   double           main_mip                    = 0;
   double           tile_mip                    = 0;
   int              default_coor_precision_coef = 1;
   QString          images_dir;
-  QVector<KShape*> shapes;
+  QVector<KClass*> classes;
 
 protected:
   QString error_str;
 
 public:
-  KShapeManager(QString image_dir = QString());
-  virtual ~KShapeManager();
+  KClassManager(QString image_dir = QString());
+  virtual ~KClassManager();
   int    getShapeIdxById(QString id);
-  KShape getShapeById(QString id);
+  KClass getShapeById(QString id);
   void   loadShapes(QString path, QString images_dir = QString());
   KShapeImageList  getShapeImageList();
-  QVector<KShape*> getShapes();
+  QVector<KClass*> getShapes();
 
   void   setMainMip(double);
   double getMainMip();
@@ -85,4 +85,4 @@ public:
   QString getErrorStr();
 };
 
-#endif  // KSHAPE_H
+#endif  // KCLASS_H

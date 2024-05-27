@@ -406,15 +406,15 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
     p->setPen(Qt::NoPen);
   else
     p->setPen(sh->pen);
-  if (sh->style == KShape::Hatch)
+  if (sh->style == KClass::Hatch)
     p->setBrush(QBrush(sh->brush, Qt::HorPattern));
-  else if (sh->style == KShape::BDiag)
+  else if (sh->style == KClass::BDiag)
     p->setBrush(QBrush(sh->brush, Qt::BDiagPattern));
-  else if (sh->style == KShape::FDiag)
+  else if (sh->style == KClass::FDiag)
     p->setBrush(QBrush(sh->brush, Qt::FDiagPattern));
-  else if (sh->style == KShape::Horiz)
+  else if (sh->style == KClass::Horiz)
     p->setBrush(QBrush(sh->brush, Qt::HorPattern));
-  else if (sh->style == KShape::Vert)
+  else if (sh->style == KClass::Vert)
     p->setBrush(QBrush(sh->brush, Qt::VerPattern));
   else
     p->setBrush(sh->brush);
@@ -483,9 +483,9 @@ void KRender::paintLineObject(QPainter*          painter,
   auto sh = obj->shape;
 
   Qt::PenStyle style = Qt::SolidLine;
-  if (sh->style == KShape::Dash)
+  if (sh->style == KClass::Dash)
     style = Qt::DashLine;
-  if (sh->style == KShape::Dots)
+  if (sh->style == KClass::Dots)
     style = Qt::DotLine;
   int obj_name_width = 0;
   if (!obj->name.isEmpty())
@@ -526,7 +526,7 @@ void KRender::paintLineObject(QPainter*          painter,
     auto size_pix     = (size_m.width() + size_m.height()) / mip;
     auto hatch_length = size_pix * 0.05;
     if (hatch_length > 5)
-      if (sh->style == KShape::Hatch)
+      if (sh->style == KClass::Hatch)
       {
         if (hatch_length > 5)
           hatch_length = 5;
@@ -666,13 +666,13 @@ bool KRender::paintObject(QPainter* p, const KPackObject* obj,
 {
   switch (obj->shape->type)
   {
-  case KShape::Point:
+  case KClass::Point:
     paintPointObject(p, obj, render_idx);
     break;
-  case KShape::Line:
+  case KClass::Line:
     paintLineObject(p, obj, render_idx, line_iter);
     break;
-  case KShape::Polygon:
+  case KClass::Polygon:
     paintPolygonObject(p, obj, render_idx);
     break;
   default:
@@ -862,10 +862,10 @@ void KRender::renderMap(QPainter* p, KRenderPack* map, int render_idx,
       if (!obj)
         continue;
 
-      if (obj->shape->type != KShape::Line && line_iter == 1)
+      if (obj->shape->type != KClass::Line && line_iter == 1)
         continue;
 
-      if (obj->shape->type == KShape::Line && line_iter == 0 &&
+      if (obj->shape->type == KClass::Line && line_iter == 0 &&
           obj->shape->brush == Qt::black)
         continue;
 

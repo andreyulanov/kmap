@@ -6,7 +6,7 @@ SOURCES += \
     ../lib/kbase.cpp \
     ../lib/klocker.cpp \
     ../lib/kpack.cpp \
-    ../lib/kshape.cpp \
+    ../lib/kclass.cpp \
     main.cpp
 
 HEADERS += \
@@ -14,7 +14,7 @@ HEADERS += \
     ../lib/klocker.h \
     ../lib/kpack.h \
     ../lib/kserialize.h \
-    ../lib/kshape.h \
+    ../lib/kclass.h \
 
 
 

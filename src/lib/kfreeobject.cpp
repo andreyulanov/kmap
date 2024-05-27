@@ -129,7 +129,7 @@ void KFreeObjectManager::removeObject()
   updated();
 }
 
-void KFreeObjectManager::createObject(KShape sh)
+void KFreeObjectManager::createObject(KClass sh)
 {
   KFreeObject obj;
   obj.shape = sh;
@@ -145,7 +145,7 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
     return;
 
   auto w = obj.getWidthPix(pixel_size_mm);
-  if (obj.shape.type == KShape::Point)
+  if (obj.shape.type == KClass::Point)
   {
     auto& img = obj.shape.image;
     auto  pix = deg2pix(obj.polygons.first().first());
@@ -168,7 +168,7 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
     return;
   }
 
-  if (obj.shape.type == KShape::Line)
+  if (obj.shape.type == KClass::Line)
   {
     for (auto polygon: obj.polygons)
     {
@@ -195,7 +195,7 @@ void KFreeObjectManager::paintObject(QPainter* p, KFreeObject obj,
       }
     }
   }
-  if (obj.shape.type == KShape::Polygon)
+  if (obj.shape.type == KClass::Polygon)
   {
     int    w     = obj.getWidthPix(pixel_size_mm);
     QPen   pen   = QPen(obj.shape.pen, w);
@@ -284,7 +284,7 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
     return;
   auto& obj  = objects[edited_object_idx];
   auto  type = obj.shape.type;
-  if (type == KShape::Point)
+  if (type == KClass::Point)
   {
     KGeoPolygon poly;
     poly.append(coor);
@@ -305,7 +305,7 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
       for (int polygon_idx = -1; auto& polygon: obj.polygons)
       {
         polygon_idx++;
-        if (polygon.count() < 4 || type == KShape::Line ||
+        if (polygon.count() < 4 || type == KClass::Line ||
             is_creating_new_object)
         {
           polygon.append(coor);
@@ -449,13 +449,13 @@ int KFreeObjectManager::getObjectIdxAt(QPoint p0)
   for (int idx = -1; auto obj: objects)
   {
     idx++;
-    if (obj.shape.type == KShape::Point)
+    if (obj.shape.type == KClass::Point)
     {
       auto point_pos = deg2pix(obj.polygons.first().first());
       if ((point_pos - p0).manhattanLength() < proximity_pix)
         return idx;
     }
-    if (obj.shape.type == KShape::Line)
+    if (obj.shape.type == KClass::Line)
     {
       for (auto polygon: obj.polygons)
       {
@@ -466,7 +466,7 @@ int KFreeObjectManager::getObjectIdxAt(QPoint p0)
           return idx;
       }
     }
-    if (obj.shape.type == KShape::Polygon)
+    if (obj.shape.type == KClass::Polygon)
     {
       for (auto polygon: obj.polygons)
       {

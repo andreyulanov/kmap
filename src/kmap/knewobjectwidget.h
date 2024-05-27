@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QGroupBox>
 #include <QCheckBox>
-#include "kshape.h"
+#include "kclass.h"
 
 class KNewObjectWidget: public QWidget
 {
@@ -21,8 +21,8 @@ class KNewObjectWidget: public QWidget
 
 signals:
   KShapeImageList getUserShapeImageList();
-  KShape          getShapeById(QString);
-  void            selectedShape(KShape);
+  KClass          getShapeById(QString);
+  void            selectedShape(KClass);
   void            sendObject();
   void            doNotSendObject();
 

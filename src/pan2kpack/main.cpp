@@ -56,7 +56,7 @@ auto joinPolys(KPackObject* obj)
   return false;
 }
 
-struct KPanShape: public KShape
+struct KPanShape: public KClass
 {
   int                 pan_code = 0;
   QString             pan_key;
@@ -66,7 +66,7 @@ struct KPanShape: public KShape
   QVector<KAttribute> attributes;
 };
 
-class KPanShapeManager: public KShapeManager
+class KPanShapeManager: public KClassManager
 {
   QVector<KPanShape*> pan_shapes;
 
@@ -79,7 +79,7 @@ public:
 };
 
 KPanShapeManager::KPanShapeManager(QString image_dir):
-    KShapeManager(image_dir)
+    KClassManager(image_dir)
 {
 }
 
@@ -141,8 +141,8 @@ void KPanShapeManager::loadShapes(QString path, QString images_dir)
         if (!type_str.isEmpty())
         {
           bool ok  = false;
-          sh->type = static_cast<KShape::Type>(
-              QMetaEnum::fromType<KShape::Type>().keyToValue(
+          sh->type = static_cast<KClass::Type>(
+              QMetaEnum::fromType<KClass::Type>().keyToValue(
                   type_str.toUtf8(), &ok));
           if (!ok)
           {
@@ -151,13 +151,13 @@ void KPanShapeManager::loadShapes(QString path, QString images_dir)
           }
         }
 
-        sh->style      = KShape::Solid;
+        sh->style      = KClass::Solid;
         auto style_str = obj.value("style").toString();
         if (!style_str.isEmpty())
         {
           bool ok   = false;
-          sh->style = static_cast<KShape::Style>(
-              QMetaEnum::fromType<KShape::Style>().keyToValue(
+          sh->style = static_cast<KClass::Style>(
+              QMetaEnum::fromType<KClass::Style>().keyToValue(
                   style_str.toUtf8(), &ok));
           if (!ok)
           {
@@ -282,7 +282,7 @@ int main(int argc, char* argv[])
   QApplication a(argc, argv);
   QDMapView    qd;
 
-  KShapeManager shape_man(argv[1]);
+  KClassManager shape_man(argv[1]);
   shape_man.loadShapes(QString(argv[1]) + "/" + argv[2],
                        QString(argv[1]) + "/images");
   auto shape_list = shape_man.getShapes();
@@ -464,7 +464,7 @@ int main(int argc, char* argv[])
 
       auto pan_shape = pan_shape_list.at(shape_idx);
 
-      if (pan_shape->type == KShape::None)
+      if (pan_shape->type == KClass::None)
         continue;
 
       WCHAR str_utf16[1000];
@@ -570,7 +570,7 @@ int main(int argc, char* argv[])
       }
 
       if (max_dist < pan_shape->coor_precision_coef * 0.01 &&
-          pan_shape->type == KShape::Polygon)
+          pan_shape->type == KClass::Polygon)
       {
         delete obj;
         continue;
@@ -597,7 +597,7 @@ int main(int argc, char* argv[])
     QElapsedTimer t;
     t.start();
     for (auto obj: obj_list)
-      if (obj->shape->type == KShape::Line)
+      if (obj->shape->type == KClass::Line)
         while (joinPolys(obj))
           ;
     qDebug() << "joinPolys() elapsed" << t.restart();

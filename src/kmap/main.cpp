@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
   KRenderWidget  renderw(mapw_settings);
   KPackFetcher   map_fetcher(mapw_settings.map_dir,
                              renderw.getWorldMap());
-  KShapeManager  user_shape_man(storage_man.classPath());
+  KClassManager  user_shape_man(storage_man.classPath());
   KTrackManager  track_man(storage_man.tracksPath());
   KFreeObjectManager object_man(storage_man.objectsPath(), pixel_size_mm);
   KAutoScroll    auto_scroll;
@@ -209,11 +209,11 @@ int main(int argc, char* argv[])
 
   QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
                    &user_shape_man,
-                   &KShapeManager::getShapeImageList);
+                   &KClassManager::getShapeImageList);
   QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
                    &object_man, &KFreeObjectManager::createObject);
   QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
-                   &user_shape_man, &KShapeManager::getShapeById);
+                   &user_shape_man, &KClassManager::getShapeById);
 
   QObject::connect(&renderw, &KRenderWidget::zoomFinished, &controls,
                    &KControls::checkZoomRepeat);

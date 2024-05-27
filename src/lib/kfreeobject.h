@@ -5,7 +5,7 @@
 #include <QUuid>
 #include <QMap>
 #include <QVariant>
-#include "kshape.h"
+#include "kclass.h"
 
 struct KFreeObject
 {
@@ -28,7 +28,7 @@ struct KFreeObject
 
   QUuid guid;
 
-  KShape               shape;
+  KClass               shape;
   QVector<KGeoPolygon> polygons;
   QVector<Attribute>   attributes;
 
@@ -72,7 +72,7 @@ signals:
 
 public:
   KFreeObjectManager(QString objects_dir, double pixel_size_mm);
-  void createObject(KShape);
+  void createObject(KClass);
   void removeObject();
   void paintObject(QPainter* p, KFreeObject obj,
                    PaintMode paint_mode);

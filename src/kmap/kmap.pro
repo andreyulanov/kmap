@@ -10,12 +10,12 @@ QT += qml quick
 
 SOURCES += \
  ../lib/kbase.cpp \
+ ../lib/kclass.cpp \
  ../lib/kdatetime.cpp \
  ../lib/kfreeobject.cpp \
 ../lib/klocker.cpp \
  ../lib/kpack.cpp \
 ../lib/krender.cpp \
-../lib/kshape.cpp \
  kautoscroll.cpp \
  kcontrols.cpp \
  keditwidget.cpp \
@@ -33,12 +33,12 @@ main.cpp
 
 HEADERS += \
  ../lib/kbase.h \
+ ../lib/kclass.h \
  ../lib/kdatetime.h \
  ../lib/kfreeobject.h \
 ../lib/klocker.h \
  ../lib/kpack.h \
 ../lib/krender.h \
-../lib/kshape.h \
  kautoscroll.h \
  kcontrols.h \
  keditwidget.h \
