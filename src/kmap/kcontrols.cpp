@@ -143,7 +143,7 @@ KControls::KControls(Settings v):
   initButton(&add, QPixmap(":/labels/plus.png"),
              {mapw->width() / 2, mapw->height() / 2 + step * 2},
              settings.button_size_mm);
-  connect(&add, &QPushButton::pressed, this, &KControls::selectShape);
+  connect(&add, &QPushButton::pressed, this, &KControls::selectClass);
   connect(&add, &QPushButton::pressed, &record, &QWidget::hide);
   connect(&add, &QPushButton::pressed, &ok, &QWidget::show);
 

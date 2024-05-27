@@ -39,7 +39,7 @@ void KNewObjectWidget::onSelected()
 {
   auto b  = dynamic_cast<QPushButton*>(sender());
   auto id = button_id_map.value(b);
-  selectedShape(getShapeById(id));
+  selectedClass(getClassById(id));
   if (send_check_box->isChecked())
     emit sendObject();
   else
@@ -49,7 +49,7 @@ void KNewObjectWidget::onSelected()
 
 void KNewObjectWidget::show()
 {
-  auto list = getUserShapeImageList();
+  auto list = getUserClassImageList();
   int  posy = 0;
   for (auto l: list)
   {

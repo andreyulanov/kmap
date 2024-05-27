@@ -88,14 +88,15 @@ int main(int argc, char* argv[])
   else
   {
     if (argc > 1)
-        mmc_path = argv[1];
+      mmc_path = argv[1];
     else
     {
-        mmc_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-        if (mmc_path.isEmpty())
-        {
-            qCritical("Standard app's data diricory is not writable");
-        }
+      mmc_path = QStandardPaths::writableLocation(
+          QStandardPaths::AppDataLocation);
+      if (mmc_path.isEmpty())
+      {
+        qCritical("Standard app's data diricory is not writable");
+      }
     }
   }
   kStorageManager storage_man(mmc_path);
@@ -108,13 +109,14 @@ int main(int argc, char* argv[])
   mapw_settings.update_interval_ms      = 100;
   mapw_settings.max_zoom_speed          = 1.5;
 
-  KRenderWidget  renderw(mapw_settings);
-  KPackFetcher   map_fetcher(mapw_settings.map_dir,
-                             renderw.getWorldMap());
-  KClassManager  user_shape_man(storage_man.classPath());
-  KTrackManager  track_man(storage_man.tracksPath());
-  KFreeObjectManager object_man(storage_man.objectsPath(), pixel_size_mm);
-  KAutoScroll    auto_scroll;
+  KRenderWidget      renderw(mapw_settings);
+  KPackFetcher       map_fetcher(mapw_settings.map_dir,
+                                 renderw.getWorldMap());
+  KClassManager      user_class_man(storage_man.classPath());
+  KTrackManager      track_man(storage_man.tracksPath());
+  KFreeObjectManager object_man(storage_man.objectsPath(),
+                                pixel_size_mm);
+  KAutoScroll        auto_scroll;
 
   QObject::connect(&map_fetcher, &KPackFetcher::fetched,
                    [&renderw](QString map_path)
@@ -123,15 +125,15 @@ int main(int argc, char* argv[])
                      renderw.renderMap();
                    });
 
-  QDir dir(storage_man.classPath());
+  QDir        dir(storage_man.classPath());
   QStringList filters;
   filters << "*.json";
   dir.setNameFilters(filters);
 
   auto path_list = dir.entryList();
   for (auto path: path_list)
-    user_shape_man.loadClasses(storage_man.classPath() + "/" + path,
-                              storage_man.classPath());
+    user_class_man.loadClasses(storage_man.classPath() + "/" + path,
+                               storage_man.classPath());
 
   QObject::connect(&editw, &KEditWidget::saveTrack, &track_man,
                    &KTrackManager::saveTrack);
@@ -141,7 +143,8 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
-                   &object_man, &KFreeObjectManager::startMovingPoint);
+                   &object_man,
+                   &KFreeObjectManager::startMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::mouseMoved, &auto_scroll,
                    &KAutoScroll::accumulate);
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,
@@ -202,18 +205,18 @@ int main(int argc, char* argv[])
                    });
   QObject::connect(&controls, &KControls::isRecording, &track_man,
                    &KTrackManager::isRecording);
-  QObject::connect(&controls, &KControls::selectShape, &newobjw,
+  QObject::connect(&controls, &KControls::selectClass, &newobjw,
                    &KNewObjectWidget::show);
   QObject::connect(&controls, &KControls::removeObject, &object_man,
                    &KFreeObjectManager::removeObject);
 
-  QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
-                   &user_shape_man,
+  QObject::connect(&newobjw, &KNewObjectWidget::getUserClassImageList,
+                   &user_class_man,
                    &KClassManager::getClassImageList);
-  QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
+  QObject::connect(&newobjw, &KNewObjectWidget::selectedClass,
                    &object_man, &KFreeObjectManager::createObject);
-  QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
-                   &user_shape_man, &KClassManager::getClassById);
+  QObject::connect(&newobjw, &KNewObjectWidget::getClassById,
+                   &user_class_man, &KClassManager::getClassById);
 
   QObject::connect(&renderw, &KRenderWidget::zoomFinished, &controls,
                    &KControls::checkZoomRepeat);
@@ -246,25 +249,29 @@ int main(int argc, char* argv[])
                    &object_man, &KFreeObjectManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&renderw, &KRenderWidget::canScroll, &object_man,
-                   &KFreeObjectManager::canScroll, Qt::DirectConnection);
+                   &KFreeObjectManager::canScroll,
+                   Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KFreeObjectManager::deg2pix, &renderw,
-                   &KRenderWidget::deg2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KFreeObjectManager::deg2scr, &renderw,
-                   &KRenderWidget::deg2scr, Qt::DirectConnection);
-  QObject::connect(&object_man, &KFreeObjectManager::scr2deg, &renderw,
-                   &KRenderWidget::scr2deg, Qt::DirectConnection);
+  QObject::connect(&object_man, &KFreeObjectManager::deg2pix,
+                   &renderw, &KRenderWidget::deg2pix,
+                   Qt::DirectConnection);
+  QObject::connect(&object_man, &KFreeObjectManager::deg2scr,
+                   &renderw, &KRenderWidget::deg2scr,
+                   Qt::DirectConnection);
+  QObject::connect(&object_man, &KFreeObjectManager::scr2deg,
+                   &renderw, &KRenderWidget::scr2deg,
+                   Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2scr,
                    &renderw, &KRenderWidget::deg2scr,
                    Qt::DirectConnection);
 
   QObject::connect(&track_man, &KTrackManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KFreeObjectManager::updated, &renderw,
-                   &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KFreeObjectManager::startEdit, &controls,
-                   &KControls::startEdit);
+  QObject::connect(&object_man, &KFreeObjectManager::updated,
+                   &renderw, &KRenderWidget::renderUserObjects);
+  QObject::connect(&object_man, &KFreeObjectManager::startEdit,
+                   &controls, &KControls::startEdit);
   QObject::connect(&object_man, &KFreeObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 
@@ -341,7 +348,8 @@ int main(int argc, char* argv[])
   QString proxy       = "proxy.macaw.me";
 
   KXmppClient client(storage_man.objectsPath(), proxy);
-  client.logger()->setLogFilePath(storage_man.logsPath() + "/client.log");
+  client.logger()->setLogFilePath(storage_man.logsPath() +
+                                  "/client.log");
   client.logger()->setLoggingType(QXmppLogger::FileLogging);
 
   KSettings k_settings;
@@ -378,19 +386,22 @@ int main(int argc, char* argv[])
   QObject::connect(&object_man, &KFreeObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
 
-  QQuickView muc_view;
-  QQmlContext* muc_context = muc_view.engine()->rootContext();
+  QQuickView          muc_view;
+  QQmlContext*        muc_context = muc_view.engine()->rootContext();
   KMucRoomsController muc_controller;
-  KMucRoomsModel muc_rooms_model(client.findExtension<QXmppMucManager>());
+  KMucRoomsModel      muc_rooms_model(
+           client.findExtension<QXmppMucManager>());
   muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
   muc_context->setContextProperty("_mucBackEnd", &muc_controller);
   muc_view.setSource(QUrl("qrc:KMuc.qml"));
-  //muc_view.show();
-  QObject::connect(&muc_controller, &KMucRoomsController::addRoom,[client_p = &client](QString room_jid)
-  {
-      qDebug() << "adding muc room" << room_jid;
-      client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
-  });
+  // muc_view.show();
+  QObject::connect(
+      &muc_controller, &KMucRoomsController::addRoom,
+      [client_p = &client](QString room_jid)
+      {
+        qDebug() << "adding muc room" << room_jid;
+        client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
+      });
 
 #endif
   return a.exec();

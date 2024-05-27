@@ -19,9 +19,9 @@ void KPackObject::load(QVector<KClass*>* class_list, int& pos,
 
   read(ba, pos, attributes);
 
-  int shape_idx;
-  read(ba, pos, shape_idx);
-  cl = (*class_list)[shape_idx];
+  int class_idx;
+  read(ba, pos, class_idx);
+  cl = (*class_list)[class_idx];
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -92,8 +92,8 @@ void KPackObject::save(const QVector<KClass*>* class_list,
 
   write(ba, attributes);
 
-  auto shape_idx = class_list->indexOf(cl);
-  write(ba, shape_idx);
+  auto class_idx = class_list->indexOf(cl);
+  write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));
 
@@ -184,17 +184,17 @@ void KPack::add(KPack* m)
   frame = frame.united(m->frame);
   for (auto new_obj: m->main)
   {
-    auto new_sh = new_obj->cl;
+    auto new_cl = new_obj->cl;
     bool found  = false;
     for (auto sh: classes)
-      if (new_sh->id == sh->id)
+      if (new_cl->id == sh->id)
       {
         new_obj->cl = sh;
         found       = true;
         break;
       }
     if (!found)
-      qDebug() << "ERROR: shape" << new_sh->id
+      qDebug() << "ERROR: class" << new_cl->id
                << "not found in primary classifier!";
     main.append(new_obj);
   }
@@ -257,8 +257,8 @@ void KPack::save(QString new_path) const
   write(&f, main_mip);
   write(&f, tile_mip);
   write(&f, classes.count());
-  for (auto& shape: classes)
-    shape->save(&f);
+  for (auto& cl: classes)
+    cl->save(&f);
 
   QByteArray ba;
   ba = qCompress(ba, 9);
@@ -355,13 +355,13 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
 
   qDebug() << "loading main from" << path;
   main.status = KObjectCollection::Loading;
-  int shape_count;
-  read(&f, shape_count);
-  classes.resize(shape_count);
-  for (auto& shape: classes)
+  int class_count;
+  read(&f, class_count);
+  classes.resize(class_count);
+  for (auto& cl: classes)
   {
-    shape = new KClass;
-    shape->load(&f, pixel_size_mm);
+    cl = new KClass;
+    cl->load(&f, pixel_size_mm);
   }
 
   int ba_count = 0;

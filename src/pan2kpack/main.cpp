@@ -56,7 +56,7 @@ auto joinPolys(KPackObject* obj)
   return false;
 }
 
-struct KPanShape: public KClass
+struct KPanClass: public KClass
 {
   int                 pan_code = 0;
   QString             pan_key;
@@ -66,24 +66,24 @@ struct KPanShape: public KClass
   QVector<KAttribute> attributes;
 };
 
-class KPanShapeManager: public KClassManager
+class KPanClassManager: public KClassManager
 {
-  QVector<KPanShape*> pan_shapes;
+  QVector<KPanClass*> pan_classes;
 
 public:
-  KPanShapeManager(QString image_dir = QString());
+  KPanClassManager(QString image_dir = QString());
   void loadClasses(QString path, QString images_dir = QString());
-  int  getShapeIdx(int code, QString key, QStringList attr_names,
+  int  getClassIdx(int code, QString key, QStringList attr_names,
                    QStringList attr_values);
-  QVector<KPanShape*> getClasses();
+  QVector<KPanClass*> getClasses();
 };
 
-KPanShapeManager::KPanShapeManager(QString image_dir):
+KPanClassManager::KPanClassManager(QString image_dir):
     KClassManager(image_dir)
 {
 }
 
-void KPanShapeManager::loadClasses(QString path, QString images_dir)
+void KPanClassManager::loadClasses(QString path, QString images_dir)
 {
   QFile         f(path);
   QSet<QString> id_set;
@@ -123,7 +123,7 @@ void KPanShapeManager::loadClasses(QString path, QString images_dir)
           continue;
         }
 
-        auto sh = new KPanShape;
+        auto sh = new KPanClass;
 
         sh->id = obj.value("id").toString();
         if (id_set.contains(sh->id))
@@ -234,22 +234,22 @@ void KPanShapeManager::loadClasses(QString path, QString images_dir)
         if (sh->coor_precision_coef == 0)
           sh->coor_precision_coef = default_coor_precision_coef;
 
-        pan_shapes.append(sh);
+        pan_classes.append(sh);
       }
     }
   }
 }
 
-QVector<KPanShape*> KPanShapeManager::getClasses()
+QVector<KPanClass*> KPanClassManager::getClasses()
 {
-  return pan_shapes;
+  return pan_classes;
 }
 
-int KPanShapeManager::getShapeIdx(int code, QString key,
+int KPanClassManager::getClassIdx(int code, QString key,
                                   QStringList attr_names,
                                   QStringList attr_values)
 {
-  for (int idx = -1; auto& sh: pan_shapes)
+  for (int idx = -1; auto& sh: pan_classes)
   {
     idx++;
     bool code_match = true;
@@ -282,26 +282,26 @@ int main(int argc, char* argv[])
   QApplication a(argc, argv);
   QDMapView    qd;
 
-  KClassManager shape_man(argv[1]);
-  shape_man.loadClasses(QString(argv[1]) + "/" + argv[2],
+  KClassManager class_man(argv[1]);
+  class_man.loadClasses(QString(argv[1]) + "/" + argv[2],
                         QString(argv[1]) + "/images");
-  auto shape_list = shape_man.getClasses();
+  auto class_list = class_man.getClasses();
 
-  KPanShapeManager pan_shape_man(argv[1]);
-  pan_shape_man.loadClasses(QString(argv[1]) + "/" + argv[2],
+  KPanClassManager pan_class_man(argv[1]);
+  pan_class_man.loadClasses(QString(argv[1]) + "/" + argv[2],
                             QString(argv[1]) + "/images");
-  auto pan_shape_list = pan_shape_man.getClasses();
+  auto pan_class_list = pan_class_man.getClasses();
 
-  auto str = pan_shape_man.getErrorStr();
+  auto str = pan_class_man.getErrorStr();
   if (!str.isEmpty())
   {
-    qDebug() << "ERROR: shape manager error:" << str;
+    qDebug() << "ERROR: class manager error:" << str;
     return -1;
   }
 
-  if (shape_list.isEmpty())
+  if (class_list.isEmpty())
   {
-    qDebug() << "ERROR: empty shape list!";
+    qDebug() << "ERROR: empty class list!";
     return -1;
   }
 
@@ -382,9 +382,9 @@ int main(int argc, char* argv[])
                     "borders!";
     }
 
-    map.setClasses(shape_list);
-    map.setMainMip(shape_man.getMainMip());
-    map.setTileMip(shape_man.getTileMip());
+    map.setClasses(class_list);
+    map.setMainMip(class_man.getMainMip());
+    map.setTileMip(class_man.getTileMip());
     QVector<KPackObject*> obj_list;
     DFRAME                df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
@@ -439,9 +439,9 @@ int main(int argc, char* argv[])
               QString::fromUtf16(str_utf16).simplified());
       }
 
-      int shape_idx = pan_shape_man.getShapeIdx(code, key, attr_names,
+      int class_idx = pan_class_man.getClassIdx(code, key, attr_names,
                                                 attr_values);
-      if (shape_idx < 0)
+      if (class_idx < 0)
       {
         WCHAR   str_utf16[1000];
         QString name;
@@ -452,9 +452,9 @@ int main(int argc, char* argv[])
         int point_count = mapPointCount(info, 0);
         if (!name.isEmpty() && point_count == 1)
         {
-          shape_idx =
-              shape_man.getClassIdxById("default_named_point");
-          if (shape_idx < 0)
+          class_idx =
+              class_man.getClassIdxById("default_named_point");
+          if (class_idx < 0)
             continue;
           poi_count++;
         }
@@ -462,9 +462,9 @@ int main(int argc, char* argv[])
           continue;
       }
 
-      auto pan_shape = pan_shape_list.at(shape_idx);
+      auto pan_class = pan_class_list.at(class_idx);
 
-      if (pan_shape->type == KClass::None)
+      if (pan_class->type == KClass::None)
         continue;
 
       WCHAR str_utf16[1000];
@@ -472,10 +472,10 @@ int main(int argc, char* argv[])
                                      sizeof(str_utf16), 1))
         name = QString::fromUtf16(str_utf16).simplified();
 
-      if (pan_shape->name_code > 0)
+      if (pan_class->name_code > 0)
       {
         name.clear();
-        if (mapSemanticCodeValueNameUn(info, pan_shape->name_code,
+        if (mapSemanticCodeValueNameUn(info, pan_class->name_code,
                                        str_utf16, sizeof(str_utf16),
                                        1))
         {
@@ -490,9 +490,9 @@ int main(int argc, char* argv[])
       KPackObject* obj = new KPackObject;
       obj->name        = name;
 
-      obj->cl = shape_list[shape_idx];
+      obj->cl = class_list[class_idx];
 
-      for (auto attr: pan_shape->attributes)
+      for (auto attr: pan_class->attributes)
       {
         WCHAR   str_utf16[1000];
         QString value;
@@ -527,7 +527,7 @@ int main(int argc, char* argv[])
                                pow(prev_point_m.y - point_m.y, 2));
               max_dist  = std::max(dist, max_dist);
 
-              if (dist < pan_shape->coor_precision_coef * 0.01 &&
+              if (dist < pan_class->coor_precision_coef * 0.01 &&
                   point_idx < point_count - 1)
                 continue;
             }
@@ -569,8 +569,8 @@ int main(int argc, char* argv[])
           obj->frame = obj->frame.united(polygon->getFrame());
       }
 
-      if (max_dist < pan_shape->coor_precision_coef * 0.01 &&
-          pan_shape->type == KClass::Polygon)
+      if (max_dist < pan_class->coor_precision_coef * 0.01 &&
+          pan_class->type == KClass::Polygon)
       {
         delete obj;
         continue;
@@ -582,8 +582,8 @@ int main(int argc, char* argv[])
         {
           if (obj->polygons.count() > 20)
           {
-            auto idx = shape_man.getClassIdxById("complex_water");
-            obj->cl  = shape_list[idx];
+            auto idx = class_man.getClassIdxById("complex_water");
+            obj->cl  = class_list[idx];
           }
         }
 
