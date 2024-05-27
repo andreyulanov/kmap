@@ -1030,7 +1030,7 @@
     "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
     "max_mip": 3,
-    "name_code": 1
+    "name_code": 0
 },
 {
     "id"     : "wall",
@@ -1075,7 +1075,7 @@
     "attrname" : "Уровень",
     "attrval" : 1,
     "layer"  : 23,
-    "width_mm"  : 1,
+    "width_mm"  : 0.5,
     "pen"    : [255, 255, 255],
     "brush"  : [116, 116, 116],
     "max_mip": 200
