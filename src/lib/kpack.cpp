@@ -91,7 +91,7 @@ void KPackObject::save(const QVector<KClass>* class_list,
 
   write(ba, attributes);
 
-  const KClass* new_cl = &(*class_list)[class_idx];
+  auto new_cl = &(*class_list)[class_idx];
   write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));

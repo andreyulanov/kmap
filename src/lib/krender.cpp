@@ -333,7 +333,7 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
   if (!render_frame_m.contains(coor_m))
     return;
 
-  const KClass* new_cl = &pack.classes[obj.class_idx];
+  auto new_cl = &pack.classes[obj.class_idx];
   p->setPen(QPen(new_cl->pen, 2));
   p->setBrush(new_cl->brush);
   auto        kpos       = obj.polygons.first()->first();
@@ -395,7 +395,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
   auto   bottom_right_m = frame.bottom_right.toMeters();
   QRectF obj_frame_m    = {top_left_m, bottom_right_m};
 
-  const KClass* new_cl = &pack.classes[obj.class_idx];
+  auto new_cl = &pack.classes[obj.class_idx];
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
@@ -482,7 +482,7 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  const KClass* new_cl = &pack.classes[obj.class_idx];
+  auto new_cl = &pack.classes[obj.class_idx];
 
   Qt::PenStyle style = Qt::SolidLine;
   if (new_cl->style == KClass::Dash)
