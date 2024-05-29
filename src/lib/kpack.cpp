@@ -168,12 +168,12 @@ const QVector<KPackObjectCollection*> KPack::getTiles() const
   return tiles;
 }
 
-void KPack::add(KPack* m)
+void KPack::add(const KPack& m)
 {
-  frame = frame.united(m->frame);
-  for (auto new_obj: m->main)
+  frame = frame.united(m.frame);
+  for (auto new_obj: m.main)
   {
-    auto new_cl = &m->classes[new_obj->class_idx];
+    auto new_cl = &m.classes[new_obj->class_idx];
     bool found  = false;
     for (int class_idx = -1; auto& cl: classes)
     {

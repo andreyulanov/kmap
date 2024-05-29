@@ -19,8 +19,8 @@ struct KPackObject
   QRectF                    tile_frame_m;
   QVector<KGeoPolygon*>     polygons;
   KGeoCoor                  getCenter();
-  void save(const QVector<KClass> *class_list, QByteArray& ba);
-  void load(QVector<KClass> *class_list, int& pos,
+  void save(const QVector<KClass>* class_list, QByteArray& ba);
+  void load(QVector<KClass>* class_list, int& pos,
             const QByteArray& ba);
   virtual ~KPackObject();
 };
@@ -60,7 +60,7 @@ public:
   void loadTile(int tile_idx, QRectF tile_rect_m);
   void loadAll(double pixel_size_mm);
   void clear();
-  void add(KPack*);
+  void add(const KPack&);
 
   void   setMainMip(double);
   double getMainMip() const;

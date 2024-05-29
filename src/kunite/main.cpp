@@ -29,8 +29,8 @@ int main(int argc, char* argv[])
       continue;
 
     qDebug() << "loading" << fi.absoluteFilePath();
-    KPack* pack = new KPack(fi.absoluteFilePath());
-    pack->loadAll(0);
+    KPack pack(fi.absoluteFilePath());
+    pack.loadAll(0);
     united_pack->add(pack);
   }
   qDebug() << "saving united pack...";
