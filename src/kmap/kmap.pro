@@ -17,6 +17,7 @@ SOURCES += \
 ../lib/klocker.cpp \
  ../lib/kpack.cpp \
 ../lib/krender.cpp \
+ ../lib/krenderpack.cpp \
  kautoscroll.cpp \
  kcontrols.cpp \
  keditwidget.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
 ../lib/klocker.h \
  ../lib/kpack.h \
 ../lib/krender.h \
+ ../lib/krenderpack.h \
  kautoscroll.h \
  kcontrols.h \
  keditwidget.h \

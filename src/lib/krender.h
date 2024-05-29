@@ -1,7 +1,7 @@
 #ifndef KRENDER_H
 #define KRENDER_H
 
-#include "kpack.h"
+#include "krenderpack.h"
 #include <QReadWriteLock>
 #include <QThread>
 #include <QSet>
@@ -59,11 +59,11 @@ class KRender: public QThread
   bool          getting_pixmap_enabled = false;
   int           load_thread_count      = 0;
 
-  QPointF              center_m;
-  QSize                pixmap_size   = {100, 100};
-  double               pixel_size_mm = 0.1;
+  QPointF               center_m;
+  QSize                 pixmap_size   = {100, 100};
+  double                pixel_size_mm = 0.1;
   KRenderPackCollection maps;
-  QFont                font;
+  QFont                 font;
 
   QVector<PointName>     point_names[KRenderPack::render_count];
   QVector<DrawTextEntry> draw_text_array[KRenderPack::render_count];
@@ -135,10 +135,10 @@ public:
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
   const KRenderPackCollection* getMaps() const;
-  void                        renderMap();
-  void                        renderUserObjects();
-  void                        stopAndWait();
-  void                        enableLoading(bool);
+  void                         renderMap();
+  void                         renderUserObjects();
+  void                         stopAndWait();
+  void                         enableLoading(bool);
 
   QPoint deg2pix(KGeoCoor) const;
 
