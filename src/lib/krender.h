@@ -29,8 +29,9 @@ class KRender: public QThread
     double             angle_deg   = 0;
     QPoint             mid_point;
     const KPackObject* obj = nullptr;
-    void fix(const KPackObject* obj, const QPoint& start,
-             const QPoint& end);
+    QColor             tcolor;
+    void               fix(const KPack* pack, const KPackObject* obj,
+                           const QPoint& start, const QPoint& end);
   };
 
   struct PointName
@@ -82,11 +83,11 @@ class KRender: public QThread
   void render(QPainter* p, QVector<KRenderPack*> render_maps,
               int render_idx);
 
-  bool checkMipRange(const KPack *pack, const KPackObject* obj);
+  bool checkMipRange(const KPack* pack, const KPackObject* obj);
   bool canContinue();
   void checkYieldResult();
 
-  bool paintObject(QPainter* p, const KRenderPack *map,
+  bool paintObject(QPainter* p, const KRenderPack* map,
                    const KPackObject& obj, int render_idx,
                    int line_iter);
   bool paintPointNames(QPainter* p);

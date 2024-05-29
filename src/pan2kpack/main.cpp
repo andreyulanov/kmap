@@ -264,7 +264,6 @@ int main(int argc, char* argv[])
       KPackObject* obj = new KPackObject;
       obj->name        = name;
 
-      obj->cl        = class_list[class_idx];
       obj->class_idx = class_idx;
       KClass* new_cl = class_list[class_idx];
 

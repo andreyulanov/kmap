@@ -60,7 +60,10 @@ void KRenderPack::addCollectionToIndex(
     const KPackObjectCollection* collection)
 {
   for (auto& obj: *collection)
-    render_data[obj->cl->layer].append(obj);
+  {
+    auto new_cl = classes[obj->class_idx];
+    render_data[new_cl->layer].append(obj);
+  }
 
   int total_object_count = 0;
   for (auto layer: render_data)

@@ -580,7 +580,8 @@ void KRender::paintLineObject(QPainter*          painter,
         {
           if (nh.length_pix > obj_name_width)
           {
-            nh.fix(&obj, pl.at(nh.start_idx), pl.at(nh.end_idx));
+            nh.fix(&map, &obj, pl.at(nh.start_idx),
+                   pl.at(nh.end_idx));
             name_holder_array[render_idx].append(nh);
           }
           nh           = NameHolder();
@@ -631,7 +632,8 @@ void KRender::paintLineObject(QPainter*          painter,
   }
 }
 
-void KRender::NameHolder::fix(const KPackObject* _obj,
+void KRender::NameHolder::fix(const KPack*       pack,
+                              const KPackObject* _obj,
                               const QPoint& start, const QPoint& end)
 {
   obj       = _obj;
@@ -641,6 +643,7 @@ void KRender::NameHolder::fix(const KPackObject* _obj,
     angle_deg -= 180;
   if (angle_deg < -90)
     angle_deg += 180;
+  tcolor = pack->classes[_obj->class_idx]->tcolor;
 }
 
 bool KRender::isCluttering(const QRect& rect)
@@ -771,7 +774,7 @@ bool KRender::paintLineNames(QPainter* p)
 
       p->setTransform(tr);
       text_rect_array.append(mapped_rect);
-      paintOutlinedText(p, nh.obj->name, nh.obj->cl->tcolor);
+      paintOutlinedText(p, nh.obj->name, nh.tcolor);
       p->restore();
       if (!canContinue())
         return false;

@@ -21,7 +21,6 @@ void KPackObject::load(QVector<KClass*>* class_list, int& pos,
 
   read(ba, pos, class_idx);
   auto new_cl = (*class_list)[class_idx];
-  cl          = new_cl;
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -92,7 +91,6 @@ void KPackObject::save(const QVector<KClass*>* class_list,
 
   write(ba, attributes);
 
-  class_idx      = class_list->indexOf(cl);
   KClass* new_cl = (*class_list)[class_idx];
   write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
@@ -175,15 +173,18 @@ void KPack::add(KPack* m)
   frame = frame.united(m->frame);
   for (auto new_obj: m->main)
   {
-    auto new_cl = new_obj->cl;
+    auto new_cl = m->classes[new_obj->class_idx];
     bool found  = false;
-    for (auto sh: classes)
+    for (int class_idx = -1; auto sh: classes)
+    {
+      class_idx++;
       if (new_cl->id == sh->id)
       {
-        new_obj->cl = sh;
-        found       = true;
+        new_obj->class_idx = class_idx;
+        found              = true;
         break;
       }
+    }
     if (!found)
       qDebug() << "ERROR: class" << new_cl->id
                << "not found in primary classifier!";
@@ -485,7 +486,8 @@ void KPack::addObjects(const QVector<KPackObject*>& obj_list,
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& obj: obj_list)
   {
-    if (obj->cl->max_mip == 0 || obj->cl->max_mip > getTileMip())
+    auto new_cl = classes[obj->class_idx];
+    if (new_cl->max_mip == 0 || new_cl->max_mip > getTileMip())
       main.append(obj);
     else
     {
