@@ -25,7 +25,7 @@ struct KPackObject
   virtual ~KPackObject();
 };
 
-struct KObjectCollection: public QVector<KPackObject*>
+struct KPackObjectCollection: public QVector<KPackObject*>
 {
   enum Status
   {
@@ -34,12 +34,6 @@ struct KObjectCollection: public QVector<KPackObject*>
     Loaded
   };
   Status status = Null;
-};
-
-struct RenderAddress
-{
-  int layer_idx;
-  int obj_idx;
 };
 
 class KPack
@@ -51,12 +45,17 @@ class KPack
   double  tile_mip = 0;
 
 protected:
-  QVector<KClass*>            classes;
-  KGeoRect                    frame;
-  QVector<QPolygonF>          borders_m;
-  QVector<KGeoPolygon>        borders;
-  KObjectCollection           main;
-  QVector<KObjectCollection*> tiles;
+  struct RenderAddress
+  {
+    int layer_idx;
+    int obj_idx;
+  };
+  QVector<KClass*>                classes;
+  KGeoRect                        frame;
+  QVector<QPolygonF>              borders_m;
+  QVector<KGeoPolygon>            borders;
+  KPackObjectCollection           main;
+  QVector<KPackObjectCollection*> tiles;
 
 public:
   KPack(const QString& path);
@@ -77,8 +76,8 @@ public:
   void            setFrame(KGeoRect);
   const KGeoRect& getFrame() const;
 
-  const KObjectCollection&          getMain() const;
-  const QVector<KObjectCollection*> getTiles() const;
+  const KPackObjectCollection&          getMain() const;
+  const QVector<KPackObjectCollection*> getTiles() const;
 };
 
 class KRenderPack: public QObject, public KPack
@@ -95,7 +94,7 @@ public:
   QList<RenderAddress>  render_start_list;
   int                   render_object_count;
 
-  void addCollectionToIndex(const KObjectCollection* collection);
+  void addCollectionToIndex(const KPackObjectCollection* collection);
 
 signals:
   void loaded();

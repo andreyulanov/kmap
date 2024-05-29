@@ -159,12 +159,12 @@ const KGeoRect& KPack::getFrame() const
   return frame;
 }
 
-const KObjectCollection& KPack::getMain() const
+const KPackObjectCollection& KPack::getMain() const
 {
   return main;
 }
 
-const QVector<KObjectCollection*> KPack::getTiles() const
+const QVector<KPackObjectCollection*> KPack::getTiles() const
 {
   return tiles;
 }
@@ -202,9 +202,9 @@ void KPack::add(KPack* m)
 
 void KPack::clear()
 {
-  if (main.status != KObjectCollection::Loaded)
+  if (main.status != KPackObjectCollection::Loaded)
     return;
-  if (main.status == KObjectCollection::Loading)
+  if (main.status == KPackObjectCollection::Loading)
     return;
 
   qDeleteAll(main);
@@ -220,7 +220,7 @@ void KPack::clear()
   tiles.clear();
   classes.clear();
   qDeleteAll(classes);
-  main.status = KObjectCollection::Null;
+  main.status = KPackObjectCollection::Null;
 }
 
 void KPack::save(QString new_path) const
@@ -301,7 +301,7 @@ void KPack::save(QString new_path) const
 
 void KPack::loadMain(bool load_objects, double pixel_size_mm)
 {
-  if (main.status == KObjectCollection::Loading)
+  if (main.status == KPackObjectCollection::Loading)
     return;
 
   QElapsedTimer t;
@@ -315,7 +315,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
   }
 
-  if (main.status != KObjectCollection::Null)
+  if (main.status != KPackObjectCollection::Null)
     return;
 
   QString format_id;
@@ -354,7 +354,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
 
   qDebug() << "loading main from" << path;
-  main.status = KObjectCollection::Loading;
+  main.status = KPackObjectCollection::Loading;
   int class_count;
   read(&f, class_count);
   classes.resize(class_count);
@@ -405,10 +405,10 @@ void KPack::loadAll(double pixel_size_mm)
 
 void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
 {
-  if (main.status != KObjectCollection::Loaded)
+  if (main.status != KPackObjectCollection::Loaded)
     return;
   if (tiles[tile_idx] &&
-      tiles[tile_idx]->status == KObjectCollection::Loading)
+      tiles[tile_idx]->status == KPackObjectCollection::Loading)
     return;
 
   qDebug() << "loading tile" << tile_idx << "from" << path;
@@ -446,12 +446,12 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   if (part_obj_count == 0)
   {
     if (!tiles[tile_idx])
-      tiles[tile_idx] = new KObjectCollection;
+      tiles[tile_idx] = new KPackObjectCollection;
     return;
   }
 
   if (!tiles[tile_idx])
-    tiles[tile_idx] = new KObjectCollection;
+    tiles[tile_idx] = new KPackObjectCollection;
   tiles[tile_idx]->resize(part_obj_count);
 
   int ba_count = 0;
@@ -461,7 +461,7 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   f.read(ba.data(), ba_count);
   ba = qUncompress(ba);
 
-  tiles[tile_idx]->status = KObjectCollection::Loading;
+  tiles[tile_idx]->status = KPackObjectCollection::Loading;
   int pos                 = 0;
   for (auto& obj: *tiles[tile_idx])
   {
@@ -502,7 +502,7 @@ void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
   {
     QWriteLocker big_locker(&main_lock);
     addCollectionToIndex(&main);
-    main.status = KObjectCollection::Loaded;
+    main.status = KPackObjectCollection::Loaded;
     loaded();
   }
 }
@@ -512,7 +512,7 @@ void KRenderPack::loadTile(int tile_idx, QRectF tile_rect_m)
   KPack::loadTile(tile_idx, tile_rect_m);
   QWriteLocker small_locker(&tile_lock);
   addCollectionToIndex(tiles[tile_idx]);
-  tiles[tile_idx]->status = KObjectCollection::Loaded;
+  tiles[tile_idx]->status = KPackObjectCollection::Loaded;
   loaded();
 }
 
@@ -556,14 +556,14 @@ void KEditablePack::addObjects(const QVector<KPackObject*>& obj_list,
           1.0 * shift_y / map_size_m.height() * tile_side_num;
       int part_idx = part_idx_y * tile_side_num + part_idx_x;
       if (!tiles[part_idx])
-        tiles[part_idx] = new KObjectCollection;
+        tiles[part_idx] = new KPackObjectCollection;
       tiles[part_idx]->append(obj);
     }
   }
 }
 
 void KRenderPack::addCollectionToIndex(
-    const KObjectCollection* collection)
+    const KPackObjectCollection* collection)
 {
   for (auto& obj: *collection)
     render_data[obj->cl->layer].append(obj);
