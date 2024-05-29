@@ -432,7 +432,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& map,
                                  pixmap_size.height() / 2) &&
          obj_span_pix >
              max_object_size_with_name_mm / pixel_size_mm) ||
-        !obj.cl->image.isNull())
+        !new_cl->image.isNull())
     {
 
       QPoint top_left_pix     = deg2pix(obj.frame.top_left);
@@ -655,17 +655,19 @@ bool KRender::isCluttering(const QRect& rect)
   return clutter_flag;
 }
 
-bool KRender::checkMipRange(const KPackObject* obj)
+bool KRender::checkMipRange(const KPack* pack, const KPackObject* obj)
 {
-  return (obj->cl->min_mip == 0 || render_mip >= obj->cl->min_mip) &&
-         (obj->cl->max_mip == 0 || render_mip <= obj->cl->max_mip);
+  auto new_cl = pack->classes[obj->class_idx];
+  return (new_cl->min_mip == 0 || render_mip >= new_cl->min_mip) &&
+         (new_cl->max_mip == 0 || render_mip <= new_cl->max_mip);
 }
 
 bool KRender::paintObject(QPainter* p, const KRenderPack* map,
                           const KPackObject& obj, int render_idx,
                           int line_iter)
 {
-  switch (obj.cl->type)
+  auto new_cl = map->classes[obj.class_idx];
+  switch (new_cl->type)
   {
   case KClass::Point:
     paintPointObject(p, *map, obj, render_idx);
@@ -863,14 +865,16 @@ void KRender::renderMap(QPainter* p, const KRenderPack* map,
       if (!obj)
         continue;
 
-      if (obj->cl->type != KClass::Line && line_iter == 1)
+      auto new_cl = map->classes[obj->class_idx];
+
+      if (new_cl->type != KClass::Line && line_iter == 1)
         continue;
 
-      if (obj->cl->type == KClass::Line && line_iter == 0 &&
-          obj->cl->brush == Qt::black)
+      if (new_cl->type == KClass::Line && line_iter == 0 &&
+          new_cl->brush == Qt::black)
         continue;
 
-      if (!checkMipRange(obj))
+      if (!checkMipRange(map, obj))
         continue;
       if (obj->tile_frame_m.isValid())
         if (!obj->tile_frame_m.intersects(render_frame_m))

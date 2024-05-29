@@ -82,7 +82,7 @@ class KRender: public QThread
   void render(QPainter* p, QVector<KRenderPack*> render_maps,
               int render_idx);
 
-  bool checkMipRange(const KPackObject* obj);
+  bool checkMipRange(const KPack *pack, const KPackObject* obj);
   bool canContinue();
   void checkYieldResult();
 
