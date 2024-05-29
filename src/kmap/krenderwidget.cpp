@@ -76,7 +76,7 @@ void KRenderWidget::renderUserObjects()
 
 void KRenderWidget::renderMap()
 {
-  r.renderMap();
+  r.renderPack();
 }
 
 void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
@@ -86,7 +86,7 @@ void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
   movedCenterTo(deg);
   r.setCenterM(deg.toMeters());
   r.setMip(mip);
-  r.renderMap();
+  r.renderPack();
 }
 
 void KRenderWidget::onRendered(int ms_elapsed)
@@ -133,7 +133,7 @@ void KRenderWidget::scroll(QPoint diff)
     {
       r.pan(total_pan_pos);
       r.stopAndWait();
-      r.renderMap();
+      r.renderPack();
       total_pan_pos = QPoint();
     }
   }
@@ -277,7 +277,7 @@ void KRenderWidget::checkZoomFinished()
     if (r.isRunning())
     {
       r.stopAndWait();
-      r.renderMap();
+      r.renderPack();
     }
     updateLabel(r.getPixmap(), 0);
     zoom_pixmap_rendered = false;
@@ -336,7 +336,7 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
   r.zoom(coef);
   if (mode == Out)
     r.enableLoading(false);
-  r.renderMap();
+  r.renderPack();
   zoom_timer.start();
 }
 

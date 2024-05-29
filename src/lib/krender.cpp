@@ -42,16 +42,16 @@ KRender::~KRender()
 void KRender::addMap(QString path, bool load_now)
 {
   stopAndWait();
-  insertMap(maps.count(), path, load_now);
+  insertPack(packs.count(), path, load_now);
 }
 
-void KRender::insertMap(int idx, QString path, bool load_now)
+void KRender::insertPack(int idx, QString path, bool load_now)
 {
   auto map = new KRenderPack(path);
   connect(map, &KRenderPack::loaded, this, &KRender::onLoaded,
           Qt::UniqueConnection);
   map->loadMain(load_now, pixel_size_mm);
-  maps.insert(idx, map);
+  packs.insert(idx, map);
 }
 
 void KRender::setMip(double v)
@@ -116,7 +116,7 @@ const QPixmap* KRender::getPixmap() const
 
 const KRenderPackCollection* KRender::getMaps() const
 {
-  return &maps;
+  return &packs;
 }
 
 QRectF KRender::getDrawRectM() const
@@ -136,21 +136,21 @@ void KRender::onLoaded()
     load_thread_count = 0;
   qDebug() << "loaded, load_thread_count" << load_thread_count;
   if (rendering_enabled && load_thread_count == 0)
-    renderMap();
+    renderPack();
 }
 
 void KRender::checkUnload()
 {
   auto draw_rect_m  = getDrawRectM();
   int  loaded_count = 0;
-  for (int i = -1; auto& map: maps)
+  for (int i = -1; auto& map: packs)
   {
     i++;
     if (i == 0)
       continue;
     if (map->getMain().status == KPackObjectCollection::Loaded)
     {
-      if (!needToLoadMap(map, draw_rect_m))
+      if (!needToLoadPack(map, draw_rect_m))
         if (loaded_count > 1)
           map->clear();
       loaded_count++;
@@ -158,12 +158,12 @@ void KRender::checkUnload()
   }
 }
 
-bool KRender::needToLoadMap(const KRenderPack* map,
-                            const QRectF&      draw_rect_m)
+bool KRender::needToLoadPack(const KRenderPack* pack,
+                             const QRectF&      draw_rect_m)
 {
-  if (map->getMainMip() > 0 && render_mip > map->getMainMip())
+  if (pack->getMainMip() > 0 && render_mip > pack->getMainMip())
     return false;
-  auto map_rect_m       = map->getFrame().toMeters();
+  auto map_rect_m       = pack->getFrame().toMeters();
   bool frame_intersects = draw_rect_m.intersects(map_rect_m);
   if (!frame_intersects)
     return false;
@@ -179,7 +179,7 @@ bool KRender::needToLoadMap(const KRenderPack* map,
   rect << frame_m.topRight();
   rect << frame_m.bottomLeft();
   rect << frame_m.bottomRight();
-  if (map->intersects(rect))
+  if (pack->intersects(rect))
     return true;
   return false;
 }
@@ -187,11 +187,11 @@ bool KRender::needToLoadMap(const KRenderPack* map,
 void KRender::checkLoad()
 {
   auto draw_rect_m = getDrawRectM();
-  for (auto& map: maps)
+  for (auto& map: packs)
   {
     auto map_rect_m = map->getFrame().toMeters();
 
-    if (!needToLoadMap(map, draw_rect_m))
+    if (!needToLoadPack(map, draw_rect_m))
       continue;
 
     if (map->getMain().status == KPackObjectCollection::Null &&
@@ -209,7 +209,7 @@ void KRender::checkLoad()
     }
     if (map->getMain().status == KPackObjectCollection::Loaded)
     {
-      if (needToLoadMap(map, draw_rect_m))
+      if (needToLoadPack(map, draw_rect_m))
       {
         int    tile_side_count = sqrt(map->getTiles().count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
@@ -323,7 +323,7 @@ QPoint KRender::deg2pix(KGeoCoor kp) const
           int((m.y() - render_top_left_m.y()) / render_mip)};
 }
 
-void KRender::paintPointObject(QPainter* p, const KRenderPack& map,
+void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
                                const KPackObject& obj, int render_idx)
 {
   auto& frame = obj.frame;
@@ -333,7 +333,7 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& map,
   if (!render_frame_m.contains(coor_m))
     return;
 
-  KClass* new_cl = map.classes[obj.class_idx];
+  KClass* new_cl = pack.classes[obj.class_idx];
   p->setPen(QPen(new_cl->pen, 2));
   p->setBrush(new_cl->brush);
   auto        kpos       = obj.polygons.first()->first();
@@ -384,7 +384,7 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
   return pl;
 }
 
-void KRender::paintPolygonObject(QPainter* p, const KRenderPack& map,
+void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
                                  const KPackObject& obj,
                                  int                render_idx)
 {
@@ -395,7 +395,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& map,
   auto   bottom_right_m = frame.bottom_right.toMeters();
   QRectF obj_frame_m    = {top_left_m, bottom_right_m};
 
-  KClass* new_cl = map.classes[obj.class_idx];
+  KClass* new_cl = pack.classes[obj.class_idx];
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
@@ -468,7 +468,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& map,
 }
 
 void KRender::paintLineObject(QPainter*          painter,
-                              const KRenderPack& map,
+                              const KRenderPack& pack,
                               const KPackObject& obj, int render_idx,
                               int line_iter)
 {
@@ -482,7 +482,7 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  KClass* new_cl = map.classes[obj.class_idx];
+  KClass* new_cl = pack.classes[obj.class_idx];
 
   Qt::PenStyle style = Qt::SolidLine;
   if (new_cl->style == KClass::Dash)
@@ -580,7 +580,7 @@ void KRender::paintLineObject(QPainter*          painter,
         {
           if (nh.length_pix > obj_name_width)
           {
-            nh.fix(&map, &obj, pl.at(nh.start_idx),
+            nh.fix(&pack, &obj, pl.at(nh.start_idx),
                    pl.at(nh.end_idx));
             name_holder_array[render_idx].append(nh);
           }
@@ -821,10 +821,10 @@ bool KRender::paintPolygonNames(QPainter* p)
   return true;
 }
 
-void KRender::render(QPainter* p, QVector<KRenderPack*> render_maps,
+void KRender::render(QPainter* p, QVector<KRenderPack*> render_packs,
                      int render_idx)
 {
-  for (auto map: render_maps)
+  for (auto map: render_packs)
   {
     KLocker main_locker(&map->main_lock, KLocker::Read);
     if (!main_locker.hasLocked())
@@ -834,17 +834,17 @@ void KRender::render(QPainter* p, QVector<KRenderPack*> render_maps,
       continue;
 
     for (int line_iter = 0; line_iter < 2; line_iter++)
-      renderMap(p, map, render_idx, line_iter);
+      renderPack(p, map, render_idx, line_iter);
   }
 }
 
-void KRender::renderMap(QPainter* p, const KRenderPack* map,
-                        int render_idx, int line_iter)
+void KRender::renderPack(QPainter* p, const KRenderPack* pack,
+                         int render_idx, int line_iter)
 {
-  if (!map || render_idx > map->render_start_list.count() - 1)
+  if (!pack || render_idx > pack->render_start_list.count() - 1)
     return;
 
-  auto start        = map->render_start_list[render_idx];
+  auto start        = pack->render_start_list[render_idx];
   int  object_count = 0;
 
   auto render_frame_m = getDrawRectM();
@@ -856,19 +856,19 @@ void KRender::renderMap(QPainter* p, const KRenderPack* map,
     int start_obj_idx = 0;
     if (layer_idx == start.layer_idx)
       start_obj_idx = start.obj_idx;
-    auto& layer     = map->render_data[layer_idx];
+    auto& layer     = pack->render_data[layer_idx];
     auto  obj_count = layer.count();
 
     for (int obj_idx = start_obj_idx; obj_idx < obj_count; obj_idx++)
     {
       auto obj = layer[obj_idx];
       object_count++;
-      if (object_count == map->render_object_count)
+      if (object_count == pack->render_object_count)
         return;
       if (!obj)
         continue;
 
-      auto new_cl = map->classes[obj->class_idx];
+      auto new_cl = pack->classes[obj->class_idx];
 
       if (new_cl->type != KClass::Line && line_iter == 1)
         continue;
@@ -877,13 +877,13 @@ void KRender::renderMap(QPainter* p, const KRenderPack* map,
           new_cl->brush == Qt::black)
         continue;
 
-      if (!checkMipRange(map, obj))
+      if (!checkMipRange(pack, obj))
         continue;
       if (obj->tile_frame_m.isValid())
         if (!obj->tile_frame_m.intersects(render_frame_m))
           continue;
 
-      if (!paintObject(p, map, *obj, render_idx, line_iter))
+      if (!paintObject(p, pack, *obj, render_idx, line_iter))
       {
         emit rendered(0);
         return;
@@ -967,7 +967,7 @@ void KRender::run()
 
   QVector<int> intersecting_maps;
   auto         draw_rect = getDrawRectM();
-  for (int map_idx = -1; auto& map: maps)
+  for (int map_idx = -1; auto& map: packs)
   {
     if (map->getMainMip() > 0 && render_mip > map->getMainMip())
       continue;
@@ -975,12 +975,12 @@ void KRender::run()
     if (map_idx == 0)
       continue;
 
-    if (needToLoadMap(map, draw_rect))
+    if (needToLoadPack(map, draw_rect))
       intersecting_maps.append(map_idx);
   }
 
   QVector<KRenderPack*> render_maps;
-  for (int map_idx = -1; auto& map: maps)
+  for (int map_idx = -1; auto& map: packs)
   {
     map_idx++;
 
@@ -992,7 +992,7 @@ void KRender::run()
     if (!big_locker.hasLocked())
       continue;
 
-    if (map_idx > 0 && !needToLoadMap(map, render_frame_m))
+    if (map_idx > 0 && !needToLoadPack(map, render_frame_m))
       continue;
 
     auto map_rect_m = map->getFrame().toMeters();
@@ -1079,7 +1079,7 @@ void KRender::renderUserObjects()
   time_since_last_repaint.start();
 }
 
-void KRender::renderMap()
+void KRender::renderPack()
 {
   if (isRunning())
     return;

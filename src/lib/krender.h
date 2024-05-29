@@ -63,7 +63,7 @@ class KRender: public QThread
   QPointF               center_m;
   QSize                 pixmap_size   = {100, 100};
   double                pixel_size_mm = 0.1;
-  KRenderPackCollection maps;
+  KRenderPackCollection packs;
   QFont                 font;
 
   QVector<PointName>     point_names[KRenderPack::render_count];
@@ -77,10 +77,10 @@ class KRender: public QThread
 
   void run();
   void start() = delete;
-  void insertMap(int idx, QString path, bool load_now);
-  void renderMap(QPainter* p, const KRenderPack* map, int render_idx,
-                 int line_iter);
-  void render(QPainter* p, QVector<KRenderPack*> render_maps,
+  void insertPack(int idx, QString path, bool load_now);
+  void renderPack(QPainter* p, const KRenderPack* pack,
+                  int render_idx, int line_iter);
+  void render(QPainter* p, QVector<KRenderPack*> render_packs,
               int render_idx);
 
   bool checkMipRange(const KPack* pack, const KPackObject* obj);
@@ -100,15 +100,15 @@ class KRender: public QThread
                         DrawTextEntry           new_dte);
 
   QPolygon poly2pix(const KGeoPolygon& polygon);
-  void     paintPointObject(QPainter* p, const KRenderPack& map,
+  void     paintPointObject(QPainter* p, const KRenderPack& pack,
                             const KPackObject& obj, int render_idx);
-  void     paintPolygonObject(QPainter* p, const KRenderPack& map,
+  void     paintPolygonObject(QPainter* p, const KRenderPack& pack,
                               const KPackObject& obj, int render_idx);
-  void     paintLineObject(QPainter* painter, const KRenderPack& map,
+  void     paintLineObject(QPainter* painter, const KRenderPack& pack,
                            const KPackObject& obj, int render_idx,
                            int line_iter);
   QRectF   getDrawRectM() const;
-  bool     needToLoadMap(const KRenderPack*, const QRectF& draw_rect);
+  bool     needToLoadPack(const KRenderPack*pack, const QRectF& draw_rect);
   void     checkLoad();
   void     checkUnload();
   void     onLoaded();
@@ -138,7 +138,7 @@ public:
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
   const KRenderPackCollection* getMaps() const;
-  void                         renderMap();
+  void                         renderPack();
   void                         renderUserObjects();
   void                         stopAndWait();
   void                         enableLoading(bool);
