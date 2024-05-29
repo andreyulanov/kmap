@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
     path.remove(".sitx");
     path.remove(".sitz");
     path.remove(".mptz");
-    KEditablePack map(path);
+    KPack pack(path);
 
     if (is_analyzing_local_map)
     {
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
           {
             found_borders = true;
             for (auto polygon: obj->polygons)
-              map.addBorder(*polygon);
+              pack.addBorder(*polygon);
           }
         }
         if (!found_borders)
@@ -156,9 +156,9 @@ int main(int argc, char* argv[])
                     "borders!";
     }
 
-    map.setClasses(class_list);
-    map.setMainMip(class_man.getMainMip());
-    map.setTileMip(class_man.getTileMip());
+    pack.setClasses(class_list);
+    pack.setMainMip(class_man.getMainMip());
+    pack.setTileMip(class_man.getTileMip());
     QVector<KPackObject*> obj_list;
     DFRAME                df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
         KGeoCoor::fromDegs(rad2deg(df.X2), rad2deg(df.Y1));
     auto bottom_right =
         KGeoCoor::fromDegs(rad2deg(df.X1), rad2deg(df.Y2));
-    map.setFrame({top_left, bottom_right});
+    pack.setFrame({top_left, bottom_right});
 
     int  object_count = mapGetObjectCount(hMap, 1);
     HOBJ info         = mapCreateSiteObject(hMap, hMap);
@@ -375,10 +375,10 @@ int main(int argc, char* argv[])
           ;
     qDebug() << "joinPolys() elapsed" << t.restart();
 
-    map.addObjects(obj_list, 500000);
+    pack.addObjects(obj_list, 500000);
 
     qDebug() << "  saving...";
-    map.save();
+    pack.save();
 
     qDeleteAll(obj_list);
 

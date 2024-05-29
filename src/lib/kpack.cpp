@@ -461,22 +461,18 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   }
 }
 
-KEditablePack::KEditablePack(const QString& path): KPack(path)
-{
-}
-
-void KEditablePack::setClasses(QVector<KClass*> v)
+void KPack::setClasses(QVector<KClass*> v)
 {
   classes = v;
 }
 
-void KEditablePack::addBorder(KGeoPolygon v)
+void KPack::addBorder(KGeoPolygon v)
 {
   borders.append(v);
 }
 
-void KEditablePack::addObjects(const QVector<KPackObject*>& obj_list,
-                               int max_objects_per_tile)
+void KPack::addObjects(const QVector<KPackObject*>& obj_list,
+                       int max_objects_per_tile)
 {
   int tile_side_num =
       std::ceil(1.0 * obj_list.count() / max_objects_per_tile);

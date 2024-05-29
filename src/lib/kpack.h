@@ -73,12 +73,7 @@ public:
 
   const KPackObjectCollection&          getMain() const;
   const QVector<KPackObjectCollection*> getTiles() const;
-};
 
-class KEditablePack: public KPack
-{
-public:
-  KEditablePack(const QString& path);
   void addObjects(const QVector<KPackObject*>& obj_list,
                   int                          max_objects_per_tile);
   void setClasses(QVector<KClass*>);
