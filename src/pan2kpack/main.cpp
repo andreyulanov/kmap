@@ -264,7 +264,9 @@ int main(int argc, char* argv[])
       KPackObject* obj = new KPackObject;
       obj->name        = name;
 
-      obj->cl = class_list[class_idx];
+      obj->cl        = class_list[class_idx];
+      obj->class_idx = class_idx;
+      KClass* new_cl = class_list[class_idx];
 
       for (auto attr: pan_class->attributes)
       {
@@ -351,13 +353,13 @@ int main(int argc, char* argv[])
       }
 
       if (is_analyzing_local_map)
-        if (obj->cl->id == "океан, море" || obj->cl->id == "водоём" ||
-            obj->cl->id == "река (площадной)")
+        if (new_cl->id == "океан, море" || new_cl->id == "водоём" ||
+            new_cl->id == "река (площадной)")
         {
           if (obj->polygons.count() > 20)
           {
             auto idx = class_man.getClassIdxById("complex_water");
-            obj->cl  = class_list[idx];
+            new_cl   = class_list[idx];
           }
         }
 
@@ -370,9 +372,12 @@ int main(int argc, char* argv[])
     QElapsedTimer t;
     t.start();
     for (auto obj: obj_list)
-      if (obj->cl->type == KClass::Line)
+    {
+      KClass* new_cl = class_list[obj->class_idx];
+      if (new_cl->type == KClass::Line)
         while (joinPolys(obj))
           ;
+    }
     qDebug() << "joinPolys() elapsed" << t.restart();
 
     pack.addObjects(obj_list, 500000);

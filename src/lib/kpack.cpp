@@ -19,9 +19,9 @@ void KPackObject::load(QVector<KClass*>* class_list, int& pos,
 
   read(ba, pos, attributes);
 
-  int class_idx;
   read(ba, pos, class_idx);
-  cl = (*class_list)[class_idx];
+  auto new_cl = (*class_list)[class_idx];
+  cl          = new_cl;
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -50,7 +50,7 @@ void KPackObject::load(QVector<KClass*>* class_list, int& pos,
     for (std::size_t i = 0; auto& polygon: polygons)
     {
       polygon = new KGeoPolygon;
-      polygon->load(ba, pos, cl->coor_precision_coef);
+      polygon->load(ba, pos, new_cl->coor_precision_coef);
       if (i++ == 0)
         frame = polygon->getFrame();
       else
@@ -61,7 +61,7 @@ void KPackObject::load(QVector<KClass*>* class_list, int& pos,
   {
     polygons.resize(1);
     auto polygon = new KGeoPolygon;
-    polygon->load(ba, pos, cl->coor_precision_coef);
+    polygon->load(ba, pos, new_cl->coor_precision_coef);
     polygons[0] = polygon;
     frame       = polygon->getFrame();
   }
@@ -92,7 +92,8 @@ void KPackObject::save(const QVector<KClass*>* class_list,
 
   write(ba, attributes);
 
-  auto class_idx = class_list->indexOf(cl);
+  class_idx      = class_list->indexOf(cl);
+  KClass* new_cl = (*class_list)[class_idx];
   write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));
@@ -104,12 +105,12 @@ void KPackObject::save(const QVector<KClass*>* class_list,
   }
 
   if (polygons.count() == 1)
-    polygons[0]->save(ba, cl->coor_precision_coef);
+    polygons[0]->save(ba, new_cl->coor_precision_coef);
   else
   {
     write(ba, polygons.count());
     for (auto& polygon: polygons)
-      polygon->save(ba, cl->coor_precision_coef);
+      polygon->save(ba, new_cl->coor_precision_coef);
   }
 }
 

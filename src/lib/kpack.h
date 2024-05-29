@@ -13,6 +13,7 @@
 struct KPackObject
 {
   KClass*                   cl;
+  int                       class_idx;
   QString                   name;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
