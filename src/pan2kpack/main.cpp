@@ -265,7 +265,7 @@ int main(int argc, char* argv[])
       obj->name        = name;
 
       obj->class_idx = class_idx;
-      KClass* new_cl = class_list[class_idx];
+      KClass new_cl  = class_list[class_idx];
 
       for (auto attr: pan_class->attributes)
       {
@@ -352,8 +352,8 @@ int main(int argc, char* argv[])
       }
 
       if (is_analyzing_local_map)
-        if (new_cl->id == "океан, море" || new_cl->id == "водоём" ||
-            new_cl->id == "река (площадной)")
+        if (new_cl.id == "океан, море" || new_cl.id == "водоём" ||
+            new_cl.id == "река (площадной)")
         {
           if (obj->polygons.count() > 20)
           {
@@ -372,8 +372,8 @@ int main(int argc, char* argv[])
     t.start();
     for (auto obj: obj_list)
     {
-      KClass* new_cl = class_list[obj->class_idx];
-      if (new_cl->type == KClass::Line)
+      KClass new_cl = class_list[obj->class_idx];
+      if (new_cl.type == KClass::Line)
         while (joinPolys(obj))
           ;
     }

@@ -463,9 +463,10 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   }
 }
 
-void KPack::setClasses(QVector<KClass*> v)
+void KPack::setClasses(QVector<KClass> src_classes)
 {
-  classes = v;
+  for (auto cl: src_classes)
+    classes.append(new KClass(cl));
 }
 
 void KPack::addBorder(KGeoPolygon v)

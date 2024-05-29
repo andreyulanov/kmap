@@ -76,7 +76,7 @@ public:
 
   void addObjects(const QVector<KPackObject*>& obj_list,
                   int                          max_objects_per_tile);
-  void setClasses(QVector<KClass*>);
+  void setClasses(QVector<KClass> src_classes);
   void addBorder(KGeoPolygon);
 };
 

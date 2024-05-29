@@ -44,21 +44,21 @@ void KClassManager::loadClasses(QString path, QString images_dir)
           continue;
         }
 
-        auto sh = new KClass;
+        KClass cl;
 
-        sh->id = obj.value("id").toString();
-        if (id_set.contains(sh->id))
+        cl.id = obj.value("id").toString();
+        if (id_set.contains(cl.id))
         {
-          error_str = sh->id + " has been already defined!";
+          error_str = cl.id + " has been already defined!";
           return;
         }
-        id_set.insert(sh->id);
+        id_set.insert(cl.id);
 
         auto type_str = obj.value("type").toString();
         if (!type_str.isEmpty())
         {
-          bool ok  = false;
-          sh->type = static_cast<KClass::Type>(
+          bool ok = false;
+          cl.type = static_cast<KClass::Type>(
               QMetaEnum::fromType<KClass::Type>().keyToValue(
                   type_str.toUtf8(), &ok));
           if (!ok)
@@ -68,12 +68,12 @@ void KClassManager::loadClasses(QString path, QString images_dir)
           }
         }
 
-        sh->style      = KClass::Solid;
+        cl.style       = KClass::Solid;
         auto style_str = obj.value("style").toString();
         if (!style_str.isEmpty())
         {
-          bool ok   = false;
-          sh->style = static_cast<KClass::Style>(
+          bool ok  = false;
+          cl.style = static_cast<KClass::Style>(
               QMetaEnum::fromType<KClass::Style>().keyToValue(
                   style_str.toUtf8(), &ok));
           if (!ok)
@@ -83,38 +83,38 @@ void KClassManager::loadClasses(QString path, QString images_dir)
           }
         }
 
-        sh->layer    = obj.value("layer").toInt();
-        sh->width_mm = obj.value("width_mm").toDouble();
+        cl.layer    = obj.value("layer").toInt();
+        cl.width_mm = obj.value("width_mm").toDouble();
 
         auto l = obj.value("pen").toArray().toVariantList();
         if (l.count() >= 3)
-          sh->pen = QColor{l.at(0).toInt(), l.at(1).toInt(),
-                           l.at(2).toInt()};
+          cl.pen = QColor{l.at(0).toInt(), l.at(1).toInt(),
+                          l.at(2).toInt()};
         if (l.count() == 4)
-          sh->pen.setAlpha(l.at(3).toInt());
+          cl.pen.setAlpha(l.at(3).toInt());
         else
-          sh->pen.setAlpha(255);
+          cl.pen.setAlpha(255);
 
         l = obj.value("brush").toArray().toVariantList();
         if (l.count() >= 3)
-          sh->brush = QColor{l.at(0).toInt(), l.at(1).toInt(),
-                             l.at(2).toInt()};
+          cl.brush = QColor{l.at(0).toInt(), l.at(1).toInt(),
+                            l.at(2).toInt()};
         if (l.count() == 4)
-          sh->brush.setAlpha(l.at(3).toInt());
+          cl.brush.setAlpha(l.at(3).toInt());
         else
-          sh->brush.setAlpha(255);
+          cl.brush.setAlpha(255);
 
         l = obj.value("tcolor").toArray().toVariantList();
         if (l.count() >= 3)
-          sh->tcolor = QColor{l.at(0).toInt(), l.at(1).toInt(),
-                              l.at(2).toInt()};
+          cl.tcolor = QColor{l.at(0).toInt(), l.at(1).toInt(),
+                             l.at(2).toInt()};
         if (l.count() == 4)
-          sh->tcolor.setAlpha(l.at(3).toInt());
+          cl.tcolor.setAlpha(l.at(3).toInt());
         else
-          sh->tcolor.setAlpha(255);
+          cl.tcolor.setAlpha(255);
 
-        sh->min_mip     = obj.value("min_mip").toDouble();
-        sh->max_mip     = obj.value("max_mip").toDouble();
+        cl.min_mip      = obj.value("min_mip").toDouble();
+        cl.max_mip      = obj.value("max_mip").toDouble();
         auto image_name = obj.value("image").toString();
         if (!image_name.isEmpty())
         {
@@ -123,16 +123,16 @@ void KClassManager::loadClasses(QString path, QString images_dir)
           if (image.isNull())
             qDebug() << "error opening" << image_path;
           else
-            sh->image = image.scaledToWidth(sh->getWidthPix(),
-                                            Qt::SmoothTransformation);
+            cl.image = image.scaledToWidth(cl.getWidthPix(),
+                                           Qt::SmoothTransformation);
         }
 
-        sh->coor_precision_coef =
+        cl.coor_precision_coef =
             obj.value("coor_precision_coef").toInt();
-        if (sh->coor_precision_coef == 0)
-          sh->coor_precision_coef = default_coor_precision_coef;
+        if (cl.coor_precision_coef == 0)
+          cl.coor_precision_coef = default_coor_precision_coef;
 
-        classes.append(sh);
+        classes.append(cl);
       }
     }
   }
@@ -143,17 +143,12 @@ KClassManager::KClassManager(QString _images_dir)
   images_dir = _images_dir;
 }
 
-KClassManager::~KClassManager()
-{
-  qDeleteAll(classes);
-}
-
 int KClassManager::getClassIdxById(QString id)
 {
-  for (int i = -1; auto sh: classes)
+  for (int i = -1; auto cl: classes)
   {
     i++;
-    if (sh->id == id)
+    if (cl.id == id)
       return i;
   }
   return -1;
@@ -163,12 +158,12 @@ KClass KClassManager::getClassById(QString id)
 {
   auto idx = getClassIdxById(id);
   if (idx >= 0)
-    return *classes.at(idx);
+    return classes.at(idx);
   else
     return KClass();
 }
 
-QVector<KClass*> KClassManager::getClasses()
+QVector<KClass> KClassManager::getClasses()
 {
   return classes;
 }
@@ -176,8 +171,8 @@ QVector<KClass*> KClassManager::getClasses()
 KClassImageList KClassManager::getClassImageList()
 {
   QVector<KClassImage> ret;
-  for (auto sh: classes)
-    ret.append({sh->id, sh->image});
+  for (auto cl: classes)
+    ret.append({cl.id, cl.image});
   return ret;
 }
 
