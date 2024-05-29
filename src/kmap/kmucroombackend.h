@@ -22,7 +22,9 @@ public slots:
     void showRoom(QXmppMucRoom*);
 signals:
     void roomJidChanged();
+    /// User entered incorrect Jid
     void invalidJid();
+    /// User adds a MUC room
     void addRoom(QString room_jid);
 private:
     QString room_jid;
@@ -33,7 +35,9 @@ private:
 };
 
 
-/// TODO: update rooms if their subject or name changed
+/// \brief Model that contains chat rooms.
+///
+/// TODO: update rooms if their subject or name changed.
 class KMucRoomsModel : public QAbstractListModel
 {
     Q_OBJECT
