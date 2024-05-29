@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-void KPackObject::load(QVector<KClass*>* class_list, int& pos,
+void KPackObject::load(QVector<KClass>* class_list, int& pos,
                        const QByteArray& ba)
 {
   using namespace KSerialize;
@@ -20,7 +20,7 @@ void KPackObject::load(QVector<KClass*>* class_list, int& pos,
   read(ba, pos, attributes);
 
   read(ba, pos, class_idx);
-  auto new_cl = (*class_list)[class_idx];
+  auto new_cl = &(*class_list)[class_idx];
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -81,8 +81,8 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-void KPackObject::save(const QVector<KClass*>* class_list,
-                       QByteArray&             ba)
+void KPackObject::save(const QVector<KClass>* class_list,
+                       QByteArray&            ba)
 {
   using namespace KSerialize;
   write(ba, (uchar)(name.count() > 0));
@@ -91,7 +91,7 @@ void KPackObject::save(const QVector<KClass*>* class_list,
 
   write(ba, attributes);
 
-  KClass* new_cl = (*class_list)[class_idx];
+  const KClass* new_cl = &(*class_list)[class_idx];
   write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));
@@ -173,12 +173,12 @@ void KPack::add(KPack* m)
   frame = frame.united(m->frame);
   for (auto new_obj: m->main)
   {
-    auto new_cl = m->classes[new_obj->class_idx];
+    auto new_cl = &m->classes[new_obj->class_idx];
     bool found  = false;
-    for (int class_idx = -1; auto sh: classes)
+    for (int class_idx = -1; auto& cl: classes)
     {
       class_idx++;
-      if (new_cl->id == sh->id)
+      if (new_cl->id == cl.id)
       {
         new_obj->class_idx = class_idx;
         found              = true;
@@ -211,7 +211,6 @@ void KPack::clear()
   }
   tiles.clear();
   classes.clear();
-  qDeleteAll(classes);
   main.status = KPackObjectCollection::Null;
 }
 
@@ -249,8 +248,8 @@ void KPack::save(QString new_path) const
   write(&f, main_mip);
   write(&f, tile_mip);
   write(&f, classes.count());
-  for (auto& cl: classes)
-    cl->save(&f);
+  for (auto cl: classes)
+    cl.save(&f);
 
   QByteArray ba;
   ba = qCompress(ba, 9);
@@ -349,11 +348,11 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   main.status = KPackObjectCollection::Loading;
   int class_count;
   read(&f, class_count);
-  classes.resize(class_count);
-  for (auto& cl: classes)
+  for (int i = 0; i < class_count; i++)
   {
-    cl = new KClass;
-    cl->load(&f, pixel_size_mm);
+    KClass cl;
+    cl.load(&f, pixel_size_mm);
+    classes.append(cl);
   }
 
   int ba_count = 0;
@@ -463,10 +462,9 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   }
 }
 
-void KPack::setClasses(QVector<KClass> src_classes)
+void KPack::setClasses(QVector<KClass> v)
 {
-  for (auto cl: src_classes)
-    classes.append(new KClass(cl));
+  classes = v;
 }
 
 void KPack::addBorder(KGeoPolygon v)
@@ -488,7 +486,7 @@ void KPack::addObjects(const QVector<KPackObject*>& obj_list,
   for (auto& obj: obj_list)
   {
     auto new_cl = classes[obj->class_idx];
-    if (new_cl->max_mip == 0 || new_cl->max_mip > getTileMip())
+    if (new_cl.max_mip == 0 || new_cl.max_mip > getTileMip())
       main.append(obj);
     else
     {

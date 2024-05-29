@@ -40,9 +40,9 @@ public:
   QColor  brush;
   QColor  tcolor;
   QImage  image;
-  void    save(QFile* f);
+  void    save(QFile* f) const;
   void    load(QFile* f, double pixel_size_mm);
-  int     getWidthPix();
+  int     getWidthPix() const;
 };
 
 struct KClassImage

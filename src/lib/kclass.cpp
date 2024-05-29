@@ -7,7 +7,7 @@
 #include <QJsonObject>
 #include <QMetaEnum>
 
-void KClass::save(QFile* f)
+void KClass::save(QFile* f) const
 {
   using namespace KSerialize;
   write(f, id);
@@ -33,7 +33,7 @@ void KClass::save(QFile* f)
   write(f, image);
 }
 
-int KClass::getWidthPix()
+int KClass::getWidthPix() const
 {
   return round(width_mm / pixel_size_mm);
 }

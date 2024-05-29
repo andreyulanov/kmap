@@ -14,7 +14,7 @@ class KRender: public QThread
   struct DrawTextEntry
   {
     QString       text;
-    KClass*       cl;
+    const KClass* cl;
     QRect         rect;
     QRect         actual_rect;
     Qt::Alignment alignment;
@@ -36,9 +36,9 @@ class KRender: public QThread
 
   struct PointName
   {
-    QRect       rect;
-    QStringList str_list;
-    KClass*     cl;
+    QRect         rect;
+    QStringList   str_list;
+    const KClass* cl;
   };
 
   Q_OBJECT
@@ -108,7 +108,8 @@ class KRender: public QThread
                            const KPackObject& obj, int render_idx,
                            int line_iter);
   QRectF   getDrawRectM() const;
-  bool     needToLoadPack(const KRenderPack*pack, const QRectF& draw_rect);
+  bool     needToLoadPack(const KRenderPack* pack,
+                          const QRectF&      draw_rect);
   void     checkLoad();
   void     checkUnload();
   void     onLoaded();

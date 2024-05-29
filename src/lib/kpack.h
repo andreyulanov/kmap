@@ -19,8 +19,8 @@ struct KPackObject
   QRectF                    tile_frame_m;
   QVector<KGeoPolygon*>     polygons;
   KGeoCoor                  getCenter();
-  void save(const QVector<KClass*>* class_list, QByteArray& ba);
-  void load(QVector<KClass*>* class_list, int& pos,
+  void save(const QVector<KClass> *class_list, QByteArray& ba);
+  void load(QVector<KClass> *class_list, int& pos,
             const QByteArray& ba);
   virtual ~KPackObject();
 };
@@ -52,7 +52,7 @@ protected:
   QVector<KPackObjectCollection*> tiles;
 
 public:
-  QVector<KClass*> classes;
+  QVector<KClass> classes;
   KPack(const QString& path);
   virtual ~KPack();
   void save(QString new_path = "") const;
