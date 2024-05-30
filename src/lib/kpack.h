@@ -10,23 +10,30 @@
 #include <QVariant>
 #include "kclass.h"
 
-struct KPackObject
+class KPackObject
 {
-  int                       class_idx;
-  QString                   name;
+  int class_idx;
+
+public:
+  QString name;
+
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
   QRectF                    tile_frame_m;
   QVector<KGeoPolygon*>     polygons;
 
-  KGeoCoor getCenter();
   KPackObject() = default;
   KPackObject(const KPackObject&);
   KPackObject& operator=(const KPackObject&);
-  void save(const QVector<KClass>& class_list, QByteArray& ba);
-  void load(QVector<KClass>& class_list, int& pos,
-            const QByteArray& ba);
   virtual ~KPackObject();
+
+  int  getClassIdx() const;
+  void setClassIdx(int);
+
+  void     save(const QVector<KClass>& class_list, QByteArray& ba);
+  void     load(QVector<KClass>& class_list, int& pos,
+                const QByteArray& ba);
+  KGeoCoor getCenter();
 };
 
 struct KTile: public QVector<KPackObject*>
@@ -49,12 +56,12 @@ class KPack
   double  tile_mip = 0;
 
 protected:
-  QVector<KClass>                 classes;
-  KGeoRect                        frame;
-  QVector<QPolygonF>              borders_m;
-  QVector<KGeoPolygon>            borders;
-  KTile           main;
-  QVector<KTile*> tiles;
+  QVector<KClass>      classes;
+  KGeoRect             frame;
+  QVector<QPolygonF>   borders_m;
+  QVector<KGeoPolygon> borders;
+  KTile                main;
+  QVector<KTile*>      tiles;
 
 public:
   KPack(const QString& path);

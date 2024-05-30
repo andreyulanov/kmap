@@ -81,6 +81,16 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
+int KPackObject::getClassIdx() const
+{
+  return class_idx;
+}
+
+void KPackObject::setClassIdx(int v)
+{
+  class_idx = v;
+}
+
 void KPackObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba)
 {
@@ -196,15 +206,15 @@ void KPack::add(const KPack& m)
   frame = frame.united(m.frame);
   for (auto new_obj: m.main)
   {
-    auto new_cl = &m.classes[new_obj->class_idx];
+    auto new_cl = &m.classes[new_obj->getClassIdx()];
     bool found  = false;
     for (int class_idx = -1; auto& cl: classes)
     {
       class_idx++;
       if (new_cl->id == cl.id)
       {
-        new_obj->class_idx = class_idx;
-        found              = true;
+        new_obj->setClassIdx(class_idx);
+        found = true;
         break;
       }
     }
@@ -421,8 +431,7 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
 {
   if (main.status != KTile::Loaded)
     return;
-  if (tiles[tile_idx] &&
-      tiles[tile_idx]->status == KTile::Loading)
+  if (tiles[tile_idx] && tiles[tile_idx]->status == KTile::Loading)
     return;
 
   qDebug() << "loading tile" << tile_idx << "from" << path;
@@ -514,7 +523,7 @@ void KPack::addObjects(QVector<KPackObject> src_obj_list,
   for (auto& src_obj: src_obj_list)
   {
     auto obj = new KPackObject(src_obj);
-    auto cl  = classes[obj->class_idx];
+    auto cl  = classes[obj->getClassIdx()];
     if (cl.max_mip == 0 || cl.max_mip > getTileMip())
       main.append(obj);
     else

@@ -56,12 +56,11 @@ void KRenderPack::loadTile(int tile_idx, QRectF tile_rect_m)
   loaded();
 }
 
-void KRenderPack::addCollectionToIndex(
-    const KTile* collection)
+void KRenderPack::addCollectionToIndex(const KTile* collection)
 {
   for (auto& obj: *collection)
   {
-    auto cl = getClasses()[obj->class_idx];
+    auto cl = getClasses()[obj->getClassIdx()];
     render_data[cl.layer].append(obj);
   }
 

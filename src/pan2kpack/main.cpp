@@ -264,8 +264,8 @@ int main(int argc, char* argv[])
       KPackObject obj;
       obj.name = name;
 
-      obj.class_idx = class_idx;
-      KClass cl     = class_list[class_idx];
+      obj.setClassIdx(class_idx);
+      KClass cl = class_list[class_idx];
 
       for (auto attr: pan_class->attributes)
       {
@@ -369,7 +369,7 @@ int main(int argc, char* argv[])
     t.start();
     for (auto obj: obj_list)
     {
-      KClass cl = class_list[obj.class_idx];
+      KClass cl = class_list[obj.getClassIdx()];
       if (cl.type == KClass::Line)
         while (joinPolys(obj))
           ;
