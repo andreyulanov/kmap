@@ -18,7 +18,10 @@ struct KPackObject
   KGeoRect                  frame;
   QRectF                    tile_frame_m;
   QVector<KGeoPolygon*>     polygons;
-  KGeoCoor                  getCenter();
+
+  KGeoCoor getCenter();
+  KPackObject() = default;
+  KPackObject(const KPackObject&);
   void save(const QVector<KClass>& class_list, QByteArray& ba);
   void load(QVector<KClass>& class_list, int& pos,
             const QByteArray& ba);
@@ -71,8 +74,8 @@ public:
   void            setFrame(KGeoRect);
   const KGeoRect& getFrame() const;
 
-  const KPackObjectCollection&          getMain() const;
-  const QVector<KPackObjectCollection*> getTiles() const;
+  const KPackObjectCollection&           getMain() const;
+  const QVector<KPackObjectCollection*>& getTiles() const;
 
   void addObjects(const QVector<KPackObject*>& obj_list,
                   int                          max_objects_per_tile);
