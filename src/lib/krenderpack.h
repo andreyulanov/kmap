@@ -33,7 +33,7 @@ public:
   ~KRenderPack();
   void clear();
   void loadMain(bool load_objects, double pixel_size_mm);
-  void loadTile(int tile_idx, QRectF tile_rect_m);
+  void loadTile(int tile_idx);
   bool intersects(QPolygonF polygon) const;
 };
 

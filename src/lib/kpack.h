@@ -12,14 +12,13 @@
 
 class KPackObject
 {
-  int     class_idx;
-  QString name;
-
-public:
+  int                       class_idx;
+  QString                   name;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
-  QRectF                    tile_frame_m;
-  QVector<KGeoPolygon*>     polygons;
+
+public:
+  QVector<KGeoPolygon*> polygons;
 
   KPackObject() = default;
   KPackObject(const KPackObject&);
@@ -31,6 +30,12 @@ public:
 
   QString getName() const;
   void    setName(QString);
+
+  KGeoRect getFrame() const;
+  void     setFrame(KGeoRect);
+
+  QMap<QString, QByteArray> getAttributes() const;
+  void                      addAttribute(QString, QByteArray);
 
   void     save(const QVector<KClass>& class_list, QByteArray& ba);
   void     load(QVector<KClass>& class_list, int& pos,
@@ -70,7 +75,7 @@ public:
   virtual ~KPack();
   void save(QString new_path = "") const;
   void loadMain(bool load_objects, double pixel_size_mm);
-  void loadTile(int tile_idx, QRectF tile_rect_m);
+  void loadTile(int tile_idx);
   void loadAll(double pixel_size_mm);
   void clear();
   void add(const KPack&);

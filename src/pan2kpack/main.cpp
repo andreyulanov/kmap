@@ -138,9 +138,9 @@ int main(int argc, char* argv[])
         bool found_borders = false;
         for (auto obj: world_map->getMain())
         {
-          auto attr_val =
-              QString::fromUtf8(obj->attributes.value("iso_code"))
-                  .toLower();
+          auto attr_val = QString::fromUtf8(
+                              obj->getAttributes().value("iso_code"))
+                              .toLower();
           if (!attr_val.isEmpty() && map_code.contains(attr_val))
           {
             found_borders = true;
@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
                                        sizeof(str_utf16), 1))
         {
           value = QString::fromUtf16(str_utf16).simplified();
-          obj.attributes.insert(attr.name, value.toUtf8());
+          obj.addAttribute(attr.name, value.toUtf8());
         }
       }
 
@@ -319,9 +319,9 @@ int main(int argc, char* argv[])
         bool need_to_wrap = false;
         if (map_name.contains("ru-chu"))
           need_to_wrap = true;
-        if (!obj.attributes.isEmpty())
+        if (!obj.getAttributes().isEmpty())
         {
-          auto attr = obj.attributes.first().toLower();
+          auto attr = obj.getAttributes().first().toLower();
           if (attr == "ru-chu")
             need_to_wrap = true;
           if (attr.toLower() == "rus")
@@ -338,10 +338,10 @@ int main(int argc, char* argv[])
 
         obj.polygons.append(polygon);
 
-        if (obj.frame.isNull())
-          obj.frame = polygon->getFrame();
+        if (obj.getFrame().isNull())
+          obj.setFrame(polygon->getFrame());
         else
-          obj.frame = obj.frame.united(polygon->getFrame());
+          obj.setFrame(obj.getFrame().united(polygon->getFrame()));
       }
 
       if (max_dist < pan_class->coor_precision_coef * 0.01 &&

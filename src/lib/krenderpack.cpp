@@ -47,9 +47,9 @@ void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
   }
 }
 
-void KRenderPack::loadTile(int tile_idx, QRectF tile_rect_m)
+void KRenderPack::loadTile(int tile_idx)
 {
-  KPack::loadTile(tile_idx, tile_rect_m);
+  KPack::loadTile(tile_idx);
   QWriteLocker small_locker(&tile_lock);
   addCollectionToIndex(tiles[tile_idx]);
   tiles[tile_idx]->status = KTile::Loaded;

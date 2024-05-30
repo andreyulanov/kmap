@@ -231,8 +231,8 @@ void KRender::checkLoad()
               load_thread_count++;
               qDebug() << "loading tile, load_thread_count"
                        << load_thread_count;
-              QtConcurrent::run(map, &KRenderPack::loadTile, tile_idx,
-                                tile_rect_m);
+              QtConcurrent::run(map, &KRenderPack::loadTile,
+                                tile_idx);
             }
           tile_idx++;
         }
@@ -326,7 +326,7 @@ QPoint KRender::deg2pix(KGeoCoor kp) const
 void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
                                const KPackObject& obj, int render_idx)
 {
-  auto& frame = obj.frame;
+  auto frame = obj.getFrame();
 
   auto coor_m = frame.top_left.toMeters();
 
@@ -387,7 +387,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
                                  const KPackObject& obj,
                                  int                render_idx)
 {
-  auto& frame = obj.frame;
+  auto  frame = obj.getFrame();
   QRect obj_frame_pix;
 
   auto   top_left_m     = frame.top_left.toMeters();
@@ -434,8 +434,8 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
         !cl->image.isNull())
     {
 
-      QPoint top_left_pix     = deg2pix(obj.frame.top_left);
-      QPoint bottom_right_pix = deg2pix(obj.frame.bottom_right);
+      QPoint top_left_pix     = deg2pix(obj.getFrame().top_left);
+      QPoint bottom_right_pix = deg2pix(obj.getFrame().bottom_right);
       obj_frame_pix           = {top_left_pix, bottom_right_pix};
 
       auto  c = obj_frame_pix.center();
@@ -471,7 +471,7 @@ void KRender::paintLineObject(QPainter*          painter,
                               const KPackObject& obj, int render_idx,
                               int line_iter)
 {
-  auto& frame = obj.frame;
+  auto frame = obj.getFrame();
 
   auto top_left_m     = frame.top_left.toMeters();
   auto bottom_right_m = frame.bottom_right.toMeters();
@@ -497,7 +497,7 @@ void KRender::paintLineObject(QPainter*          painter,
   int          sizeable_w = 0;
   int          w          = fixed_w;
   bool         one_way    = false;
-  QMapIterator it(obj.attributes);
+  QMapIterator it(obj.getAttributes());
   while (it.hasNext())
   {
     it.next();
@@ -846,8 +846,6 @@ void KRender::renderPack(QPainter* p, const KRenderPack* pack,
   auto start        = pack->render_start_list[render_idx];
   int  object_count = 0;
 
-  auto render_frame_m = getDrawRectM();
-
   p->setRenderHint(QPainter::Antialiasing);
   for (int layer_idx = start.layer_idx;
        layer_idx < KRenderPack::max_layer_count; layer_idx++)
@@ -878,9 +876,6 @@ void KRender::renderPack(QPainter* p, const KRenderPack* pack,
 
       if (!checkMipRange(pack, obj))
         continue;
-      if (obj->tile_frame_m.isValid())
-        if (!obj->tile_frame_m.intersects(render_frame_m))
-          continue;
 
       if (!paintObject(p, pack, *obj, render_idx, line_iter))
       {

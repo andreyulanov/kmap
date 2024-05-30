@@ -17,7 +17,7 @@ KPackFetcher::KPackFetcher(QString _map_dir, const KPack* world_map)
   for (auto obj: world_map->getMain())
   {
     auto iso_code =
-        QString::fromUtf8(obj->attributes.value("iso_code"))
+        QString::fromUtf8(obj->getAttributes().value("iso_code"))
             .toLower();
     if (iso_code.isEmpty())
       continue;
@@ -26,7 +26,7 @@ KPackFetcher::KPackFetcher(QString _map_dir, const KPack* world_map)
     for (auto poly: obj->polygons)
       polygons_m.append(poly->toPolygonM());
 
-    auto entry = LocalMapEntry{obj->frame.toRectM(), polygons_m};
+    auto entry = LocalMapEntry{obj->getFrame().toRectM(), polygons_m};
     if (name_list.contains(iso_code))
       iso_metrics_map[iso_code] = entry;
   }

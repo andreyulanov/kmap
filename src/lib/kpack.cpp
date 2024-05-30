@@ -101,6 +101,26 @@ void KPackObject::setName(QString v)
   name = v;
 }
 
+QMap<QString, QByteArray> KPackObject::getAttributes() const
+{
+  return attributes;
+}
+
+void KPackObject::addAttribute(QString k, QByteArray v)
+{
+  attributes.insert(k, v);
+}
+
+KGeoRect KPackObject::getFrame() const
+{
+  return frame;
+}
+
+void KPackObject::setFrame(KGeoRect v)
+{
+  frame = v;
+}
+
 void KPackObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba)
 {
@@ -137,11 +157,10 @@ KPackObject& KPackObject::operator=(const KPackObject& src_obj)
   qDeleteAll(polygons);
   polygons.clear();
   attributes.clear();
-  class_idx    = src_obj.class_idx;
-  name         = src_obj.name;
-  attributes   = src_obj.attributes;
-  frame        = src_obj.frame;
-  tile_frame_m = src_obj.tile_frame_m;
+  class_idx  = src_obj.class_idx;
+  name       = src_obj.name;
+  attributes = src_obj.attributes;
+  frame      = src_obj.frame;
   for (auto src_polygon: src_obj.polygons)
   {
     auto polygon = new KGeoPolygon;
@@ -434,10 +453,10 @@ void KPack::loadAll(double pixel_size_mm)
 {
   loadMain(true, pixel_size_mm);
   for (int i = 0; i < tiles.count(); i++)
-    loadTile(i, QRect());
+    loadTile(i);
 }
 
-void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
+void KPack::loadTile(int tile_idx)
 {
   if (main.status != KTile::Loaded)
     return;
@@ -500,7 +519,6 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   {
     obj = new KPackObject;
     obj->load(classes, pos, ba);
-    obj->tile_frame_m = tile_rect_m;
   }
 }
 
@@ -538,7 +556,7 @@ void KPack::addObjects(QVector<KPackObject> src_obj_list,
       main.append(obj);
     else
     {
-      auto   obj_top_left_m = obj->frame.top_left.toMeters();
+      auto   obj_top_left_m = obj->getFrame().top_left.toMeters();
       double shift_x_m      = obj_top_left_m.x() - map_top_left_m.x();
       int    part_idx_x =
           1.0 * shift_x_m / map_size_m.width() * tile_side_num;
