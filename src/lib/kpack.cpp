@@ -495,6 +495,11 @@ void KPack::addBorder(KGeoPolygon v)
   borders.append(v);
 }
 
+const QVector<KClass>& KPack::getClasses() const
+{
+  return classes;
+}
+
 void KPack::addObjects(QVector<KPackObject> src_obj_list,
                        int                  max_objects_per_tile)
 {

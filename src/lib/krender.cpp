@@ -333,7 +333,7 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
   if (!render_frame_m.contains(coor_m))
     return;
 
-  auto new_cl = &pack.classes[obj.class_idx];
+  auto new_cl = &pack.getClasses()[obj.class_idx];
   p->setPen(QPen(new_cl->pen, 2));
   p->setBrush(new_cl->brush);
   auto        kpos       = obj.polygons.first()->first();
@@ -395,7 +395,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
   auto   bottom_right_m = frame.bottom_right.toMeters();
   QRectF obj_frame_m    = {top_left_m, bottom_right_m};
 
-  auto new_cl = &pack.classes[obj.class_idx];
+  auto new_cl = &pack.getClasses()[obj.class_idx];
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
@@ -482,7 +482,7 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  auto new_cl = &pack.classes[obj.class_idx];
+  auto new_cl = &pack.getClasses()[obj.class_idx];
 
   Qt::PenStyle style = Qt::SolidLine;
   if (new_cl->style == KClass::Dash)
@@ -643,7 +643,7 @@ void KRender::NameHolder::fix(const KPack*       pack,
     angle_deg -= 180;
   if (angle_deg < -90)
     angle_deg += 180;
-  tcolor = pack->classes[_obj->class_idx].tcolor;
+  tcolor = pack->getClasses()[_obj->class_idx].tcolor;
 }
 
 bool KRender::isCluttering(const QRect& rect)
@@ -660,7 +660,7 @@ bool KRender::isCluttering(const QRect& rect)
 
 bool KRender::checkMipRange(const KPack* pack, const KPackObject* obj)
 {
-  auto new_cl = &pack->classes[obj->class_idx];
+  auto new_cl = &pack->getClasses()[obj->class_idx];
   return (new_cl->min_mip == 0 || render_mip >= new_cl->min_mip) &&
          (new_cl->max_mip == 0 || render_mip <= new_cl->max_mip);
 }
@@ -669,7 +669,7 @@ bool KRender::paintObject(QPainter* p, const KRenderPack* map,
                           const KPackObject& obj, int render_idx,
                           int line_iter)
 {
-  auto new_cl = &map->classes[obj.class_idx];
+  auto new_cl = &map->getClasses()[obj.class_idx];
   switch (new_cl->type)
   {
   case KClass::Point:
@@ -868,7 +868,7 @@ void KRender::renderPack(QPainter* p, const KRenderPack* pack,
       if (!obj)
         continue;
 
-      auto new_cl = &pack->classes[obj->class_idx];
+      auto new_cl = &pack->getClasses()[obj->class_idx];
 
       if (new_cl->type != KClass::Line && line_iter == 1)
         continue;

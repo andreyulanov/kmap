@@ -49,6 +49,7 @@ class KPack
   double  tile_mip = 0;
 
 protected:
+  QVector<KClass>                 classes;
   KGeoRect                        frame;
   QVector<QPolygonF>              borders_m;
   QVector<KGeoPolygon>            borders;
@@ -56,7 +57,6 @@ protected:
   QVector<KPackObjectCollection*> tiles;
 
 public:
-  QVector<KClass> classes;
   KPack(const QString& path);
   virtual ~KPack();
   void save(QString new_path = "") const;
@@ -78,10 +78,11 @@ public:
   const KPackObjectCollection&           getMain() const;
   const QVector<KPackObjectCollection*>& getTiles() const;
 
-  void addObjects(QVector<KPackObject> obj_list,
-                  int                  max_objects_per_tile);
-  void setClasses(QVector<KClass> src_classes);
-  void addBorder(KGeoPolygon);
+  void                   addObjects(QVector<KPackObject> obj_list,
+                                    int                  max_objects_per_tile);
+  void                   setClasses(QVector<KClass> src_classes);
+  void                   addBorder(KGeoPolygon);
+  const QVector<KClass>& getClasses() const;
 };
 
 #endif  // KPACK_H
