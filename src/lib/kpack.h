@@ -12,11 +12,10 @@
 
 class KPackObject
 {
-  int class_idx;
-
-public:
+  int     class_idx;
   QString name;
 
+public:
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
   QRectF                    tile_frame_m;
@@ -29,6 +28,9 @@ public:
 
   int  getClassIdx() const;
   void setClassIdx(int);
+
+  QString getName() const;
+  void    setName(QString);
 
   void     save(const QVector<KClass>& class_list, QByteArray& ba);
   void     load(QVector<KClass>& class_list, int& pos,

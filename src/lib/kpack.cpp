@@ -91,6 +91,16 @@ void KPackObject::setClassIdx(int v)
   class_idx = v;
 }
 
+QString KPackObject::getName() const
+{
+  return name;
+}
+
+void KPackObject::setName(QString v)
+{
+  name = v;
+}
+
 void KPackObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba)
 {

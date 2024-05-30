@@ -340,10 +340,10 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
   QPoint      pos        = deg2pix(kpos);
   int         max_length = 0;
   QStringList str_list;
-  if (!obj.name.isEmpty())
+  if (!obj.getName().isEmpty())
   {
-    str_list += obj.name;
-    max_length = obj.name.count();
+    str_list += obj.getName();
+    max_length = obj.getName().count();
   }
 
   auto rect = QRect{pos.x(), pos.y(), max_length * cl->getWidthPix(),
@@ -426,7 +426,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
 
     auto pl = poly2pix(*polygon);
 
-    if ((polygon_idx == 0 && !obj.name.isEmpty() &&
+    if ((polygon_idx == 0 && !obj.getName().isEmpty() &&
          obj_span_pix < std::min(pixmap_size.width(),
                                  pixmap_size.height() / 2) &&
          obj_span_pix >
@@ -446,7 +446,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
       actual_rect.translate({-w / 2, -w / 2});
 
       addDrawTextEntry(draw_text_array[render_idx],
-                       {obj.name, cl, obj_frame_pix, actual_rect,
+                       {obj.getName(), cl, obj_frame_pix, actual_rect,
                         Qt::AlignCenter});
     }
 
@@ -489,9 +489,9 @@ void KRender::paintLineObject(QPainter*          painter,
   if (cl->style == KClass::Dots)
     style = Qt::DotLine;
   int obj_name_width = 0;
-  if (!obj.name.isEmpty())
+  if (!obj.getName().isEmpty())
     obj_name_width =
-        painter->font().pixelSize() * obj.name.count() * 0.3;
+        painter->font().pixelSize() * obj.getName().count() * 0.3;
 
   auto         fixed_w    = cl->getWidthPix();
   int          sizeable_w = 0;
@@ -555,7 +555,7 @@ void KRender::paintLineObject(QPainter*          painter,
         }
       }
 
-    if (!obj.name.isEmpty() && poly_idx == 0)
+    if (!obj.getName().isEmpty() && poly_idx == 0)
       for (int point_idx = -1; auto p: pl)
       {
         point_idx++;
@@ -755,9 +755,9 @@ bool KRender::paintLineNames(QPainter* p)
     {
       p->save();
       QRect text_rect;
-      text_rect.setSize(
-          {int(p->font().pixelSize() * nh.obj->name.count() * 0.6),
-           p->font().pixelSize()});
+      text_rect.setSize({int(p->font().pixelSize() *
+                             nh.obj->getName().count() * 0.6),
+                         p->font().pixelSize()});
 
       QTransform tr;
       tr.translate(nh.mid_point.x(), nh.mid_point.y());
@@ -773,7 +773,7 @@ bool KRender::paintLineNames(QPainter* p)
 
       p->setTransform(tr);
       text_rect_array.append(mapped_rect);
-      paintOutlinedText(p, nh.obj->name, nh.tcolor);
+      paintOutlinedText(p, nh.obj->getName(), nh.tcolor);
       p->restore();
       if (!canContinue())
         return false;

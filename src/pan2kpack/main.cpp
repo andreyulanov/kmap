@@ -262,7 +262,7 @@ int main(int argc, char* argv[])
       name = name.remove("\"");
 
       KPackObject obj;
-      obj.name = name;
+      obj.setName(name);
 
       obj.setClassIdx(class_idx);
       KClass cl = class_list[class_idx];
