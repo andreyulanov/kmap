@@ -16,10 +16,9 @@ class KPackObject
   QString                   name;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
+  QVector<KGeoPolygon*>     polygons;
 
 public:
-  QVector<KGeoPolygon*> polygons;
-
   KPackObject() = default;
   KPackObject(const KPackObject&);
   KPackObject& operator=(const KPackObject&);
@@ -36,6 +35,10 @@ public:
 
   QMap<QString, QByteArray> getAttributes() const;
   void                      addAttribute(QString, QByteArray);
+
+  const QVector<KGeoPolygon*>& getPolygons() const;
+  void                         removePolygonAt(int idx);
+  void                         addPolygon(KGeoPolygon*);
 
   void     save(const QVector<KClass>& class_list, QByteArray& ba);
   void     load(QVector<KClass>& class_list, int& pos,

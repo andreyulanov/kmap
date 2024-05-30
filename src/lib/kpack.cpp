@@ -121,6 +121,22 @@ void KPackObject::setFrame(KGeoRect v)
   frame = v;
 }
 
+const QVector<KGeoPolygon*>& KPackObject::getPolygons() const
+{
+  return polygons;
+}
+
+void KPackObject::removePolygonAt(int idx)
+{
+  delete polygons.at(idx);
+  polygons.removeAt(idx);
+}
+
+void KPackObject::addPolygon(KGeoPolygon* v)
+{
+  polygons.append(v);
+}
+
 void KPackObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba)
 {

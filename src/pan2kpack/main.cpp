@@ -23,11 +23,12 @@ bool isVectorMap(QString path)
 auto joinPolys(KPackObject& obj)
 {
   double join_tolerance_m = 1.0;
-  for (int i = -1; auto& polygon1: obj.polygons)
+  auto   polygons         = obj.getPolygons();
+  for (int i = -1; auto& polygon1: polygons)
   {
     i++;
     auto last1 = polygon1->last();
-    for (int j = -1; auto& polygon2: obj.polygons)
+    for (int j = -1; auto& polygon2: polygons)
     {
       j++;
       if (i == j)
@@ -40,8 +41,7 @@ auto joinPolys(KPackObject& obj)
       if (dx < join_tolerance_m && dy < join_tolerance_m)
       {
         polygon1->append(*polygon2);
-        delete polygon2;
-        obj.polygons.removeAt(j);
+        obj.removePolygonAt(j);
         return true;
       }
     }
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
           if (!attr_val.isEmpty() && map_code.contains(attr_val))
           {
             found_borders = true;
-            for (auto polygon: obj->polygons)
+            for (auto polygon: obj->getPolygons())
               pack.addBorder(*polygon);
           }
         }
@@ -336,7 +336,7 @@ int main(int argc, char* argv[])
               p = p.wrapped();
         }
 
-        obj.polygons.append(polygon);
+        obj.addPolygon(polygon);
 
         if (obj.getFrame().isNull())
           obj.setFrame(polygon->getFrame());
@@ -352,7 +352,7 @@ int main(int argc, char* argv[])
         if (cl.id == "океан, море" || cl.id == "водоём" ||
             cl.id == "река (площадной)")
         {
-          if (obj.polygons.count() > 20)
+          if (obj.getPolygons().count() > 20)
           {
             auto idx = class_man.getClassIdxById("complex_water");
             cl       = class_list[idx];

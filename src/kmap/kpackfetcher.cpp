@@ -23,7 +23,7 @@ KPackFetcher::KPackFetcher(QString _map_dir, const KPack* world_map)
       continue;
 
     QVector<QPolygonF> polygons_m;
-    for (auto poly: obj->polygons)
+    for (auto poly: obj->getPolygons())
       polygons_m.append(poly->toPolygonM());
 
     auto entry = LocalMapEntry{obj->getFrame().toRectM(), polygons_m};

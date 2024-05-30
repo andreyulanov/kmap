@@ -336,7 +336,7 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
   auto cl = &pack.getClasses()[obj.getClassIdx()];
   p->setPen(QPen(cl->pen, 2));
   p->setBrush(cl->brush);
-  auto        kpos       = obj.polygons.first()->first();
+  auto        kpos       = obj.getPolygons().first()->first();
   QPoint      pos        = deg2pix(kpos);
   int         max_length = 0;
   QStringList str_list;
@@ -420,7 +420,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
     p->setBrush(cl->brush);
 
   QPainterPath path;
-  for (int polygon_idx = -1; auto polygon: obj.polygons)
+  for (int polygon_idx = -1; auto polygon: obj.getPolygons())
   {
     polygon_idx++;
 
@@ -450,7 +450,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
                         Qt::AlignCenter});
     }
 
-    if (obj.polygons.count() == 1)
+    if (obj.getPolygons().count() == 1)
     {
       p->drawPolygon(pl);
       continue;
@@ -514,7 +514,7 @@ void KRender::paintLineObject(QPainter*          painter,
   painter->setPen(QPen(cl->pen, w, style));
   painter->setBrush(Qt::NoBrush);
 
-  for (int poly_idx = -1; auto polygon: obj.polygons)
+  for (int poly_idx = -1; auto polygon: obj.getPolygons())
   {
     poly_idx++;
     NameHolder nh;
