@@ -143,16 +143,16 @@ void KRender::checkUnload()
 {
   auto draw_rect_m  = getDrawRectM();
   int  loaded_count = 0;
-  for (int i = -1; auto& map: packs)
+  for (int i = -1; auto& pack: packs)
   {
     i++;
     if (i == 0)
       continue;
-    if (map->getMain().status == KTile::Loaded)
+    if (pack->getMain().status == KTile::Loaded)
     {
-      if (!needToLoadPack(map, draw_rect_m))
+      if (!needToLoadPack(pack, draw_rect_m))
         if (loaded_count > 1)
-          map->clear();
+          pack->clear();
       loaded_count++;
     }
   }
@@ -187,34 +187,34 @@ bool KRender::needToLoadPack(const KRenderPack* pack,
 void KRender::checkLoad()
 {
   auto draw_rect_m = getDrawRectM();
-  for (auto& map: packs)
+  for (auto& pack: packs)
   {
-    auto map_rect_m = map->getFrame().toMeters();
+    auto map_rect_m = pack->getFrame().toMeters();
 
-    if (!needToLoadPack(map, draw_rect_m))
+    if (!needToLoadPack(pack, draw_rect_m))
       continue;
 
-    if (map->getMain().status == KTile::Null &&
+    if (pack->getMain().status == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
       load_thread_count++;
       qDebug() << "loading main, load_thread_count"
                << load_thread_count;
       QtConcurrent::run(
-          [this, &map]()
+          [this, &pack]()
           {
-            map->loadMain(true, pixel_size_mm);
+            pack->loadMain(true, pixel_size_mm);
           });
       continue;
     }
-    if (map->getMain().status == KTile::Loaded)
+    if (pack->getMain().status == KTile::Loaded)
     {
-      if (needToLoadPack(map, draw_rect_m))
+      if (needToLoadPack(pack, draw_rect_m))
       {
-        int    tile_side_count = sqrt(map->getTiles().count());
+        int    tile_side_count = sqrt(pack->getTiles().count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
                               map_rect_m.height() / tile_side_count};
-        for (int tile_idx = 0; auto& tile: map->getTiles())
+        for (int tile_idx = 0; auto& tile: pack->getTiles())
         {
           int    tile_idx_y = tile_idx / tile_side_count;
           int    tile_idx_x = tile_idx - tile_idx_y * tile_side_count;
@@ -226,12 +226,12 @@ void KRender::checkLoad()
           if (load_thread_count < QThread::idealThreadCount())
 
             if (!tile && tile_rect_m.intersects(draw_rect_m) &&
-                render_mip < map->getTileMip())
+                render_mip < pack->getTileMip())
             {
               load_thread_count++;
               qDebug() << "loading tile, load_thread_count"
                        << load_thread_count;
-              QtConcurrent::run(map, &KRenderPack::loadTile,
+              QtConcurrent::run(pack, &KRenderPack::loadTile,
                                 tile_idx);
             }
           tile_idx++;
