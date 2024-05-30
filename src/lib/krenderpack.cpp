@@ -61,8 +61,8 @@ void KRenderPack::addCollectionToIndex(
 {
   for (auto& obj: *collection)
   {
-    auto new_cl = getClasses()[obj->class_idx];
-    render_data[new_cl.layer].append(obj);
+    auto cl = getClasses()[obj->class_idx];
+    render_data[cl.layer].append(obj);
   }
 
   int total_object_count = 0;

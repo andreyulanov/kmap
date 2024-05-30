@@ -20,7 +20,7 @@ void KPackObject::load(QVector<KClass>& class_list, int& pos,
   read(ba, pos, attributes);
 
   read(ba, pos, class_idx);
-  auto new_cl = &class_list[class_idx];
+  auto cl = &class_list[class_idx];
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -49,7 +49,7 @@ void KPackObject::load(QVector<KClass>& class_list, int& pos,
     for (std::size_t i = 0; auto& polygon: polygons)
     {
       polygon = new KGeoPolygon;
-      polygon->load(ba, pos, new_cl->coor_precision_coef);
+      polygon->load(ba, pos, cl->coor_precision_coef);
       if (i++ == 0)
         frame = polygon->getFrame();
       else
@@ -60,7 +60,7 @@ void KPackObject::load(QVector<KClass>& class_list, int& pos,
   {
     polygons.resize(1);
     auto polygon = new KGeoPolygon;
-    polygon->load(ba, pos, new_cl->coor_precision_coef);
+    polygon->load(ba, pos, cl->coor_precision_coef);
     polygons[0] = polygon;
     frame       = polygon->getFrame();
   }
@@ -91,7 +91,7 @@ void KPackObject::save(const QVector<KClass>& class_list,
 
   write(ba, attributes);
 
-  auto new_cl = &class_list[class_idx];
+  auto cl = &class_list[class_idx];
   write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));
@@ -103,12 +103,12 @@ void KPackObject::save(const QVector<KClass>& class_list,
   }
 
   if (polygons.count() == 1)
-    polygons[0]->save(ba, new_cl->coor_precision_coef);
+    polygons[0]->save(ba, cl->coor_precision_coef);
   else
   {
     write(ba, polygons.count());
     for (auto& polygon: polygons)
-      polygon->save(ba, new_cl->coor_precision_coef);
+      polygon->save(ba, cl->coor_precision_coef);
   }
 }
 
@@ -513,9 +513,9 @@ void KPack::addObjects(QVector<KPackObject> src_obj_list,
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& src_obj: src_obj_list)
   {
-    auto obj    = new KPackObject(src_obj);
-    auto new_cl = classes[obj->class_idx];
-    if (new_cl.max_mip == 0 || new_cl.max_mip > getTileMip())
+    auto obj = new KPackObject(src_obj);
+    auto cl  = classes[obj->class_idx];
+    if (cl.max_mip == 0 || cl.max_mip > getTileMip())
       main.append(obj);
     else
     {
