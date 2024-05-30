@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-void KPackObject::load(QVector<KClass>* class_list, int& pos,
+void KPackObject::load(QVector<KClass>& class_list, int& pos,
                        const QByteArray& ba)
 {
   using namespace KSerialize;
@@ -20,7 +20,7 @@ void KPackObject::load(QVector<KClass>* class_list, int& pos,
   read(ba, pos, attributes);
 
   read(ba, pos, class_idx);
-  auto new_cl = &(*class_list)[class_idx];
+  auto new_cl = &class_list[class_idx];
 
   uchar is_multi_polygon;
   read(ba, pos, is_multi_polygon);
@@ -81,7 +81,7 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-void KPackObject::save(const QVector<KClass>* class_list,
+void KPackObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba)
 {
   using namespace KSerialize;
@@ -91,7 +91,7 @@ void KPackObject::save(const QVector<KClass>* class_list,
 
   write(ba, attributes);
 
-  auto new_cl = &(*class_list)[class_idx];
+  auto new_cl = &class_list[class_idx];
   write(ba, class_idx);
   write(ba, (uchar)(polygons.count() > 1));
   write(ba, (uchar)(frame.isNull()));
@@ -260,7 +260,7 @@ void KPack::save(QString new_path) const
   ba.clear();
 
   for (auto& obj: main)
-    obj->save(&classes, ba);
+    obj->save(classes, ba);
   ba = qCompress(ba, 9);
   write(&f, ba.count());
   f.write(ba.data(), ba.count());
@@ -275,7 +275,7 @@ void KPack::save(QString new_path) const
       write(&f, part->count());
       ba.clear();
       for (auto& obj: *part)
-        obj->save(&classes, ba);
+        obj->save(classes, ba);
       ba = qCompress(ba, 9);
       write(&f, ba.count());
       f.write(ba.data(), ba.count());
@@ -378,7 +378,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   for (auto& obj: main)
   {
     obj = new KPackObject;
-    obj->load(&classes, pos, ba);
+    obj->load(classes, pos, ba);
   }
   int small_count;
   read(&f, small_count);
@@ -457,7 +457,7 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   for (auto& obj: *tiles[tile_idx])
   {
     obj = new KPackObject;
-    obj->load(&classes, pos, ba);
+    obj->load(classes, pos, ba);
     obj->tile_frame_m = tile_rect_m;
   }
 }
