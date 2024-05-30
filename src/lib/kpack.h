@@ -29,7 +29,7 @@ struct KPackObject
   virtual ~KPackObject();
 };
 
-struct KPackObjectCollection: public QVector<KPackObject*>
+struct KTile: public QVector<KPackObject*>
 {
   enum Status
   {
@@ -53,8 +53,8 @@ protected:
   KGeoRect                        frame;
   QVector<QPolygonF>              borders_m;
   QVector<KGeoPolygon>            borders;
-  KPackObjectCollection           main;
-  QVector<KPackObjectCollection*> tiles;
+  KTile           main;
+  QVector<KTile*> tiles;
 
 public:
   KPack(const QString& path);
@@ -75,8 +75,8 @@ public:
   void            setFrame(KGeoRect);
   const KGeoRect& getFrame() const;
 
-  const KPackObjectCollection&           getMain() const;
-  const QVector<KPackObjectCollection*>& getTiles() const;
+  const KTile&           getMain() const;
+  const QVector<KTile*>& getTiles() const;
 
   void                   addObjects(QVector<KPackObject> obj_list,
                                     int                  max_objects_per_tile);

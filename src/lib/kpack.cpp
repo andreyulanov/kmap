@@ -181,12 +181,12 @@ const KGeoRect& KPack::getFrame() const
   return frame;
 }
 
-const KPackObjectCollection& KPack::getMain() const
+const KTile& KPack::getMain() const
 {
   return main;
 }
 
-const QVector<KPackObjectCollection*>& KPack::getTiles() const
+const QVector<KTile*>& KPack::getTiles() const
 {
   return tiles;
 }
@@ -217,9 +217,9 @@ void KPack::add(const KPack& m)
 
 void KPack::clear()
 {
-  if (main.status != KPackObjectCollection::Loaded)
+  if (main.status != KTile::Loaded)
     return;
-  if (main.status == KPackObjectCollection::Loading)
+  if (main.status == KTile::Loading)
     return;
 
   qDeleteAll(main);
@@ -234,7 +234,7 @@ void KPack::clear()
   }
   tiles.clear();
   classes.clear();
-  main.status = KPackObjectCollection::Null;
+  main.status = KTile::Null;
 }
 
 void KPack::save(QString new_path) const
@@ -315,7 +315,7 @@ void KPack::save(QString new_path) const
 
 void KPack::loadMain(bool load_objects, double pixel_size_mm)
 {
-  if (main.status == KPackObjectCollection::Loading)
+  if (main.status == KTile::Loading)
     return;
 
   QElapsedTimer t;
@@ -329,7 +329,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
   }
 
-  if (main.status != KPackObjectCollection::Null)
+  if (main.status != KTile::Null)
     return;
 
   QString format_id;
@@ -368,7 +368,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
 
   qDebug() << "loading main from" << path;
-  main.status = KPackObjectCollection::Loading;
+  main.status = KTile::Loading;
   int class_count;
   read(&f, class_count);
   for (int i = 0; i < class_count; i++)
@@ -419,10 +419,10 @@ void KPack::loadAll(double pixel_size_mm)
 
 void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
 {
-  if (main.status != KPackObjectCollection::Loaded)
+  if (main.status != KTile::Loaded)
     return;
   if (tiles[tile_idx] &&
-      tiles[tile_idx]->status == KPackObjectCollection::Loading)
+      tiles[tile_idx]->status == KTile::Loading)
     return;
 
   qDebug() << "loading tile" << tile_idx << "from" << path;
@@ -460,12 +460,12 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   if (part_obj_count == 0)
   {
     if (!tiles[tile_idx])
-      tiles[tile_idx] = new KPackObjectCollection;
+      tiles[tile_idx] = new KTile;
     return;
   }
 
   if (!tiles[tile_idx])
-    tiles[tile_idx] = new KPackObjectCollection;
+    tiles[tile_idx] = new KTile;
   tiles[tile_idx]->resize(part_obj_count);
 
   int ba_count = 0;
@@ -475,7 +475,7 @@ void KPack::loadTile(int tile_idx, QRectF tile_rect_m)
   f.read(ba.data(), ba_count);
   ba = qUncompress(ba);
 
-  tiles[tile_idx]->status = KPackObjectCollection::Loading;
+  tiles[tile_idx]->status = KTile::Loading;
   int pos                 = 0;
   for (auto& obj: *tiles[tile_idx])
   {
@@ -528,7 +528,7 @@ void KPack::addObjects(QVector<KPackObject> src_obj_list,
           1.0 * shift_y / map_size_m.height() * tile_side_num;
       int part_idx = part_idx_y * tile_side_num + part_idx_x;
       if (!tiles[part_idx])
-        tiles[part_idx] = new KPackObjectCollection;
+        tiles[part_idx] = new KTile;
       tiles[part_idx]->append(obj);
     }
   }

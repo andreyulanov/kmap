@@ -148,7 +148,7 @@ void KRender::checkUnload()
     i++;
     if (i == 0)
       continue;
-    if (map->getMain().status == KPackObjectCollection::Loaded)
+    if (map->getMain().status == KTile::Loaded)
     {
       if (!needToLoadPack(map, draw_rect_m))
         if (loaded_count > 1)
@@ -194,7 +194,7 @@ void KRender::checkLoad()
     if (!needToLoadPack(map, draw_rect_m))
       continue;
 
-    if (map->getMain().status == KPackObjectCollection::Null &&
+    if (map->getMain().status == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
       load_thread_count++;
@@ -207,7 +207,7 @@ void KRender::checkLoad()
           });
       continue;
     }
-    if (map->getMain().status == KPackObjectCollection::Loaded)
+    if (map->getMain().status == KTile::Loaded)
     {
       if (needToLoadPack(map, draw_rect_m))
       {
