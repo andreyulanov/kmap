@@ -112,8 +112,11 @@ void KPackObject::save(const QVector<KClass>& class_list,
   }
 }
 
-KPackObject::KPackObject(const KPackObject& src_obj)
+KPackObject& KPackObject::operator=(const KPackObject& src_obj)
 {
+  qDeleteAll(polygons);
+  polygons.clear();
+  attributes.clear();
   class_idx    = src_obj.class_idx;
   name         = src_obj.name;
   attributes   = src_obj.attributes;
@@ -125,6 +128,12 @@ KPackObject::KPackObject(const KPackObject& src_obj)
     *polygon     = *src_polygon;
     polygons.append(polygon);
   }
+  return *this;
+}
+
+KPackObject::KPackObject(const KPackObject& src_obj)
+{
+  *this = src_obj;
 }
 
 KPackObject::~KPackObject()
@@ -177,7 +186,7 @@ const KPackObjectCollection& KPack::getMain() const
   return main;
 }
 
-const QVector<KPackObjectCollection *> &KPack::getTiles() const
+const QVector<KPackObjectCollection*>& KPack::getTiles() const
 {
   return tiles;
 }
@@ -486,8 +495,8 @@ void KPack::addBorder(KGeoPolygon v)
   borders.append(v);
 }
 
-void KPack::addObjects(const QVector<KPackObject*>& src_obj_list,
-                       int max_objects_per_tile)
+void KPack::addObjects(QVector<KPackObject> src_obj_list,
+                       int                  max_objects_per_tile)
 {
   int tile_side_num =
       std::ceil(1.0 * src_obj_list.count() / max_objects_per_tile);
@@ -499,7 +508,7 @@ void KPack::addObjects(const QVector<KPackObject*>& src_obj_list,
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& src_obj: src_obj_list)
   {
-    auto obj    = new KPackObject(*src_obj);
+    auto obj    = new KPackObject(src_obj);
     auto new_cl = classes[obj->class_idx];
     if (new_cl.max_mip == 0 || new_cl.max_mip > getTileMip())
       main.append(obj);

@@ -22,6 +22,7 @@ struct KPackObject
   KGeoCoor getCenter();
   KPackObject() = default;
   KPackObject(const KPackObject&);
+  KPackObject& operator=(const KPackObject&);
   void save(const QVector<KClass>& class_list, QByteArray& ba);
   void load(QVector<KClass>& class_list, int& pos,
             const QByteArray& ba);
@@ -77,8 +78,8 @@ public:
   const KPackObjectCollection&           getMain() const;
   const QVector<KPackObjectCollection*>& getTiles() const;
 
-  void addObjects(const QVector<KPackObject*>& obj_list,
-                  int                          max_objects_per_tile);
+  void addObjects(QVector<KPackObject> obj_list,
+                  int                  max_objects_per_tile);
   void setClasses(QVector<KClass> src_classes);
   void addBorder(KGeoPolygon);
 };

@@ -20,14 +20,14 @@ bool isVectorMap(QString path)
       .contains(ext);
 }
 
-auto joinPolys(KPackObject* obj)
+auto joinPolys(KPackObject& obj)
 {
   double join_tolerance_m = 1.0;
-  for (int i = -1; auto& polygon1: obj->polygons)
+  for (int i = -1; auto& polygon1: obj.polygons)
   {
     i++;
     auto last1 = polygon1->last();
-    for (int j = -1; auto& polygon2: obj->polygons)
+    for (int j = -1; auto& polygon2: obj.polygons)
     {
       j++;
       if (i == j)
@@ -41,7 +41,7 @@ auto joinPolys(KPackObject* obj)
       {
         polygon1->append(*polygon2);
         delete polygon2;
-        obj->polygons.removeAt(j);
+        obj.polygons.removeAt(j);
         return true;
       }
     }
@@ -159,8 +159,8 @@ int main(int argc, char* argv[])
     pack.setClasses(class_list);
     pack.setMainMip(class_man.getMainMip());
     pack.setTileMip(class_man.getTileMip());
-    QVector<KPackObject*> obj_list;
-    DFRAME                df;
+    QVector<KPackObject> obj_list;
+    DFRAME               df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
     auto top_left =
         KGeoCoor::fromDegs(rad2deg(df.X2), rad2deg(df.Y1));
@@ -261,11 +261,11 @@ int main(int argc, char* argv[])
 
       name = name.remove("\"");
 
-      KPackObject* obj = new KPackObject;
-      obj->name        = name;
+      KPackObject obj;
+      obj.name = name;
 
-      obj->class_idx = class_idx;
-      KClass new_cl  = class_list[class_idx];
+      obj.class_idx = class_idx;
+      KClass new_cl = class_list[class_idx];
 
       for (auto attr: pan_class->attributes)
       {
@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
                                        sizeof(str_utf16), 1))
         {
           value = QString::fromUtf16(str_utf16).simplified();
-          obj->attributes.insert(attr.name, value.toUtf8());
+          obj.attributes.insert(attr.name, value.toUtf8());
         }
       }
 
@@ -319,9 +319,9 @@ int main(int argc, char* argv[])
         bool need_to_wrap = false;
         if (map_name.contains("ru-chu"))
           need_to_wrap = true;
-        if (!obj->attributes.isEmpty())
+        if (!obj.attributes.isEmpty())
         {
-          auto attr = obj->attributes.first().toLower();
+          auto attr = obj.attributes.first().toLower();
           if (attr == "ru-chu")
             need_to_wrap = true;
           if (attr.toLower() == "rus")
@@ -336,26 +336,23 @@ int main(int argc, char* argv[])
               p = p.wrapped();
         }
 
-        obj->polygons.append(polygon);
+        obj.polygons.append(polygon);
 
-        if (obj->frame.isNull())
-          obj->frame = polygon->getFrame();
+        if (obj.frame.isNull())
+          obj.frame = polygon->getFrame();
         else
-          obj->frame = obj->frame.united(polygon->getFrame());
+          obj.frame = obj.frame.united(polygon->getFrame());
       }
 
       if (max_dist < pan_class->coor_precision_coef * 0.01 &&
           pan_class->type == KClass::Polygon)
-      {
-        delete obj;
         continue;
-      }
 
       if (is_analyzing_local_map)
         if (new_cl.id == "океан, море" || new_cl.id == "водоём" ||
             new_cl.id == "река (площадной)")
         {
-          if (obj->polygons.count() > 20)
+          if (obj.polygons.count() > 20)
           {
             auto idx = class_man.getClassIdxById("complex_water");
             new_cl   = class_list[idx];
@@ -372,7 +369,7 @@ int main(int argc, char* argv[])
     t.start();
     for (auto obj: obj_list)
     {
-      KClass new_cl = class_list[obj->class_idx];
+      KClass new_cl = class_list[obj.class_idx];
       if (new_cl.type == KClass::Line)
         while (joinPolys(obj))
           ;
@@ -383,8 +380,6 @@ int main(int argc, char* argv[])
 
     qDebug() << "  saving...";
     pack.save();
-
-    qDeleteAll(obj_list);
 
     mapCloseData(hMap);
 
