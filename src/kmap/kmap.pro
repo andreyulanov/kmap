@@ -22,8 +22,6 @@ SOURCES += \
  kautoscroll.cpp \
  kcontrols.cpp \
  keditwidget.cpp \
-    kmucmanager.cpp \
-    kmucroombackend.cpp \
  knewobjectwidget.cpp \
  kpackfetcher.cpp \
  kposgenerator.cpp \
@@ -48,8 +46,6 @@ HEADERS += \
  kautoscroll.h \
  kcontrols.h \
  keditwidget.h \
-    kmucmanager.h \
-    kmucroombackend.h \
  knewobjectwidget.h \
  kpackfetcher.h \
  kposgenerator.h \
@@ -63,13 +59,17 @@ HEADERS += \
 kloginwidget.cpp \
 kportableobjectsender.cpp \
 krosterwidget.cpp \
-kxmppclient.cpp
+kxmppclient.cpp \
+kmucmanager.cpp \
+kmucroombackend.cpp
 
 !android: HEADERS += \
 kloginwidget.h \
 kportableobjectsender.h \
 krosterwidget.h \
-kxmppclient.h
+kxmppclient.h \
+kmucmanager.h \
+kmucroombackend.h
 
 !linux-buildroot-g++: SOURCES += \
     kheading.cpp \

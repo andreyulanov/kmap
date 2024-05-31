@@ -23,8 +23,8 @@
 #include "kscalelabel.h"
 #include "ksettings.h"
 #include "kstoragemanager.h"
-#include "kmucroombackend.h"
 #ifdef BUILD_WITH_XMPP
+  #include "kmucroombackend.h"
   #include "kxmppclient.h"
   #include "kloginwidget.h"
   #include "krosterwidget.h"

@@ -348,7 +348,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
 {
   if (main.getStatus() == KTile::Loading)
     return;
-
+  qDebug() << "111" << path;
   QElapsedTimer t;
   t.start();
 
@@ -359,6 +359,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     qDebug() << "read error:" << path;
     return;
   }
+  qDebug() << "222" << path;
 
   if (main.getStatus() != KTile::Null)
     return;
@@ -369,6 +370,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
 
   char has_borders = false;
   read(&f, has_borders);
+  qDebug() << "333" << path;
   if (has_borders)
   {
     QByteArray ba;
@@ -391,17 +393,25 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
         borders_m.append(border_m);
     }
   }
+  qDebug() << "444" << path;
 
   read(&f, main_mip);
   read(&f, tile_mip);
 
+  qDebug() << "main_mip" << main_mip;
+  qDebug() << "tile_mip" << tile_mip;
+
   if (!load_objects)
+  {
+    qDebug() << Q_FUNC_INFO << "exit";
     return;
+  }
 
   qDebug() << "loading main from" << path;
   main.setStatus(KTile::Loading);
   int class_count;
   read(&f, class_count);
+  qDebug() << "class_count" << class_count;
   for (int i = 0; i < class_count; i++)
   {
     KClass cl;
@@ -409,6 +419,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     classes.append(cl);
   }
 
+  qDebug() << "555" << path;
   int ba_count = 0;
   read(&f, ba_count);
   QByteArray ba;
@@ -417,6 +428,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   ba = qUncompress(ba);
 
   int pos = 0;
+  qDebug() << "777" << path;
 
   int big_obj_count;
   read(&f, big_obj_count);
@@ -434,11 +446,14 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     obj = new KPackObject;
     obj->load(classes, pos, ba);
   }
+  qDebug() << "888" << path;
+
   int small_count;
   read(&f, small_count);
   tiles.resize(small_count);
   for (auto& part: tiles)
     part = nullptr;
+  qDebug() << Q_FUNC_INFO << "finished" << path;
 }
 
 void KPack::loadAll(double pixel_size_mm)
