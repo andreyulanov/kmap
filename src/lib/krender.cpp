@@ -114,9 +114,9 @@ const QPixmap* KRender::getPixmap() const
   return getting_pixmap_enabled ? &render_pixmap : nullptr;
 }
 
-const KRenderPackCollection* KRender::getMaps() const
+const KRefPack* KRender::getWorldPack() const
 {
-  return &packs;
+  return packs.first();
 }
 
 QRectF KRender::getDrawRectM() const
@@ -136,7 +136,7 @@ void KRender::onLoaded()
     load_thread_count = 0;
   qDebug() << "loaded, load_thread_count" << load_thread_count;
   if (rendering_enabled && load_thread_count == 0)
-    renderPack();
+    render();
 }
 
 void KRender::checkUnload()
@@ -1073,7 +1073,7 @@ void KRender::renderUserObjects()
   time_since_last_repaint.start();
 }
 
-void KRender::renderPack()
+void KRender::render()
 {
   if (isRunning())
     return;

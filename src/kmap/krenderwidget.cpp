@@ -64,9 +64,9 @@ void KRenderWidget::addMap(QString path, bool load_now)
   r.addMap(path, load_now);
 }
 
-const KRefPack *KRenderWidget::getWorldMap()
+const KRefPack* KRenderWidget::getWorldPack()
 {
-  return r.getMaps()->first();
+  return r.getWorldPack();
 }
 
 void KRenderWidget::renderUserObjects()
@@ -74,9 +74,9 @@ void KRenderWidget::renderUserObjects()
   r.renderUserObjects();
 }
 
-void KRenderWidget::renderMap()
+void KRenderWidget::render()
 {
-  r.renderPack();
+  r.render();
 }
 
 void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
@@ -86,7 +86,7 @@ void KRenderWidget::setViewPoint(const KGeoCoor& deg, double mip)
   movedCenterTo(deg);
   r.setCenterM(deg.toMeters());
   r.setMip(mip);
-  r.renderPack();
+  r.render();
 }
 
 void KRenderWidget::onRendered(int ms_elapsed)
@@ -133,7 +133,7 @@ void KRenderWidget::scroll(QPoint diff)
     {
       r.pan(total_pan_pos);
       r.stopAndWait();
-      r.renderPack();
+      r.render();
       total_pan_pos = QPoint();
     }
   }
@@ -277,7 +277,7 @@ void KRenderWidget::checkZoomFinished()
     if (r.isRunning())
     {
       r.stopAndWait();
-      r.renderPack();
+      r.render();
     }
     updateLabel(r.getPixmap(), 0);
     zoom_pixmap_rendered = false;
@@ -336,7 +336,7 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
   r.zoom(coef);
   if (mode == Out)
     r.enableLoading(false);
-  r.renderPack();
+  r.render();
   zoom_timer.start();
 }
 

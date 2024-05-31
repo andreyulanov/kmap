@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
 
   KRenderWidget      renderw(mapw_settings);
   KPackFetcher       map_fetcher(mapw_settings.map_dir,
-                                 renderw.getWorldMap());
+                                 renderw.getWorldPack());
   KClassManager      user_class_man(storage_man.classPath());
   KTrackManager      track_man(storage_man.tracksPath());
   KFreeObjectManager object_man(storage_man.objectsPath(),
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
                    [&renderw](QString map_path)
                    {
                      renderw.addMap(map_path, true);
-                     renderw.renderMap();
+                     renderw.render();
                    });
 
   QDir        dir(storage_man.classPath());

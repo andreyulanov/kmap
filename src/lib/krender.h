@@ -121,28 +121,28 @@ signals:
 
 public:
   virtual ~KRender();
-  void           addMap(QString path, bool load_now);
-  void           setMip(double);
-  double         getMip() const;
-  void           setCenterM(QPointF);
-  QPointF        getCenterM() const;
-  QPointF        getRenderCenterM() const;
-  void           setPixmapSize(QSize);
-  void           setPixelSizeMM(double);
-  void           setUpdateIntervalMs(int ms);
-  void           setBackgroundColor(QColor);
-  double         getRenderWindowSizeCoef() const;
-  void           setRenderWindowSizeCoef(double);
-  void           paintPointName(QPainter* p, const QString& text,
-                                const QColor& tcolor);
-  static void    paintOutlinedText(QPainter* p, const QString& text,
-                                   const QColor& tcolor);
-  const QPixmap* getPixmap() const;
-  const KRenderPackCollection* getMaps() const;
-  void                         renderPack();
-  void                         renderUserObjects();
-  void                         stopAndWait();
-  void                         enableLoading(bool);
+  void            addMap(QString path, bool load_now);
+  void            setMip(double);
+  double          getMip() const;
+  void            setCenterM(QPointF);
+  QPointF         getCenterM() const;
+  QPointF         getRenderCenterM() const;
+  void            setPixmapSize(QSize);
+  void            setPixelSizeMM(double);
+  void            setUpdateIntervalMs(int ms);
+  void            setBackgroundColor(QColor);
+  double          getRenderWindowSizeCoef() const;
+  void            setRenderWindowSizeCoef(double);
+  void            paintPointName(QPainter* p, const QString& text,
+                                 const QColor& tcolor);
+  static void     paintOutlinedText(QPainter* p, const QString& text,
+                                    const QColor& tcolor);
+  const QPixmap*  getPixmap() const;
+  const KRefPack* getWorldPack() const;
+  void            render();
+  void            renderUserObjects();
+  void            stopAndWait();
+  void            enableLoading(bool);
 
   QPoint deg2pix(KGeoCoor) const;
 

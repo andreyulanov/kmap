@@ -90,11 +90,11 @@ signals:
 
 public:
   KRenderWidget(Settings settings);
-  void            renderMap();
+  void            render();
   void            renderUserObjects();
   void            setViewPoint(const KGeoCoor& deg, double mip);
   void            addMap(QString path, bool load_now);
-  const KRefPack* getWorldMap();
+  const KRefPack* getWorldPack();
   void            scroll(QPoint diff);
   void            scrollTo(const KGeoCoor& coor);
   void            zoomIn();
