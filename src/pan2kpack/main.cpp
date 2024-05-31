@@ -4,7 +4,7 @@
 #include "mapapi.h"
 #include "qdmcmp.h"
 #include "kpanclassmanager.h"
-#include "krenderpack.h"
+#include "krefpack.h"
 #include <QApplication>
 #include <QtConcurrent/QtConcurrent>
 #include <QDir>

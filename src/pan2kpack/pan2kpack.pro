@@ -10,7 +10,7 @@ SOURCES += \
     ../lib/kbase.cpp \
     ../lib/klocker.cpp \
     ../lib/kpack.cpp \
-    ../lib/krenderpack.cpp \
+    ../lib/krefpack.cpp \
     ../lib/kclass.cpp \
     ../lib/kclassmanager.cpp \
     kpanclassmanager.cpp \
@@ -20,7 +20,7 @@ HEADERS += \
  ../lib/kbase.h \
     ../lib/klocker.h \
     ../lib/kpack.h \
-    ../lib/krenderpack.h \
+    ../lib/krefpack.h \
     ../lib/kserialize.h \
     ../lib/kclass.h \
     ../lib/kclassmanager.h \

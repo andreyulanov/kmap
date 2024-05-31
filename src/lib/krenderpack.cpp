@@ -1,20 +1,6 @@
 #include "krenderpack.h"
 #include "klocker.h"
 
-KRefPack::KRefPack(const QString& path): KPack(path)
-{
-}
-
-const KTile& KRefPack::getMainTile() const
-{
-  return main;
-}
-
-const QVector<KTile*>& KRefPack::getTiles() const
-{
-  return tiles;
-}
-
 KRenderPack::KRenderPack(const QString& path): KRefPack(path)
 {
 }

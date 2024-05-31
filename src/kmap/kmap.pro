@@ -16,6 +16,7 @@ SOURCES += \
  ../lib/kfreeobject.cpp \
 ../lib/klocker.cpp \
  ../lib/kpack.cpp \
+ ../lib/krefpack.cpp \
 ../lib/krender.cpp \
  ../lib/krenderpack.cpp \
  kautoscroll.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
  ../lib/kfreeobject.h \
 ../lib/klocker.h \
  ../lib/kpack.h \
+ ../lib/krefpack.h \
 ../lib/krender.h \
  ../lib/krenderpack.h \
  kautoscroll.h \
