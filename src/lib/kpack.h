@@ -88,7 +88,6 @@ public:
   void loadTile(int tile_idx);
   void loadAll(double pixel_size_mm);
   void clear();
-  void addPackToMainTile(const KPack&);
 
   void   setMainMip(double);
   double getMainMip() const;

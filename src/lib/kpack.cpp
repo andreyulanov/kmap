@@ -246,30 +246,6 @@ const KGeoRect& KPack::getFrame() const
   return frame;
 }
 
-void KPack::addPackToMainTile(const KPack& m)
-{
-  frame = frame.united(m.frame);
-  for (auto new_obj: m.main)
-  {
-    auto new_cl = &m.classes[new_obj->getClassIdx()];
-    bool found  = false;
-    for (int class_idx = -1; auto& cl: classes)
-    {
-      class_idx++;
-      if (new_cl->id == cl.id)
-      {
-        new_obj->setClassIdx(class_idx);
-        found = true;
-        break;
-      }
-    }
-    if (!found)
-      qDebug() << "ERROR: class" << new_cl->id
-               << "not found in primary classifier!";
-    main.append(new_obj);
-  }
-}
-
 void KPack::clear()
 {
   if (main.getStatus() != KTile::Loaded)
