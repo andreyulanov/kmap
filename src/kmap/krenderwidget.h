@@ -90,18 +90,18 @@ signals:
 
 public:
   KRenderWidget(Settings settings);
-  void         renderMap();
-  void         renderUserObjects();
-  void         setViewPoint(const KGeoCoor& deg, double mip);
-  void         addMap(QString path, bool load_now);
-  const KRenderPack *getWorldMap();
-  void         scroll(QPoint diff);
-  void         scrollTo(const KGeoCoor& coor);
-  void         zoomIn();
-  void         zoomOut();
-  QPoint       deg2scr(const KGeoCoor&) const;
-  QPoint       deg2pix(const KGeoCoor&) const;
-  KGeoCoor     scr2deg(const QPoint&) const;
-  double       getMip();
+  void            renderMap();
+  void            renderUserObjects();
+  void            setViewPoint(const KGeoCoor& deg, double mip);
+  void            addMap(QString path, bool load_now);
+  const KRefPack* getWorldMap();
+  void            scroll(QPoint diff);
+  void            scrollTo(const KGeoCoor& coor);
+  void            zoomIn();
+  void            zoomOut();
+  QPoint          deg2scr(const KGeoCoor&) const;
+  QPoint          deg2pix(const KGeoCoor&) const;
+  KGeoCoor        scr2deg(const QPoint&) const;
+  double          getMip();
 };
 #endif  // KRENDERWIDGET_H

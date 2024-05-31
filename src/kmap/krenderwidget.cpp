@@ -64,7 +64,7 @@ void KRenderWidget::addMap(QString path, bool load_now)
   r.addMap(path, load_now);
 }
 
-const KRenderPack* KRenderWidget::getWorldMap()
+const KRefPack *KRenderWidget::getWorldMap()
 {
   return r.getMaps()->first();
 }

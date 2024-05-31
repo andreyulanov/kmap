@@ -96,11 +96,11 @@ int main(int argc, char* argv[])
   if (QString(argv[2]).contains("local"))
     is_analyzing_local_map = true;
 
-  KRenderPack* world_map = nullptr;
+  KRefPack* world_map = nullptr;
   if (is_analyzing_local_map)
   {
     auto world_map_path = output_dir + "/world.kpack";
-    world_map           = new KRenderPack(world_map_path);
+    world_map           = new KRefPack(world_map_path);
     world_map->loadAll(0);
   }
 
