@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     qDebug() << "loading" << fi.absoluteFilePath();
     KPack pack(fi.absoluteFilePath());
     pack.loadAll(0);
-    united_pack->add(pack);
+    united_pack->addPackToMainTile(pack);
   }
   qDebug() << "saving united pack...";
   if (united_pack)

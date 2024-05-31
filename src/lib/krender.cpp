@@ -211,10 +211,10 @@ void KRender::checkLoad()
     {
       if (needToLoadPack(pack, draw_rect_m))
       {
-        int    tile_side_count = sqrt(pack->getTiles().count());
+        int    tile_side_count = sqrt(pack->getLocalTiles().count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
                               map_rect_m.height() / tile_side_count};
-        for (int tile_idx = 0; auto& tile: pack->getTiles())
+        for (int tile_idx = 0; auto& tile: pack->getLocalTiles())
         {
           int    tile_idx_y = tile_idx / tile_side_count;
           int    tile_idx_x = tile_idx - tile_idx_y * tile_side_count;

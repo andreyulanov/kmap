@@ -9,7 +9,7 @@ const KTile& KRefPack::getMainTile() const
   return main;
 }
 
-const QVector<KTile*>& KRefPack::getTiles() const
+const QVector<KTile*>& KRefPack::getLocalTiles() const
 {
   return tiles;
 }

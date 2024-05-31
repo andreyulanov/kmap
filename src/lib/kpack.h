@@ -88,7 +88,7 @@ public:
   void loadTile(int tile_idx);
   void loadAll(double pixel_size_mm);
   void clear();
-  void add(const KPack&);
+  void addPackToMainTile(const KPack&);
 
   void   setMainMip(double);
   double getMainMip() const;
@@ -99,7 +99,7 @@ public:
   void            setFrame(KGeoRect);
   const KGeoRect& getFrame() const;
 
-  void                   addObjects(QVector<KPackObject> obj_list,
+  void                   setObjects(QVector<KPackObject> obj_list,
                                     int                  max_objects_per_tile);
   void                   setClasses(QVector<KClass> src_classes);
   void                   addBorder(KGeoPolygon);

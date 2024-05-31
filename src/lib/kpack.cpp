@@ -246,7 +246,7 @@ const KGeoRect& KPack::getFrame() const
   return frame;
 }
 
-void KPack::add(const KPack& m)
+void KPack::addPackToMainTile(const KPack& m)
 {
   frame = frame.united(m.frame);
   for (auto new_obj: m.main)
@@ -554,7 +554,7 @@ const QVector<KClass>& KPack::getClasses() const
   return classes;
 }
 
-void KPack::addObjects(QVector<KPackObject> src_obj_list,
+void KPack::setObjects(QVector<KPackObject> src_obj_list,
                        int                  max_objects_per_tile)
 {
   int tile_side_num =
