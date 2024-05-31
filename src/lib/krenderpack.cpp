@@ -20,6 +20,11 @@ bool KRenderPack::intersects(QPolygonF polygon_m) const
   return false;
 }
 
+const QVector<KTile*>& KRenderPack::getTiles() const
+{
+  return tiles;
+}
+
 void KRenderPack::clear()
 {
   KLocker big_locker(&main_lock, KLocker::Write);

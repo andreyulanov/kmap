@@ -35,6 +35,7 @@ public:
   void loadMain(bool load_objects, double pixel_size_mm);
   void loadTile(int tile_idx);
   bool intersects(QPolygonF polygon) const;
+  const QVector<KTile*>& getTiles() const;
 };
 
 struct KRenderPackCollection: public QVector<KRenderPack*>

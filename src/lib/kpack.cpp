@@ -241,11 +241,6 @@ const KTile& KPack::getMain() const
   return main;
 }
 
-const QVector<KTile*>& KPack::getTiles() const
-{
-  return tiles;
-}
-
 void KPack::add(const KPack& m)
 {
   frame = frame.united(m.frame);
