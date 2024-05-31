@@ -148,7 +148,7 @@ void KRender::checkUnload()
     i++;
     if (i == 0)
       continue;
-    if (pack->getMain().status == KTile::Loaded)
+    if (pack->getMain().getStatus() == KTile::Loaded)
     {
       if (!needToLoadPack(pack, draw_rect_m))
         if (loaded_count > 1)
@@ -194,7 +194,7 @@ void KRender::checkLoad()
     if (!needToLoadPack(pack, draw_rect_m))
       continue;
 
-    if (pack->getMain().status == KTile::Null &&
+    if (pack->getMain().getStatus() == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
       load_thread_count++;
@@ -207,7 +207,7 @@ void KRender::checkLoad()
           });
       continue;
     }
-    if (pack->getMain().status == KTile::Loaded)
+    if (pack->getMain().getStatus() == KTile::Loaded)
     {
       if (needToLoadPack(pack, draw_rect_m))
       {

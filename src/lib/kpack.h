@@ -48,13 +48,20 @@ public:
 
 struct KTile: public QVector<KPackObject*>
 {
+public:
   enum Status
   {
     Null,
     Loading,
     Loaded
   };
+
+private:
   Status status = Null;
+
+public:
+  Status getStatus() const;
+  void   setStatus(Status);
 };
 
 class KPack

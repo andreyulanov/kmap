@@ -196,6 +196,16 @@ KPackObject::~KPackObject()
   qDeleteAll(polygons);
 }
 
+KTile::Status KTile::getStatus() const
+{
+  return status;
+}
+
+void KTile::setStatus(Status v)
+{
+  status = v;
+}
+
 KPack::KPack(const QString& v)
 {
   path = v;
@@ -267,9 +277,9 @@ void KPack::add(const KPack& m)
 
 void KPack::clear()
 {
-  if (main.status != KTile::Loaded)
+  if (main.getStatus() != KTile::Loaded)
     return;
-  if (main.status == KTile::Loading)
+  if (main.getStatus() == KTile::Loading)
     return;
 
   qDeleteAll(main);
@@ -284,7 +294,7 @@ void KPack::clear()
   }
   tiles.clear();
   classes.clear();
-  main.status = KTile::Null;
+  main.setStatus(KTile::Null);
 }
 
 void KPack::save(QString new_path) const
@@ -365,7 +375,7 @@ void KPack::save(QString new_path) const
 
 void KPack::loadMain(bool load_objects, double pixel_size_mm)
 {
-  if (main.status == KTile::Loading)
+  if (main.getStatus() == KTile::Loading)
     return;
 
   QElapsedTimer t;
@@ -379,7 +389,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
   }
 
-  if (main.status != KTile::Null)
+  if (main.getStatus() != KTile::Null)
     return;
 
   QString format_id;
@@ -418,7 +428,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
 
   qDebug() << "loading main from" << path;
-  main.status = KTile::Loading;
+  main.setStatus(KTile::Loading);
   int class_count;
   read(&f, class_count);
   for (int i = 0; i < class_count; i++)
@@ -469,9 +479,10 @@ void KPack::loadAll(double pixel_size_mm)
 
 void KPack::loadTile(int tile_idx)
 {
-  if (main.status != KTile::Loaded)
+  if (main.getStatus() != KTile::Loaded)
     return;
-  if (tiles[tile_idx] && tiles[tile_idx]->status == KTile::Loading)
+  if (tiles[tile_idx] &&
+      tiles[tile_idx]->getStatus() == KTile::Loading)
     return;
 
   qDebug() << "loading tile" << tile_idx << "from" << path;
@@ -524,8 +535,8 @@ void KPack::loadTile(int tile_idx)
   f.read(ba.data(), ba_count);
   ba = qUncompress(ba);
 
-  tiles[tile_idx]->status = KTile::Loading;
-  int pos                 = 0;
+  tiles[tile_idx]->setStatus(KTile::Loading);
+  int pos = 0;
   for (auto& obj: *tiles[tile_idx])
   {
     obj = new KPackObject;
