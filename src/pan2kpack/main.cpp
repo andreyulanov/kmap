@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
         map_code.remove(".sitz");
         map_code.remove(".mptz");
         bool found_borders = false;
-        for (auto obj: world_map->getMain())
+        for (auto obj: world_map->getMainTile())
         {
           auto attr_val = QString::fromUtf8(
                               obj->getAttributes().value("iso_code"))

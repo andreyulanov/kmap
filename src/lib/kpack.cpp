@@ -246,7 +246,7 @@ const KGeoRect& KPack::getFrame() const
   return frame;
 }
 
-const KTile& KPack::getMain() const
+const KTile& KPack::getMainTile() const
 {
   return main;
 }

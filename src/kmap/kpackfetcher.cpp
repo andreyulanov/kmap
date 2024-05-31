@@ -14,7 +14,7 @@ KPackFetcher::KPackFetcher(QString _map_dir, const KPack* world_map)
     while (!in.atEnd())
       name_list.append(in.readLine());
   }
-  for (auto obj: world_map->getMain())
+  for (auto obj: world_map->getMainTile())
   {
     auto iso_code =
         QString::fromUtf8(obj->getAttributes().value("iso_code"))
