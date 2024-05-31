@@ -4,7 +4,7 @@
 #include "mapapi.h"
 #include "qdmcmp.h"
 #include "kpanclassmanager.h"
-#include "kpack.h"
+#include "krenderpack.h"
 #include <QApplication>
 #include <QtConcurrent/QtConcurrent>
 #include <QDir>
@@ -96,11 +96,11 @@ int main(int argc, char* argv[])
   if (QString(argv[2]).contains("local"))
     is_analyzing_local_map = true;
 
-  KPack* world_map = nullptr;
+  KRenderPack* world_map = nullptr;
   if (is_analyzing_local_map)
   {
     auto world_map_path = output_dir + "/world.kpack";
-    world_map           = new KPack(world_map_path);
+    world_map           = new KRenderPack(world_map_path);
     world_map->loadAll(0);
   }
 

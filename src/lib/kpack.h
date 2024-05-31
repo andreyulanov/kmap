@@ -99,8 +99,6 @@ public:
   void            setFrame(KGeoRect);
   const KGeoRect& getFrame() const;
 
-  const KTile& getMainTile() const;
-
   void                   addObjects(QVector<KPackObject> obj_list,
                                     int                  max_objects_per_tile);
   void                   setClasses(QVector<KClass> src_classes);

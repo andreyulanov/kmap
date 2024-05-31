@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QPolygonF>
 #include <QMap>
-#include "kpack.h"
+#include "krenderpack.h"
 
 class KPackFetcher: public QThread
 {
@@ -26,7 +26,7 @@ signals:
   void fetched(QString map_name);
 
 public:
-  KPackFetcher(QString map_dir, const KPack* world_map);
+  KPackFetcher(QString map_dir, const KRenderPack* world_map);
   void requestRect(QRectF);
 };
 

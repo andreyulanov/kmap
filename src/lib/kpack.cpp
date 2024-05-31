@@ -246,11 +246,6 @@ const KGeoRect& KPack::getFrame() const
   return frame;
 }
 
-const KTile& KPack::getMainTile() const
-{
-  return main;
-}
-
 void KPack::add(const KPack& m)
 {
   frame = frame.united(m.frame);

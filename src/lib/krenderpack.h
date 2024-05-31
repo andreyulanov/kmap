@@ -31,10 +31,11 @@ signals:
 public:
   KRenderPack(const QString& path);
   ~KRenderPack();
-  void clear();
-  void loadMain(bool load_objects, double pixel_size_mm);
-  void loadTile(int tile_idx);
-  bool intersects(QPolygonF polygon) const;
+  void         clear();
+  void         loadMain(bool load_objects, double pixel_size_mm);
+  void         loadTile(int tile_idx);
+  bool         intersects(QPolygonF polygon) const;
+  const KTile& getMainTile() const;
   const QVector<KTile*>& getTiles() const;
 };
 

@@ -20,6 +20,11 @@ bool KRenderPack::intersects(QPolygonF polygon_m) const
   return false;
 }
 
+const KTile& KRenderPack::getMainTile() const
+{
+  return main;
+}
+
 const QVector<KTile*>& KRenderPack::getTiles() const
 {
   return tiles;
