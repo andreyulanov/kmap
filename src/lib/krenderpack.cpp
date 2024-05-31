@@ -1,7 +1,21 @@
 #include "krenderpack.h"
 #include "klocker.h"
 
-KRenderPack::KRenderPack(const QString& path): KPack(path)
+KRefPack::KRefPack(const QString& path): KPack(path)
+{
+}
+
+const KTile& KRefPack::getMainTile() const
+{
+  return main;
+}
+
+const QVector<KTile*>& KRefPack::getTiles() const
+{
+  return tiles;
+}
+
+KRenderPack::KRenderPack(const QString& path): KRefPack(path)
 {
 }
 
@@ -18,16 +32,6 @@ bool KRenderPack::intersects(QPolygonF polygon_m) const
     if (border_m.intersects(polygon_m))
       return true;
   return false;
-}
-
-const KTile& KRenderPack::getMainTile() const
-{
-  return main;
-}
-
-const QVector<KTile*>& KRenderPack::getTiles() const
-{
-  return tiles;
 }
 
 void KRenderPack::clear()

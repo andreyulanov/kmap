@@ -26,7 +26,7 @@ signals:
   void fetched(QString map_name);
 
 public:
-  KPackFetcher(QString map_dir, const KRenderPack* world_map);
+  KPackFetcher(QString map_dir, const KRefPack *world_map);
   void requestRect(QRectF);
 };
 

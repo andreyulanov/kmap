@@ -4,8 +4,8 @@
 #include <QDir>
 #include <QDebug>
 
-KPackFetcher::KPackFetcher(QString            _map_dir,
-                           const KRenderPack* world_map)
+KPackFetcher::KPackFetcher(QString         _map_dir,
+                           const KRefPack* world_map)
 {
   map_dir = _map_dir;
   QFile f(map_dir + "/maplist.txt");
