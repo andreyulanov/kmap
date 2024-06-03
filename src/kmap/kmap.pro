@@ -13,6 +13,7 @@ SOURCES += \
  ../lib/kclass.cpp \
  ../lib/kclassmanager.cpp \
  ../lib/kdatetime.cpp \
+ ../lib/kobject.cpp \
  ../lib/kfreeobject.cpp \
 ../lib/klocker.cpp \
  ../lib/kpack.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
  ../lib/kdatetime.h \
  ../lib/kfreeobject.h \
 ../lib/klocker.h \
+ ../lib/kobject.h \
  ../lib/kpack.h \
  ../lib/krefpack.h \
 ../lib/krender.h \

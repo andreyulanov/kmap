@@ -8,22 +8,7 @@
 #include <QMap>
 #include <QElapsedTimer>
 #include <QVariant>
-#include "kclass.h"
-
-struct KObject
-{
-  int                       class_idx = 0;
-  QString                   name;
-  QMap<QString, QByteArray> attributes;
-  KGeoRect                  frame;
-  QVector<KGeoPolygon>      polygons;
-
-public:
-  void save(const QVector<KClass>& class_list, QByteArray& ba) const;
-  void load(QVector<KClass>& class_list, int& pos,
-            const QByteArray& ba);
-  KGeoCoor getCenter();
-};
+#include "kobject.h"
 
 struct KTile: public QVector<KObject>
 {
@@ -78,7 +63,7 @@ public:
   const KGeoRect& getFrame() const;
 
   void                   setObjects(QVector<KObject> obj_list,
-                                    int                  max_objects_per_tile);
+                                    int              max_objects_per_tile);
   void                   setClasses(QVector<KClass> src_classes);
   void                   addBorder(KGeoPolygon);
   const QVector<KClass>& getClasses() const;

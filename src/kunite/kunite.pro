@@ -8,6 +8,7 @@ SOURCES += \
     ../lib/kpack.cpp \
     ../lib/krefpack.cpp \
     ../lib/kclass.cpp \
+    ../lib/kobject.cpp \
     ../lib/kclassmanager.cpp \
     main.cpp
 
