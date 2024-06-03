@@ -42,7 +42,7 @@ public:
   QVector<QPolygonF>   borders_m;
   QVector<KGeoPolygon> borders;
   KTile                main;
-  QVector<KTile*>      tiles;
+  QVector<KTile>       tiles;
 
   KPack(const QString& path);
   virtual ~KPack();

@@ -224,7 +224,7 @@ void KRender::checkLoad()
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (load_thread_count < QThread::idealThreadCount())
-            if (tile->getStatus() == KTile::Null &&
+            if (tile.getStatus() == KTile::Null &&
                 tile_rect_m.intersects(draw_rect_m) &&
                 render_mip < pack->getTileMip())
             {

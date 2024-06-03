@@ -51,8 +51,8 @@ void KRenderPack::loadTile(int tile_idx)
 {
   KPack::loadTile(tile_idx);
   QWriteLocker small_locker(&tile_lock);
-  addCollectionToIndex(*tiles[tile_idx]);
-  tiles[tile_idx]->setStatus(KTile::Loaded);
+  addCollectionToIndex(tiles[tile_idx]);
+  tiles[tile_idx].setStatus(KTile::Loaded);
   loaded();
 }
 
