@@ -64,8 +64,8 @@ struct KGeoRect
 
 struct KGeoPolygon: public QVector<KGeoCoor>
 {
-  KGeoRect getFrame();
-  void     save(QByteArray& ba, int coor_precision_coef);
+  KGeoRect getFrame() const;
+  void     save(QByteArray& ba, int coor_precision_coef) const;
   void load(const QByteArray& ba, int& pos, int coor_precision_coef);
   QPolygonF toPolygonM();
 };

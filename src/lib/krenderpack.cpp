@@ -56,12 +56,12 @@ void KRenderPack::loadTile(int tile_idx)
   loaded();
 }
 
-void KRenderPack::addCollectionToIndex(const KTile* collection)
+void KRenderPack::addCollectionToIndex(KTile* collection)
 {
   for (auto& obj: *collection)
   {
-    auto cl = getClasses()[obj->getClassIdx()];
-    render_data[cl.layer].append(obj);
+    auto cl = getClasses()[obj.getClassIdx()];
+    render_data[cl.layer].append(&obj);
   }
 
   int total_object_count = 0;

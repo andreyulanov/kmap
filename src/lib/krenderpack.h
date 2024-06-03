@@ -23,7 +23,7 @@ public:
   QList<RenderAddress>  render_start_list;
   int                   render_object_count;
 
-  void addCollectionToIndex(const KTile* collection);
+  void addCollectionToIndex(KTile *collection);
 
 signals:
   void loaded();

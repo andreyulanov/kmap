@@ -134,7 +134,7 @@ void KPackObject::addPolygon(KGeoPolygon v)
 }
 
 void KPackObject::save(const QVector<KClass>& class_list,
-                       QByteArray&            ba)
+                       QByteArray&            ba) const
 {
   using namespace KSerialize;
   write(ba, (uchar)(name.count() > 0));
@@ -221,13 +221,11 @@ void KPack::clear()
   if (main.getStatus() == KTile::Loading)
     return;
 
-  qDeleteAll(main);
   main.clear();
   for (auto& tile: tiles)
   {
     if (tile)
     {
-      qDeleteAll(*tile);
       delete tile;
     }
   }
@@ -282,7 +280,7 @@ void KPack::save(QString new_path) const
   ba.clear();
 
   for (auto& obj: main)
-    obj->save(classes, ba);
+    obj.save(classes, ba);
   ba = qCompress(ba, 9);
   write(&f, ba.count());
   f.write(ba.data(), ba.count());
@@ -297,7 +295,7 @@ void KPack::save(QString new_path) const
       write(&f, part->count());
       ba.clear();
       for (auto& obj: *part)
-        obj->save(classes, ba);
+        obj.save(classes, ba);
       ba = qCompress(ba, 9);
       write(&f, ba.count());
       f.write(ba.data(), ba.count());
@@ -398,10 +396,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   ba  = qUncompress(ba);
   pos = 0;
   for (auto& obj: main)
-  {
-    obj = new KPackObject;
-    obj->load(classes, pos, ba);
-  }
+    obj.load(classes, pos, ba);
 
   int small_count;
   read(&f, small_count);
@@ -478,10 +473,7 @@ void KPack::loadTile(int tile_idx)
   tiles[tile_idx]->setStatus(KTile::Loading);
   int pos = 0;
   for (auto& obj: *tiles[tile_idx])
-  {
-    obj = new KPackObject;
-    obj->load(classes, pos, ba);
-  }
+    obj.load(classes, pos, ba);
 }
 
 void KPack::setClasses(QVector<KClass> v)
@@ -512,13 +504,13 @@ void KPack::setObjects(QVector<KPackObject> src_obj_list,
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& src_obj: src_obj_list)
   {
-    auto obj = new KPackObject(src_obj);
-    auto cl  = classes[obj->getClassIdx()];
+    KPackObject obj(src_obj);
+    auto        cl = classes[obj.getClassIdx()];
     if (cl.max_mip == 0 || cl.max_mip > getTileMip())
       main.append(obj);
     else
     {
-      auto   obj_top_left_m = obj->getFrame().top_left.toMeters();
+      auto   obj_top_left_m = obj.getFrame().top_left.toMeters();
       double shift_x_m      = obj_top_left_m.x() - map_top_left_m.x();
       int    part_idx_x =
           1.0 * shift_x_m / map_size_m.width() * tile_side_num;

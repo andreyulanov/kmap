@@ -182,7 +182,7 @@ QRectF KGeoRect::toRectM() const
   return {top_left.toMeters(), bottom_right.toMeters()};
 }
 
-KGeoRect KGeoPolygon::getFrame()
+KGeoRect KGeoPolygon::getFrame() const
 {
   using namespace std;
   auto minx = numeric_limits<int>().max();
@@ -204,7 +204,7 @@ KGeoRect KGeoPolygon::getFrame()
   return rect;
 }
 
-void KGeoPolygon::save(QByteArray& ba, int coor_precision_coef)
+void KGeoPolygon::save(QByteArray& ba, int coor_precision_coef) const
 {
   using namespace KSerialize;
   write(ba, count());

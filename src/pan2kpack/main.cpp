@@ -143,12 +143,12 @@ int main(int argc, char* argv[])
       for (auto obj: world_pack.getMainTile())
       {
         auto attr_val =
-            QString::fromUtf8(obj->getAttributes().value("iso_code"))
+            QString::fromUtf8(obj.getAttributes().value("iso_code"))
                 .toLower();
         if (!attr_val.isEmpty() && map_code.contains(attr_val))
         {
           found_borders = true;
-          for (auto polygon: obj->getPolygons())
+          for (auto polygon: obj.getPolygons())
             pack.addBorder(polygon);
         }
       }

@@ -35,13 +35,13 @@ public:
   void                 removePolygonAt(int idx);
   void                 addPolygon(KGeoPolygon);
 
-  void     save(const QVector<KClass>& class_list, QByteArray& ba);
+  void     save(const QVector<KClass>& class_list, QByteArray& ba) const;
   void     load(QVector<KClass>& class_list, int& pos,
                 const QByteArray& ba);
   KGeoCoor getCenter();
 };
 
-struct KTile: public QVector<KPackObject*>
+struct KTile: public QVector<KPackObject>
 {
 public:
   enum Status
