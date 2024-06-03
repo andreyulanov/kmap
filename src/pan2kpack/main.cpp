@@ -27,20 +27,20 @@ auto joinPolys(KPackObject& obj)
   for (int i = -1; auto& polygon1: polygons)
   {
     i++;
-    auto last1 = polygon1->last();
+    auto last1 = polygon1.last();
     for (int j = -1; auto& polygon2: polygons)
     {
       j++;
       if (i == j)
         continue;
-      auto first2   = polygon2->first();
+      auto first2   = polygon2.first();
       auto last1_m  = last1.toMeters();
       auto first2_m = first2.toMeters();
       auto dx       = fabs(last1_m.x() - first2_m.x());
       auto dy       = fabs(last1_m.y() - first2_m.y());
       if (dx < join_tolerance_m && dy < join_tolerance_m)
       {
-        polygon1->append(*polygon2);
+        polygon1.append(polygon2);
         obj.removePolygonAt(j);
         return true;
       }
@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
         {
           found_borders = true;
           for (auto polygon: obj->getPolygons())
-            pack.addBorder(*polygon);
+            pack.addBorder(polygon);
         }
       }
       if (!found_borders)

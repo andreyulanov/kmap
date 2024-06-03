@@ -25,7 +25,7 @@ KPackFetcher::KPackFetcher(QString         _map_dir,
 
     QVector<QPolygonF> polygons_m;
     for (auto poly: obj->getPolygons())
-      polygons_m.append(poly->toPolygonM());
+      polygons_m.append(poly.toPolygonM());
 
     auto entry = LocalMapEntry{obj->getFrame().toRectM(), polygons_m};
     if (name_list.contains(iso_code))

@@ -336,7 +336,7 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
   auto cl = &pack.getClasses()[obj.getClassIdx()];
   p->setPen(QPen(cl->pen, 2));
   p->setBrush(cl->brush);
-  auto        kpos       = obj.getPolygons().first()->first();
+  auto        kpos       = obj.getPolygons().first().first();
   QPoint      pos        = deg2pix(kpos);
   int         max_length = 0;
   QStringList str_list;
@@ -424,7 +424,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
   {
     polygon_idx++;
 
-    auto pl = poly2pix(*polygon);
+    auto pl = poly2pix(polygon);
 
     if ((polygon_idx == 0 && !obj.getName().isEmpty() &&
          obj_span_pix < std::min(pixmap_size.width(),
@@ -521,9 +521,9 @@ void KRender::paintLineObject(QPainter*          painter,
     QPoint     p0;
     double     a0 = 0;
 
-    auto pl = poly2pix(*polygon);
+    auto pl = poly2pix(polygon);
 
-    auto size_m       = polygon->getFrame().getSizeMeters();
+    auto size_m       = polygon.getFrame().getSizeMeters();
     auto size_pix     = (size_m.width() + size_m.height()) / mip;
     auto hatch_length = size_pix * 0.05;
     if (hatch_length > 5)
@@ -575,7 +575,7 @@ void KRender::paintLineObject(QPainter*          painter,
         else if (da < -M_PI)
           da += 2 * M_PI;
         da = fabs(da);
-        if (da > deg2rad(5) || point_idx == polygon->count() - 1)
+        if (da > deg2rad(5) || point_idx == polygon.count() - 1)
         {
           if (nh.length_pix > obj_name_width)
           {

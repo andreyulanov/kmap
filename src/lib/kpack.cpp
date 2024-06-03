@@ -33,8 +33,8 @@ void KPackObject::load(QVector<KClass>& class_list, int& pos,
     KGeoCoor p;
     memcpy((char*)&p, (char*)&ba.data()[pos], sizeof(p));
     pos += sizeof(p);
-    auto polygon = new KGeoPolygon;
-    polygon->append(p);
+    KGeoPolygon polygon;
+    polygon.append(p);
     polygons.append(polygon);
     frame.top_left     = p;
     frame.bottom_right = p;
@@ -48,21 +48,18 @@ void KPackObject::load(QVector<KClass>& class_list, int& pos,
     polygons.resize(polygon_count);
     for (std::size_t i = 0; auto& polygon: polygons)
     {
-      polygon = new KGeoPolygon;
-      polygon->load(ba, pos, cl->coor_precision_coef);
+      polygon.load(ba, pos, cl->coor_precision_coef);
       if (i++ == 0)
-        frame = polygon->getFrame();
+        frame = polygon.getFrame();
       else
-        frame = frame.united(polygon->getFrame());
+        frame = frame.united(polygon.getFrame());
     }
   }
   else
   {
     polygons.resize(1);
-    auto polygon = new KGeoPolygon;
-    polygon->load(ba, pos, cl->coor_precision_coef);
-    polygons[0] = polygon;
-    frame       = polygon->getFrame();
+    polygons[0].load(ba, pos, cl->coor_precision_coef);
+    frame = polygons[0].getFrame();
   }
 }
 
@@ -71,7 +68,7 @@ KGeoCoor KPackObject::getCenter()
   if (polygons.isEmpty())
     return KGeoCoor();
   auto   polygon = polygons.first();
-  auto   frame   = polygon->getFrame();
+  auto   frame   = polygon.getFrame();
   auto   tl      = frame.top_left;
   auto   br      = frame.bottom_right;
   double lat     = (tl.latitude() + br.latitude()) * 0.5;
@@ -121,22 +118,19 @@ void KPackObject::setFrame(KGeoRect v)
   frame = v;
 }
 
-const QVector<KGeoPolygon*>& KPackObject::getPolygons() const
+QVector<KGeoPolygon> KPackObject::getPolygons() const
 {
   return polygons;
 }
 
 void KPackObject::removePolygonAt(int idx)
 {
-  delete polygons.at(idx);
   polygons.removeAt(idx);
 }
 
-void KPackObject::addPolygon(KGeoPolygon src_polygon)
+void KPackObject::addPolygon(KGeoPolygon v)
 {
-  KGeoPolygon* polygon = new KGeoPolygon;
-  *polygon             = src_polygon;
-  polygons.append(polygon);
+  polygons.append(v);
 }
 
 void KPackObject::save(const QVector<KClass>& class_list,
@@ -156,46 +150,18 @@ void KPackObject::save(const QVector<KClass>& class_list,
 
   if (frame.isNull())
   {
-    write(ba, polygons.first()->first());
+    write(ba, polygons.first().first());
     return;
   }
 
   if (polygons.count() == 1)
-    polygons[0]->save(ba, cl->coor_precision_coef);
+    polygons[0].save(ba, cl->coor_precision_coef);
   else
   {
     write(ba, polygons.count());
     for (auto& polygon: polygons)
-      polygon->save(ba, cl->coor_precision_coef);
+      polygon.save(ba, cl->coor_precision_coef);
   }
-}
-
-KPackObject& KPackObject::operator=(const KPackObject& src_obj)
-{
-  qDeleteAll(polygons);
-  polygons.clear();
-  attributes.clear();
-  class_idx  = src_obj.class_idx;
-  name       = src_obj.name;
-  attributes = src_obj.attributes;
-  frame      = src_obj.frame;
-  for (auto src_polygon: src_obj.polygons)
-  {
-    auto polygon = new KGeoPolygon;
-    *polygon     = *src_polygon;
-    polygons.append(polygon);
-  }
-  return *this;
-}
-
-KPackObject::KPackObject(const KPackObject& src_obj)
-{
-  *this = src_obj;
-}
-
-KPackObject::~KPackObject()
-{
-  qDeleteAll(polygons);
 }
 
 KTile::Status KTile::getStatus() const
