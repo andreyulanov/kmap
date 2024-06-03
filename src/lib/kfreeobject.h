@@ -5,36 +5,15 @@
 #include <QUuid>
 #include <QMap>
 #include <QVariant>
-#include "kclass.h"
+#include "kpack.h"
 
-struct KFreeObject
+struct KFreeObject: public KPackObject
 {
-  struct Attribute
-  {
-    enum Type : uchar
-    {
-      Int,
-      Double,
-      String,
-      File
-    };
-
-    Type       type;
-    QString    name;
-    float      min_mip;
-    float      max_mip;
-    QByteArray data;
-  };
-
-  QUuid guid;
-
-  KClass               cl;
-  QVector<KGeoPolygon> polygons;
-  QVector<Attribute>   attributes;
+  QUuid  guid;
+  KClass cl;
 
   void save(QString path);
   void load(QString path, double pixel_size_mm);
-  bool isEmpty();
   int  getWidthPix(double pixel_size_mm);
 };
 

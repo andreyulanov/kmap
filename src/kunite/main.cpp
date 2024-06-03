@@ -19,15 +19,15 @@ void KWorldPack::addPackToMainTile(const KRefPack& m)
   frame = frame.united(m.getFrame());
   for (auto new_obj: m.getMainTile())
   {
-    auto new_cl = &m.getClasses()[new_obj.getClassIdx()];
+    auto new_cl = &m.getClasses()[new_obj.class_idx];
     bool found  = false;
     for (int class_idx = -1; auto& cl: classes)
     {
       class_idx++;
       if (new_cl->id == cl.id)
       {
-        new_obj.setClassIdx(class_idx);
-        found = true;
+        new_obj.class_idx = class_idx;
+        found             = true;
         break;
       }
     }

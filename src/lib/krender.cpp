@@ -326,24 +326,24 @@ QPoint KRender::deg2pix(KGeoCoor kp) const
 void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
                                const KPackObject& obj, int render_idx)
 {
-  auto frame = obj.getFrame();
+  auto frame = obj.frame;
 
   auto coor_m = frame.top_left.toMeters();
 
   if (!render_frame_m.contains(coor_m))
     return;
 
-  auto cl = &pack.getClasses()[obj.getClassIdx()];
+  auto cl = &pack.getClasses()[obj.class_idx];
   p->setPen(QPen(cl->pen, 2));
   p->setBrush(cl->brush);
-  auto        kpos       = obj.getPolygons().first().first();
+  auto        kpos       = obj.polygons.first().first();
   QPoint      pos        = deg2pix(kpos);
   int         max_length = 0;
   QStringList str_list;
-  if (!obj.getName().isEmpty())
+  if (!obj.name.isEmpty())
   {
-    str_list += obj.getName();
-    max_length = obj.getName().count();
+    str_list += obj.name;
+    max_length = obj.name.count();
   }
 
   auto rect = QRect{pos.x(), pos.y(), max_length * cl->getWidthPix(),
@@ -387,14 +387,14 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
                                  const KPackObject& obj,
                                  int                render_idx)
 {
-  auto  frame = obj.getFrame();
+  auto  frame = obj.frame;
   QRect obj_frame_pix;
 
   auto   top_left_m     = frame.top_left.toMeters();
   auto   bottom_right_m = frame.bottom_right.toMeters();
   QRectF obj_frame_m    = {top_left_m, bottom_right_m};
 
-  auto cl = &pack.getClasses()[obj.getClassIdx()];
+  auto cl = &pack.getClasses()[obj.class_idx];
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
@@ -420,13 +420,13 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
     p->setBrush(cl->brush);
 
   QPainterPath path;
-  for (int polygon_idx = -1; auto polygon: obj.getPolygons())
+  for (int polygon_idx = -1; auto polygon: obj.polygons)
   {
     polygon_idx++;
 
     auto pl = poly2pix(polygon);
 
-    if ((polygon_idx == 0 && !obj.getName().isEmpty() &&
+    if ((polygon_idx == 0 && !obj.name.isEmpty() &&
          obj_span_pix < std::min(pixmap_size.width(),
                                  pixmap_size.height() / 2) &&
          obj_span_pix >
@@ -434,8 +434,8 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
         !cl->image.isNull())
     {
 
-      QPoint top_left_pix     = deg2pix(obj.getFrame().top_left);
-      QPoint bottom_right_pix = deg2pix(obj.getFrame().bottom_right);
+      QPoint top_left_pix     = deg2pix(obj.frame.top_left);
+      QPoint bottom_right_pix = deg2pix(obj.frame.bottom_right);
       obj_frame_pix           = {top_left_pix, bottom_right_pix};
 
       auto  c = obj_frame_pix.center();
@@ -446,11 +446,11 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
       actual_rect.translate({-w / 2, -w / 2});
 
       addDrawTextEntry(draw_text_array[render_idx],
-                       {obj.getName(), cl, obj_frame_pix, actual_rect,
+                       {obj.name, cl, obj_frame_pix, actual_rect,
                         Qt::AlignCenter});
     }
 
-    if (obj.getPolygons().count() == 1)
+    if (obj.polygons.count() == 1)
     {
       p->drawPolygon(pl);
       continue;
@@ -471,7 +471,7 @@ void KRender::paintLineObject(QPainter*          painter,
                               const KPackObject& obj, int render_idx,
                               int line_iter)
 {
-  auto frame = obj.getFrame();
+  auto frame = obj.frame;
 
   auto top_left_m     = frame.top_left.toMeters();
   auto bottom_right_m = frame.bottom_right.toMeters();
@@ -481,7 +481,7 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  auto cl = &pack.getClasses()[obj.getClassIdx()];
+  auto cl = &pack.getClasses()[obj.class_idx];
 
   Qt::PenStyle style = Qt::SolidLine;
   if (cl->style == KClass::Dash)
@@ -489,15 +489,15 @@ void KRender::paintLineObject(QPainter*          painter,
   if (cl->style == KClass::Dots)
     style = Qt::DotLine;
   int obj_name_width = 0;
-  if (!obj.getName().isEmpty())
+  if (!obj.name.isEmpty())
     obj_name_width =
-        painter->font().pixelSize() * obj.getName().count() * 0.3;
+        painter->font().pixelSize() * obj.name.count() * 0.3;
 
   auto         fixed_w    = cl->getWidthPix();
   int          sizeable_w = 0;
   int          w          = fixed_w;
   bool         one_way    = false;
-  QMapIterator it(obj.getAttributes());
+  QMapIterator it(obj.attributes);
   while (it.hasNext())
   {
     it.next();
@@ -514,7 +514,7 @@ void KRender::paintLineObject(QPainter*          painter,
   painter->setPen(QPen(cl->pen, w, style));
   painter->setBrush(Qt::NoBrush);
 
-  for (int poly_idx = -1; auto polygon: obj.getPolygons())
+  for (int poly_idx = -1; auto polygon: obj.polygons)
   {
     poly_idx++;
     NameHolder nh;
@@ -555,7 +555,7 @@ void KRender::paintLineObject(QPainter*          painter,
         }
       }
 
-    if (!obj.getName().isEmpty() && poly_idx == 0)
+    if (!obj.name.isEmpty() && poly_idx == 0)
       for (int point_idx = -1; auto p: pl)
       {
         point_idx++;
@@ -642,7 +642,7 @@ void KRender::NameHolder::fix(const KPack*       pack,
     angle_deg -= 180;
   if (angle_deg < -90)
     angle_deg += 180;
-  tcolor = pack->getClasses()[_obj->getClassIdx()].tcolor;
+  tcolor = pack->getClasses()[_obj->class_idx].tcolor;
 }
 
 bool KRender::isCluttering(const QRect& rect)
@@ -659,7 +659,7 @@ bool KRender::isCluttering(const QRect& rect)
 
 bool KRender::checkMipRange(const KPack* pack, const KPackObject* obj)
 {
-  auto cl = &pack->getClasses()[obj->getClassIdx()];
+  auto cl = &pack->getClasses()[obj->class_idx];
   return (cl->min_mip == 0 || render_mip >= cl->min_mip) &&
          (cl->max_mip == 0 || render_mip <= cl->max_mip);
 }
@@ -668,7 +668,7 @@ bool KRender::paintObject(QPainter* p, const KRenderPack* map,
                           const KPackObject& obj, int render_idx,
                           int line_iter)
 {
-  auto cl = &map->getClasses()[obj.getClassIdx()];
+  auto cl = &map->getClasses()[obj.class_idx];
   switch (cl->type)
   {
   case KClass::Point:
@@ -755,9 +755,9 @@ bool KRender::paintLineNames(QPainter* p)
     {
       p->save();
       QRect text_rect;
-      text_rect.setSize({int(p->font().pixelSize() *
-                             nh.obj->getName().count() * 0.6),
-                         p->font().pixelSize()});
+      text_rect.setSize(
+          {int(p->font().pixelSize() * nh.obj->name.count() * 0.6),
+           p->font().pixelSize()});
 
       QTransform tr;
       tr.translate(nh.mid_point.x(), nh.mid_point.y());
@@ -773,7 +773,7 @@ bool KRender::paintLineNames(QPainter* p)
 
       p->setTransform(tr);
       text_rect_array.append(mapped_rect);
-      paintOutlinedText(p, nh.obj->getName(), nh.tcolor);
+      paintOutlinedText(p, nh.obj->name, nh.tcolor);
       p->restore();
       if (!canContinue())
         return false;
@@ -865,7 +865,7 @@ void KRender::renderPack(QPainter* p, const KRenderPack* pack,
       if (!obj)
         continue;
 
-      auto cl = &pack->getClasses()[obj->getClassIdx()];
+      auto cl = &pack->getClasses()[obj->class_idx];
 
       if (cl->type != KClass::Line && line_iter == 1)
         continue;

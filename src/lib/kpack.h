@@ -10,7 +10,7 @@
 #include <QVariant>
 #include "kclass.h"
 
-class KPackObject
+struct KPackObject
 {
   int                       class_idx;
   QString                   name;
@@ -19,25 +19,9 @@ class KPackObject
   QVector<KGeoPolygon>      polygons;
 
 public:
-  int  getClassIdx() const;
-  void setClassIdx(int);
-
-  QString getName() const;
-  void    setName(QString);
-
-  KGeoRect getFrame() const;
-  void     setFrame(KGeoRect);
-
-  QMap<QString, QByteArray> getAttributes() const;
-  void                      addAttribute(QString, QByteArray);
-
-  QVector<KGeoPolygon> getPolygons() const;
-  void                 removePolygonAt(int idx);
-  void                 addPolygon(KGeoPolygon);
-
-  void     save(const QVector<KClass>& class_list, QByteArray& ba) const;
-  void     load(QVector<KClass>& class_list, int& pos,
-                const QByteArray& ba);
+  void save(const QVector<KClass>& class_list, QByteArray& ba) const;
+  void load(QVector<KClass>& class_list, int& pos,
+            const QByteArray& ba);
   KGeoCoor getCenter();
 };
 

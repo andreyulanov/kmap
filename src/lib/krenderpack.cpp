@@ -60,7 +60,7 @@ void KRenderPack::addCollectionToIndex(KTile* collection)
 {
   for (auto& obj: *collection)
   {
-    auto cl = getClasses()[obj.getClassIdx()];
+    auto cl = getClasses()[obj.class_idx];
     render_data[cl.layer].append(&obj);
   }
 

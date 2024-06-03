@@ -78,61 +78,6 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-int KPackObject::getClassIdx() const
-{
-  return class_idx;
-}
-
-void KPackObject::setClassIdx(int v)
-{
-  class_idx = v;
-}
-
-QString KPackObject::getName() const
-{
-  return name;
-}
-
-void KPackObject::setName(QString v)
-{
-  name = v;
-}
-
-QMap<QString, QByteArray> KPackObject::getAttributes() const
-{
-  return attributes;
-}
-
-void KPackObject::addAttribute(QString k, QByteArray v)
-{
-  attributes.insert(k, v);
-}
-
-KGeoRect KPackObject::getFrame() const
-{
-  return frame;
-}
-
-void KPackObject::setFrame(KGeoRect v)
-{
-  frame = v;
-}
-
-QVector<KGeoPolygon> KPackObject::getPolygons() const
-{
-  return polygons;
-}
-
-void KPackObject::removePolygonAt(int idx)
-{
-  polygons.removeAt(idx);
-}
-
-void KPackObject::addPolygon(KGeoPolygon v)
-{
-  polygons.append(v);
-}
-
 void KPackObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba) const
 {
@@ -505,12 +450,12 @@ void KPack::setObjects(QVector<KPackObject> src_obj_list,
   for (auto& src_obj: src_obj_list)
   {
     KPackObject obj(src_obj);
-    auto        cl = classes[obj.getClassIdx()];
+    auto        cl = classes[obj.class_idx];
     if (cl.max_mip == 0 || cl.max_mip > getTileMip())
       main.append(obj);
     else
     {
-      auto   obj_top_left_m = obj.getFrame().top_left.toMeters();
+      auto   obj_top_left_m = obj.frame.top_left.toMeters();
       double shift_x_m      = obj_top_left_m.x() - map_top_left_m.x();
       int    part_idx_x =
           1.0 * shift_x_m / map_size_m.width() * tile_side_num;

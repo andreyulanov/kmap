@@ -24,15 +24,7 @@ void KFreeObject::save(QString path)
     for (auto point: polygon)
       write(&f, point);
   }
-  write(&f, attributes.count());
-  for (auto attr: attributes)
-  {
-    write(&f, attr.type);
-    write(&f, attr.name);
-    write(&f, attr.min_mip);
-    write(&f, attr.max_mip);
-    write(&f, attr.data);
-  }
+  write(&f, attributes);
 }
 
 void KFreeObject::load(QString path, double pixel_size_mm)
@@ -57,21 +49,7 @@ void KFreeObject::load(QString path, double pixel_size_mm)
     for (auto& point: polygon)
       read(&f, point);
   }
-  read(&f, n);
-  attributes.resize(n);
-  for (auto& attr: attributes)
-  {
-    read(&f, attr.type);
-    read(&f, attr.name);
-    read(&f, attr.min_mip);
-    read(&f, attr.max_mip);
-    read(&f, attr.data);
-  }
-}
-
-bool KFreeObject::isEmpty()
-{
-  return polygons.isEmpty();
+  read(&f, attributes);
 }
 
 int KFreeObject::getWidthPix(double pixel_size_mm)
@@ -294,7 +272,7 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
   }
   else
   {
-    if (obj.isEmpty())
+    if (obj.polygons.isEmpty())
     {
       KGeoPolygon polygon;
       polygon.append(coor);
@@ -402,7 +380,7 @@ void KFreeObjectManager::movePoint(QPoint p)
     return;
 
   auto& obj = objects[edited_object_idx];
-  if (obj.isEmpty())
+  if (obj.polygons.isEmpty())
     obj = objects[edited_object_idx];
 
   if (moving_point_idx.first < 0 ||
