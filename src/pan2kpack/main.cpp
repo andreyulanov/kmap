@@ -96,12 +96,18 @@ int main(int argc, char* argv[])
   if (QString(argv[2]).contains("local"))
     is_analyzing_local_map = true;
 
-  KRefPack* world_map = nullptr;
+  auto     world_map_path = output_dir + "/world.kpack";
+  KRefPack world_pack(world_map_path);
+
   if (is_analyzing_local_map)
   {
-    auto world_map_path = output_dir + "/world.kpack";
-    world_map           = new KRefPack(world_map_path);
-    world_map->loadAll(0);
+    if (QFile(world_map_path).exists())
+      world_pack.loadAll(0);
+    else
+    {
+      qDebug() << "ERROR: world map not found!";
+      return -1;
+    }
   }
 
   for (auto& map_name: map_name_list)
@@ -128,32 +134,26 @@ int main(int argc, char* argv[])
 
     if (is_analyzing_local_map)
     {
-      if (world_map)
+      qDebug() << "adding borders...";
+      auto map_code = map_name;
+      map_code.remove(".sitx");
+      map_code.remove(".sitz");
+      map_code.remove(".mptz");
+      bool found_borders = false;
+      for (auto obj: world_pack.getMainTile())
       {
-        qDebug() << "adding borders...";
-        auto map_code = map_name;
-        map_code.remove(".sitx");
-        map_code.remove(".sitz");
-        map_code.remove(".mptz");
-        bool found_borders = false;
-        for (auto obj: world_map->getMainTile())
+        auto attr_val =
+            QString::fromUtf8(obj->getAttributes().value("iso_code"))
+                .toLower();
+        if (!attr_val.isEmpty() && map_code.contains(attr_val))
         {
-          auto attr_val = QString::fromUtf8(
-                              obj->getAttributes().value("iso_code"))
-                              .toLower();
-          if (!attr_val.isEmpty() && map_code.contains(attr_val))
-          {
-            found_borders = true;
-            for (auto polygon: obj->getPolygons())
-              pack.addBorder(*polygon);
-          }
+          found_borders = true;
+          for (auto polygon: obj->getPolygons())
+            pack.addBorder(*polygon);
         }
-        if (!found_borders)
-          qDebug() << "ERROR: no borders found for" << map_name;
       }
-      else
-        qDebug() << "ERROR: world map not found, could not add map "
-                    "borders!";
+      if (!found_borders)
+        qDebug() << "ERROR: no borders found for" << map_name;
     }
 
     pack.setClasses(class_list);
@@ -286,7 +286,7 @@ int main(int argc, char* argv[])
       {
         DOUBLEPOINT point;
         int         point_count = mapPointCount(info, poly_idx);
-        auto        polygon     = new KGeoPolygon;
+        KGeoPolygon polygon;
         DOUBLEPOINT prev_point_m;
         for (int point_idx = 0; point_idx < point_count; point_idx++)
         {
@@ -311,7 +311,7 @@ int main(int argc, char* argv[])
           {
             auto vp = KGeoCoor::fromDegs(rad2deg(point.x),
                                          rad2deg(point.y));
-            polygon->append(vp);
+            polygon.append(vp);
             prev_point_m = point_m;
           }
         }
@@ -330,18 +330,18 @@ int main(int argc, char* argv[])
 
         if (need_to_wrap)
         {
-          auto polygon_frame = polygon->getFrame();
+          auto polygon_frame = polygon.getFrame();
           if (polygon_frame.bottom_right.needToWrap())
-            for (auto& p: *polygon)
+            for (auto& p: polygon)
               p = p.wrapped();
         }
 
         obj.addPolygon(polygon);
 
         if (obj.getFrame().isNull())
-          obj.setFrame(polygon->getFrame());
+          obj.setFrame(polygon.getFrame());
         else
-          obj.setFrame(obj.getFrame().united(polygon->getFrame()));
+          obj.setFrame(obj.getFrame().united(polygon.getFrame()));
       }
 
       if (max_dist < pan_class->coor_precision_coef * 0.01 &&

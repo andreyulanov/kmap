@@ -38,7 +38,7 @@ public:
 
   const QVector<KGeoPolygon*>& getPolygons() const;
   void                         removePolygonAt(int idx);
-  void                         addPolygon(KGeoPolygon*);
+  void                         addPolygon(KGeoPolygon);
 
   void     save(const QVector<KClass>& class_list, QByteArray& ba);
   void     load(QVector<KClass>& class_list, int& pos,

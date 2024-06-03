@@ -132,9 +132,11 @@ void KPackObject::removePolygonAt(int idx)
   polygons.removeAt(idx);
 }
 
-void KPackObject::addPolygon(KGeoPolygon* v)
+void KPackObject::addPolygon(KGeoPolygon src_polygon)
 {
-  polygons.append(v);
+  KGeoPolygon* polygon = new KGeoPolygon;
+  *polygon             = src_polygon;
+  polygons.append(polygon);
 }
 
 void KPackObject::save(const QVector<KClass>& class_list,
