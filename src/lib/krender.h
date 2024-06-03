@@ -28,9 +28,9 @@ class KRender: public QThread
     int                point_count = 0;
     double             angle_deg   = 0;
     QPoint             mid_point;
-    const KPackObject* obj = nullptr;
+    const KObject* obj = nullptr;
     QColor             tcolor;
-    void               fix(const KPack* pack, const KPackObject* obj,
+    void               fix(const KPack* pack, const KObject* obj,
                            const QPoint& start, const QPoint& end);
   };
 
@@ -83,12 +83,12 @@ class KRender: public QThread
   void render(QPainter* p, QVector<KRenderPack*> render_packs,
               int render_idx);
 
-  bool checkMipRange(const KPack* pack, const KPackObject* obj);
+  bool checkMipRange(const KPack* pack, const KObject* obj);
   bool canContinue();
   void checkYieldResult();
 
   bool paintObject(QPainter* p, const KRenderPack* map,
-                   const KPackObject& obj, int render_idx,
+                   const KObject& obj, int render_idx,
                    int line_iter);
   bool paintPointNames(QPainter* p);
   bool paintLineNames(QPainter* p);
@@ -101,11 +101,11 @@ class KRender: public QThread
 
   QPolygon poly2pix(const KGeoPolygon& polygon);
   void     paintPointObject(QPainter* p, const KRenderPack& pack,
-                            const KPackObject& obj, int render_idx);
+                            const KObject& obj, int render_idx);
   void     paintPolygonObject(QPainter* p, const KRenderPack& pack,
-                              const KPackObject& obj, int render_idx);
+                              const KObject& obj, int render_idx);
   void     paintLineObject(QPainter* painter, const KRenderPack& pack,
-                           const KPackObject& obj, int render_idx,
+                           const KObject& obj, int render_idx,
                            int line_iter);
   QRectF   getDrawRectM() const;
   bool     needToLoadPack(const KRenderPack* pack,

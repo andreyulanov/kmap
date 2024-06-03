@@ -10,7 +10,7 @@
 #include <QVariant>
 #include "kclass.h"
 
-struct KPackObject
+struct KObject
 {
   int                       class_idx = 0;
   QString                   name;
@@ -25,7 +25,7 @@ public:
   KGeoCoor getCenter();
 };
 
-struct KTile: public QVector<KPackObject>
+struct KTile: public QVector<KObject>
 {
 public:
   enum Status
@@ -77,7 +77,7 @@ public:
   void            setFrame(KGeoRect);
   const KGeoRect& getFrame() const;
 
-  void                   setObjects(QVector<KPackObject> obj_list,
+  void                   setObjects(QVector<KObject> obj_list,
                                     int                  max_objects_per_tile);
   void                   setClasses(QVector<KClass> src_classes);
   void                   addBorder(KGeoPolygon);

@@ -20,7 +20,7 @@ bool isVectorMap(QString path)
       .contains(ext);
 }
 
-auto joinPolys(KPackObject& obj)
+auto joinPolys(KObject& obj)
 {
   double join_tolerance_m = 1.0;
   auto   polygons         = obj.polygons;
@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
     pack.setClasses(class_list);
     pack.setMainMip(class_man.getMainMip());
     pack.setTileMip(class_man.getTileMip());
-    QVector<KPackObject> obj_list;
+    QVector<KObject> obj_list;
     DFRAME               df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
     auto top_left =
@@ -261,7 +261,7 @@ int main(int argc, char* argv[])
 
       name = name.remove("\"");
 
-      KPackObject obj;
+      KObject obj;
       obj.name = name;
 
       obj.class_idx = class_idx;

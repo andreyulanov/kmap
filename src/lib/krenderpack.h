@@ -17,7 +17,7 @@ public:
   static constexpr int max_layer_count = 24;
   static constexpr int render_count    = 4;
 
-  QVector<KPackObject*> render_data[max_layer_count];
+  QVector<KObject*> render_data[max_layer_count];
   QReadWriteLock        main_lock;
   QReadWriteLock        tile_lock;
   QList<RenderAddress>  render_start_list;

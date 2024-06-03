@@ -7,7 +7,7 @@
 #include <QVariant>
 #include "kpack.h"
 
-struct KFreeObject: public KPackObject
+struct KFreeObject: public KObject
 {
   QUuid  guid;
   KClass cl;

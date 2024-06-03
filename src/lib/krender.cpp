@@ -324,7 +324,7 @@ QPoint KRender::deg2pix(KGeoCoor kp) const
 }
 
 void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
-                               const KPackObject& obj, int render_idx)
+                               const KObject& obj, int render_idx)
 {
   auto frame = obj.frame;
 
@@ -384,7 +384,7 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
 }
 
 void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
-                                 const KPackObject& obj,
+                                 const KObject& obj,
                                  int                render_idx)
 {
   auto  frame = obj.frame;
@@ -468,7 +468,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
 
 void KRender::paintLineObject(QPainter*          painter,
                               const KRenderPack& pack,
-                              const KPackObject& obj, int render_idx,
+                              const KObject& obj, int render_idx,
                               int line_iter)
 {
   auto frame = obj.frame;
@@ -632,7 +632,7 @@ void KRender::paintLineObject(QPainter*          painter,
 }
 
 void KRender::NameHolder::fix(const KPack*       pack,
-                              const KPackObject* _obj,
+                              const KObject* _obj,
                               const QPoint& start, const QPoint& end)
 {
   obj       = _obj;
@@ -657,7 +657,7 @@ bool KRender::isCluttering(const QRect& rect)
   return clutter_flag;
 }
 
-bool KRender::checkMipRange(const KPack* pack, const KPackObject* obj)
+bool KRender::checkMipRange(const KPack* pack, const KObject* obj)
 {
   auto cl = &pack->getClasses()[obj->class_idx];
   return (cl->min_mip == 0 || render_mip >= cl->min_mip) &&
@@ -665,7 +665,7 @@ bool KRender::checkMipRange(const KPack* pack, const KPackObject* obj)
 }
 
 bool KRender::paintObject(QPainter* p, const KRenderPack* map,
-                          const KPackObject& obj, int render_idx,
+                          const KObject& obj, int render_idx,
                           int line_iter)
 {
   auto cl = &map->getClasses()[obj.class_idx];

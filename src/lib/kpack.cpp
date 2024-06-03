@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-void KPackObject::load(QVector<KClass>& class_list, int& pos,
+void KObject::load(QVector<KClass>& class_list, int& pos,
                        const QByteArray& ba)
 {
   using namespace KSerialize;
@@ -63,7 +63,7 @@ void KPackObject::load(QVector<KClass>& class_list, int& pos,
   }
 }
 
-KGeoCoor KPackObject::getCenter()
+KGeoCoor KObject::getCenter()
 {
   if (polygons.isEmpty())
     return KGeoCoor();
@@ -78,7 +78,7 @@ KGeoCoor KPackObject::getCenter()
   return KGeoCoor().fromDegs(lat, lon);
 }
 
-void KPackObject::save(const QVector<KClass>& class_list,
+void KObject::save(const QVector<KClass>& class_list,
                        QByteArray&            ba) const
 {
   using namespace KSerialize;
@@ -436,7 +436,7 @@ const QVector<KClass>& KPack::getClasses() const
   return classes;
 }
 
-void KPack::setObjects(QVector<KPackObject> src_obj_list,
+void KPack::setObjects(QVector<KObject> src_obj_list,
                        int                  max_objects_per_tile)
 {
   int tile_side_num =
@@ -449,7 +449,7 @@ void KPack::setObjects(QVector<KPackObject> src_obj_list,
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& src_obj: src_obj_list)
   {
-    KPackObject obj(src_obj);
+    KObject obj(src_obj);
     auto        cl = classes[obj.class_idx];
     if (cl.max_mip == 0 || cl.max_mip > getTileMip())
       main.append(obj);
