@@ -12,7 +12,7 @@
 
 struct KPackObject
 {
-  int                       class_idx;
+  int                       class_idx = 0;
   QString                   name;
   QMap<QString, QByteArray> attributes;
   KGeoRect                  frame;
