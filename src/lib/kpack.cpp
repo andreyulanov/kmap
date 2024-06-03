@@ -244,8 +244,8 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   int small_count;
   read(&f, small_count);
   tiles.resize(small_count);
-  for (auto& part: tiles)
-    part = nullptr;
+  for (auto& tile: tiles)
+    tile = new KTile;
 }
 
 void KPack::loadAll(double pixel_size_mm)
@@ -259,8 +259,7 @@ void KPack::loadTile(int tile_idx)
 {
   if (main.getStatus() != KTile::Loaded)
     return;
-  if (tiles[tile_idx] &&
-      tiles[tile_idx]->getStatus() == KTile::Loading)
+  if (tiles[tile_idx]->getStatus() == KTile::Loading)
     return;
 
   qDebug() << "loading tile" << tile_idx << "from" << path;
@@ -296,14 +295,8 @@ void KPack::loadTile(int tile_idx)
   read(&f, part_obj_count);
 
   if (part_obj_count == 0)
-  {
-    if (!tiles[tile_idx])
-      tiles[tile_idx] = new KTile;
     return;
-  }
 
-  if (!tiles[tile_idx])
-    tiles[tile_idx] = new KTile;
   tiles[tile_idx]->resize(part_obj_count);
 
   int ba_count = 0;
@@ -342,7 +335,7 @@ void KPack::setObjects(QVector<KObject> src_obj_list,
   int tile_num = pow(tile_side_num, 2);
   tiles.resize(tile_num);
   for (auto& tile: tiles)
-    tile = nullptr;
+    tile = new KTile;
   auto map_size_m     = getFrame().getSizeMeters();
   auto map_top_left_m = getFrame().top_left.toMeters();
   for (auto& src_obj: src_obj_list)
@@ -360,10 +353,8 @@ void KPack::setObjects(QVector<KObject> src_obj_list,
       int shift_y = obj_top_left_m.y() - map_top_left_m.y();
       int part_idx_y =
           1.0 * shift_y / map_size_m.height() * tile_side_num;
-      int part_idx = part_idx_y * tile_side_num + part_idx_x;
-      if (!tiles[part_idx])
-        tiles[part_idx] = new KTile;
-      tiles[part_idx]->append(obj);
+      int tile_idx = part_idx_y * tile_side_num + part_idx_x;
+      tiles[tile_idx]->append(obj);
     }
   }
 }
