@@ -211,10 +211,10 @@ void KRender::checkLoad()
     {
       if (needToLoadPack(pack, draw_rect_m))
       {
-        int    tile_side_count = sqrt(pack->getLocalTiles().count());
+        int    tile_side_count = sqrt(pack->tiles.count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
                               map_rect_m.height() / tile_side_count};
-        for (int tile_idx = 0; auto& tile: pack->getLocalTiles())
+        for (int tile_idx = 0; auto& tile: pack->tiles)
         {
           int    tile_idx_y = tile_idx / tile_side_count;
           int    tile_idx_x = tile_idx - tile_idx_y * tile_side_count;
@@ -384,8 +384,7 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
 }
 
 void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
-                                 const KObject& obj,
-                                 int                render_idx)
+                                 const KObject& obj, int render_idx)
 {
   auto  frame = obj.frame;
   QRect obj_frame_pix;
@@ -631,8 +630,7 @@ void KRender::paintLineObject(QPainter*          painter,
   }
 }
 
-void KRender::NameHolder::fix(const KPack*       pack,
-                              const KObject* _obj,
+void KRender::NameHolder::fix(const KPack* pack, const KObject* _obj,
                               const QPoint& start, const QPoint& end)
 {
   obj       = _obj;

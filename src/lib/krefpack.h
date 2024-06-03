@@ -7,8 +7,7 @@ class KRefPack: public KPack
 {
 public:
   KRefPack(const QString& path);
-  const KTile&           getMainTile() const;
-  const QVector<KTile*>& getLocalTiles() const;
+  const KTile& getMainTile() const;
 };
 
 #endif  // KREFPACK_H

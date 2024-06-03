@@ -41,7 +41,7 @@ void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
   if (load_objects)
   {
     QWriteLocker big_locker(&main_lock);
-    addCollectionToIndex(&main);
+    addCollectionToIndex(main);
     main.setStatus(KTile::Loaded);
     loaded();
   }
@@ -51,14 +51,14 @@ void KRenderPack::loadTile(int tile_idx)
 {
   KPack::loadTile(tile_idx);
   QWriteLocker small_locker(&tile_lock);
-  addCollectionToIndex(tiles[tile_idx]);
+  addCollectionToIndex(*tiles[tile_idx]);
   tiles[tile_idx]->setStatus(KTile::Loaded);
   loaded();
 }
 
-void KRenderPack::addCollectionToIndex(KTile* collection)
+void KRenderPack::addCollectionToIndex(KTile& collection)
 {
-  for (auto& obj: *collection)
+  for (auto& obj: collection)
   {
     auto cl = getClasses()[obj.class_idx];
     render_data[cl.layer].append(&obj);
