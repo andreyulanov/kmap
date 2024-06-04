@@ -1,8 +1,11 @@
 #include "krenderpack.h"
 #include "klocker.h"
+#include "krender.h"
 
-KRenderPack::KRenderPack(const QString& path): KPack(path)
+KRenderPack::KRenderPack(KRender* _render, const QString& path):
+    KPack(path)
 {
+  render = _render;
 }
 
 KRenderPack::~KRenderPack()
@@ -43,7 +46,7 @@ void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
     QWriteLocker big_locker(&main_lock);
     addCollectionToIndex(main);
     main.setStatus(KTile::Loaded);
-    loaded();
+    render->loaded();
   }
 }
 
@@ -53,7 +56,7 @@ void KRenderPack::loadTile(int tile_idx)
   QWriteLocker small_locker(&tile_lock);
   addCollectionToIndex(tiles[tile_idx]);
   tiles[tile_idx].setStatus(KTile::Loaded);
-  loaded();
+  render->loaded();
 }
 
 void KRenderPack::addCollectionToIndex(KTile& collection)

@@ -33,6 +33,12 @@ QPointF KRender::pix2meters(QPointF pix) const
   return {xm, ym};
 }
 
+KRender::KRender()
+{
+  connect(this, &KRender::loaded, this, &KRender::onLoaded,
+          Qt::UniqueConnection);
+}
+
 KRender::~KRender()
 {
   QThreadPool().globalInstance()->waitForDone();
@@ -47,9 +53,7 @@ void KRender::addMap(QString path, bool load_now)
 
 void KRender::insertPack(int idx, QString path, bool load_now)
 {
-  auto map = new KRenderPack(path);
-  connect(map, &KRenderPack::loaded, this, &KRender::onLoaded,
-          Qt::UniqueConnection);
+  auto map = new KRenderPack(this, path);
   map->loadMain(load_now, pixel_size_mm);
   packs.insert(idx, map);
 }
