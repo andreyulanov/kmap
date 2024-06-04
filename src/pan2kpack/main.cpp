@@ -149,24 +149,24 @@ int main(int argc, char* argv[])
         {
           found_borders = true;
           for (auto polygon: obj.polygons)
-            pack.addBorder(polygon);
+            pack.borders.append(polygon);
         }
       }
       if (!found_borders)
         qDebug() << "ERROR: no borders found for" << map_name;
     }
 
-    pack.setClasses(class_list);
-    pack.setMainMip(class_man.getMainMip());
-    pack.setTileMip(class_man.getTileMip());
+    pack.classes  = class_list;
+    pack.main_mip = class_man.getMainMip();
+    pack.tile_mip = class_man.getTileMip();
     QVector<KObject> obj_list;
-    DFRAME               df;
+    DFRAME           df;
     mapGetTotalBorder(hMap, &df, PP_GEO);
     auto top_left =
         KGeoCoor::fromDegs(rad2deg(df.X2), rad2deg(df.Y1));
     auto bottom_right =
         KGeoCoor::fromDegs(rad2deg(df.X1), rad2deg(df.Y2));
-    pack.setFrame({top_left, bottom_right});
+    pack.frame = {top_left, bottom_right};
 
     int  object_count = mapGetObjectCount(hMap, 1);
     HOBJ info         = mapCreateSiteObject(hMap, hMap);

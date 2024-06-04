@@ -16,10 +16,10 @@ KWorldPack::KWorldPack(const QString& path): KPack(path)
 
 void KWorldPack::addPackToMainTile(const KRefPack& m)
 {
-  frame = frame.united(m.getFrame());
+  frame = frame.united(m.frame);
   for (auto new_obj: m.getMainTile())
   {
-    auto new_cl = &m.getClasses()[new_obj.class_idx];
+    auto new_cl = &m.classes[new_obj.class_idx];
     bool found  = false;
     for (int class_idx = -1; auto& cl: classes)
     {

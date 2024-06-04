@@ -27,36 +27,6 @@ KPack::~KPack()
   clear();
 }
 
-void KPack::setMainMip(double v)
-{
-  main_mip = v;
-}
-
-double KPack::getMainMip() const
-{
-  return main_mip;
-}
-
-void KPack::setTileMip(double v)
-{
-  tile_mip = v;
-}
-
-double KPack::getTileMip() const
-{
-  return tile_mip;
-}
-
-void KPack::setFrame(KGeoRect v)
-{
-  frame = v;
-}
-
-const KGeoRect& KPack::getFrame() const
-{
-  return frame;
-}
-
 void KPack::clear()
 {
   if (main.getStatus() != KTile::Loaded)
@@ -303,21 +273,6 @@ void KPack::loadTile(int tile_idx)
     obj.load(classes, pos, ba);
 }
 
-void KPack::setClasses(QVector<KClass> v)
-{
-  classes = v;
-}
-
-void KPack::addBorder(KGeoPolygon v)
-{
-  borders.append(v);
-}
-
-const QVector<KClass>& KPack::getClasses() const
-{
-  return classes;
-}
-
 void KPack::setObjects(QVector<KObject> src_obj_list,
                        int              max_objects_per_tile)
 {
@@ -325,13 +280,13 @@ void KPack::setObjects(QVector<KObject> src_obj_list,
       std::ceil(1.0 * src_obj_list.count() / max_objects_per_tile);
   int tile_num = pow(tile_side_num, 2);
   tiles.resize(tile_num);
-  auto map_size_m     = getFrame().getSizeMeters();
-  auto map_top_left_m = getFrame().top_left.toMeters();
+  auto map_size_m     = frame.getSizeMeters();
+  auto map_top_left_m = frame.top_left.toMeters();
   for (auto& src_obj: src_obj_list)
   {
     KObject obj(src_obj);
     auto    cl = classes[obj.class_idx];
-    if (cl.max_mip == 0 || cl.max_mip > getTileMip())
+    if (cl.max_mip == 0 || cl.max_mip > tile_mip)
       main.append(obj);
     else
     {

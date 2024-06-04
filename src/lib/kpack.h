@@ -28,7 +28,7 @@ public:
   void   setStatus(Status);
 };
 
-class KPack
+struct KPack
 {
   static constexpr int border_coor_precision_coef = 10000;
 
@@ -36,7 +36,6 @@ class KPack
   double  main_mip = 0;
   double  tile_mip = 0;
 
-public:
   QVector<KClass>      classes;
   KGeoRect             frame;
   QVector<QPolygonF>   borders_m;
@@ -52,20 +51,8 @@ public:
   void loadAll(double pixel_size_mm);
   void clear();
 
-  void   setMainMip(double);
-  double getMainMip() const;
-
-  void   setTileMip(double);
-  double getTileMip() const;
-
-  void            setFrame(KGeoRect);
-  const KGeoRect& getFrame() const;
-
-  void                   setObjects(QVector<KObject> obj_list,
-                                    int              max_objects_per_tile);
-  void                   setClasses(QVector<KClass> src_classes);
-  void                   addBorder(KGeoPolygon);
-  const QVector<KClass>& getClasses() const;
+  void setObjects(QVector<KObject> obj_list,
+                  int              max_objects_per_tile);
 };
 
 #endif  // KPACK_H

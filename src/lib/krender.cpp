@@ -161,9 +161,9 @@ void KRender::checkUnload()
 bool KRender::needToLoadPack(const KRenderPack* pack,
                              const QRectF&      draw_rect_m)
 {
-  if (pack->getMainMip() > 0 && render_mip > pack->getMainMip())
+  if (pack->main_mip > 0 && render_mip > pack->main_mip)
     return false;
-  auto map_rect_m       = pack->getFrame().toMeters();
+  auto map_rect_m       = pack->frame.toMeters();
   bool frame_intersects = draw_rect_m.intersects(map_rect_m);
   if (!frame_intersects)
     return false;
@@ -189,7 +189,7 @@ void KRender::checkLoad()
   auto draw_rect_m = getDrawRectM();
   for (auto& pack: packs)
   {
-    auto map_rect_m = pack->getFrame().toMeters();
+    auto map_rect_m = pack->frame.toMeters();
 
     if (!needToLoadPack(pack, draw_rect_m))
       continue;
@@ -226,7 +226,7 @@ void KRender::checkLoad()
           if (load_thread_count < QThread::idealThreadCount())
             if (tile.getStatus() == KTile::Null &&
                 tile_rect_m.intersects(draw_rect_m) &&
-                render_mip < pack->getTileMip())
+                render_mip < pack->tile_mip)
             {
               load_thread_count++;
               qDebug() << "loading tile, load_thread_count"
@@ -333,7 +333,7 @@ void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
   if (!render_frame_m.contains(coor_m))
     return;
 
-  auto cl = &pack.getClasses()[obj.class_idx];
+  auto cl = &pack.classes[obj.class_idx];
   p->setPen(QPen(cl->pen, 2));
   p->setBrush(cl->brush);
   auto        kpos       = obj.polygons.first().first();
@@ -393,7 +393,7 @@ void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
   auto   bottom_right_m = frame.bottom_right.toMeters();
   QRectF obj_frame_m    = {top_left_m, bottom_right_m};
 
-  auto cl = &pack.getClasses()[obj.class_idx];
+  auto cl = &pack.classes[obj.class_idx];
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
@@ -480,7 +480,7 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  auto cl = &pack.getClasses()[obj.class_idx];
+  auto cl = &pack.classes[obj.class_idx];
 
   Qt::PenStyle style = Qt::SolidLine;
   if (cl->style == KClass::Dash)
@@ -640,7 +640,7 @@ void KRender::NameHolder::fix(const KPack* pack, const KObject* _obj,
     angle_deg -= 180;
   if (angle_deg < -90)
     angle_deg += 180;
-  tcolor = pack->getClasses()[_obj->class_idx].tcolor;
+  tcolor = pack->classes[_obj->class_idx].tcolor;
 }
 
 bool KRender::isCluttering(const QRect& rect)
@@ -657,7 +657,7 @@ bool KRender::isCluttering(const QRect& rect)
 
 bool KRender::checkMipRange(const KPack* pack, const KObject* obj)
 {
-  auto cl = &pack->getClasses()[obj->class_idx];
+  auto cl = &pack->classes[obj->class_idx];
   return (cl->min_mip == 0 || render_mip >= cl->min_mip) &&
          (cl->max_mip == 0 || render_mip <= cl->max_mip);
 }
@@ -666,7 +666,7 @@ bool KRender::paintObject(QPainter* p, const KRenderPack* map,
                           const KObject& obj, int render_idx,
                           int line_iter)
 {
-  auto cl = &map->getClasses()[obj.class_idx];
+  auto cl = &map->classes[obj.class_idx];
   switch (cl->type)
   {
   case KClass::Point:
@@ -863,7 +863,7 @@ void KRender::renderPack(QPainter* p, const KRenderPack* pack,
       if (!obj)
         continue;
 
-      auto cl = &pack->getClasses()[obj->class_idx];
+      auto cl = &pack->classes[obj->class_idx];
 
       if (cl->type != KClass::Line && line_iter == 1)
         continue;
@@ -961,7 +961,7 @@ void KRender::run()
   auto         draw_rect = getDrawRectM();
   for (int map_idx = -1; auto& map: packs)
   {
-    if (map->getMainMip() > 0 && render_mip > map->getMainMip())
+    if (map->main_mip > 0 && render_mip > map->main_mip)
       continue;
     map_idx++;
     if (map_idx == 0)
@@ -987,7 +987,7 @@ void KRender::run()
     if (map_idx > 0 && !needToLoadPack(map, render_frame_m))
       continue;
 
-    auto map_rect_m = map->getFrame().toMeters();
+    auto map_rect_m = map->frame.toMeters();
     if (map_idx > 0 && !render_frame_m.intersects(map_rect_m))
       continue;
 
