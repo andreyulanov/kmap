@@ -4,8 +4,7 @@
 #include <QDir>
 #include <QDebug>
 
-KPackFetcher::KPackFetcher(QString         _map_dir,
-                           const KRefPack* world_map)
+KPackFetcher::KPackFetcher(QString _map_dir, const KPack* world_map)
 {
   map_dir = _map_dir;
   QFile f(map_dir + "/maplist.txt");
@@ -15,7 +14,7 @@ KPackFetcher::KPackFetcher(QString         _map_dir,
     while (!in.atEnd())
       name_list.append(in.readLine());
   }
-  for (auto obj: world_map->getMainTile())
+  for (auto obj: world_map->main)
   {
     auto iso_code =
         QString::fromUtf8(obj.attributes.value("iso_code")).toLower();

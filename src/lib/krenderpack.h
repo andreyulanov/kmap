@@ -3,7 +3,7 @@
 
 #include "krefpack.h"
 
-class KRenderPack: public QObject, public KRefPack
+class KRenderPack: public QObject, public KPack
 {
   Q_OBJECT
 
@@ -17,13 +17,13 @@ public:
   static constexpr int max_layer_count = 24;
   static constexpr int render_count    = 4;
 
-  QVector<KObject*> render_data[max_layer_count];
-  QReadWriteLock        main_lock;
-  QReadWriteLock        tile_lock;
-  QList<RenderAddress>  render_start_list;
-  int                   render_object_count;
+  QVector<KObject*>    render_data[max_layer_count];
+  QReadWriteLock       main_lock;
+  QReadWriteLock       tile_lock;
+  QList<RenderAddress> render_start_list;
+  int                  render_object_count;
 
-  void addCollectionToIndex(KTile &collection);
+  void addCollectionToIndex(KTile& collection);
 
 signals:
   void loaded();

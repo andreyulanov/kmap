@@ -94,7 +94,7 @@ public:
   void            renderUserObjects();
   void            setViewPoint(const KGeoCoor& deg, double mip);
   void            addMap(QString path, bool load_now);
-  const KRefPack* getWorldPack();
+  const KPack *getWorldPack();
   void            scroll(QPoint diff);
   void            scrollTo(const KGeoCoor& coor);
   void            zoomIn();

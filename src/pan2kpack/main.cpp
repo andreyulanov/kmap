@@ -4,7 +4,7 @@
 #include "mapapi.h"
 #include "qdmcmp.h"
 #include "kpanclassmanager.h"
-#include "krefpack.h"
+#include "kpack.h"
 #include <QApplication>
 #include <QtConcurrent/QtConcurrent>
 #include <QDir>
@@ -96,8 +96,8 @@ int main(int argc, char* argv[])
   if (QString(argv[2]).contains("local"))
     is_analyzing_local_map = true;
 
-  auto     world_map_path = output_dir + "/world.kpack";
-  KRefPack world_pack(world_map_path);
+  auto  world_map_path = output_dir + "/world.kpack";
+  KPack world_pack(world_map_path);
 
   if (is_analyzing_local_map)
   {
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
       map_code.remove(".sitz");
       map_code.remove(".mptz");
       bool found_borders = false;
-      for (auto obj: world_pack.getMainTile())
+      for (auto obj: world_pack.main)
       {
         auto attr_val =
             QString::fromUtf8(obj.attributes.value("iso_code"))

@@ -138,7 +138,7 @@ public:
   static void     paintOutlinedText(QPainter* p, const QString& text,
                                     const QColor& tcolor);
   const QPixmap*  getPixmap() const;
-  const KRefPack* getWorldPack() const;
+  const KPack *getWorldPack() const;
   void            render();
   void            renderUserObjects();
   void            stopAndWait();

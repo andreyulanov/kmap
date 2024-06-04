@@ -114,7 +114,7 @@ const QPixmap* KRender::getPixmap() const
   return getting_pixmap_enabled ? &render_pixmap : nullptr;
 }
 
-const KRefPack* KRender::getWorldPack() const
+const KPack* KRender::getWorldPack() const
 {
   return packs.first();
 }
@@ -148,7 +148,7 @@ void KRender::checkUnload()
     i++;
     if (i == 0)
       continue;
-    if (pack->getMainTile().getStatus() == KTile::Loaded)
+    if (pack->main.getStatus() == KTile::Loaded)
     {
       if (!needToLoadPack(pack, draw_rect_m))
         if (loaded_count > 1)
@@ -194,7 +194,7 @@ void KRender::checkLoad()
     if (!needToLoadPack(pack, draw_rect_m))
       continue;
 
-    if (pack->getMainTile().getStatus() == KTile::Null &&
+    if (pack->main.getStatus() == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
       load_thread_count++;
@@ -207,7 +207,7 @@ void KRender::checkLoad()
           });
       continue;
     }
-    if (pack->getMainTile().getStatus() == KTile::Loaded)
+    if (pack->main.getStatus() == KTile::Loaded)
     {
       if (needToLoadPack(pack, draw_rect_m))
       {

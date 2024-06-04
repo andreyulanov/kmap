@@ -1,7 +1,7 @@
 #include "krenderpack.h"
 #include "klocker.h"
 
-KRenderPack::KRenderPack(const QString& path): KRefPack(path)
+KRenderPack::KRenderPack(const QString& path): KPack(path)
 {
 }
 

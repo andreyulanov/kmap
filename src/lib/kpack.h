@@ -50,7 +50,6 @@ struct KPack
   void loadTile(int tile_idx);
   void loadAll(double pixel_size_mm);
   void clear();
-
   void setObjects(QVector<KObject> obj_list,
                   int              max_objects_per_tile);
 };

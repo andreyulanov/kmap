@@ -1,23 +1,23 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>
-#include "krefpack.h"
+#include "kpack.h"
 
 class KWorldPack: public KPack
 {
 public:
   KWorldPack(const QString& path);
-  void addPackToMainTile(const KRefPack&);
+  void addPackToMainTile(const KPack&);
 };
 
 KWorldPack::KWorldPack(const QString& path): KPack(path)
 {
 }
 
-void KWorldPack::addPackToMainTile(const KRefPack& m)
+void KWorldPack::addPackToMainTile(const KPack& m)
 {
   frame = frame.united(m.frame);
-  for (auto new_obj: m.getMainTile())
+  for (auto new_obj: m.main)
   {
     auto new_cl = &m.classes[new_obj.class_idx];
     bool found  = false;
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
       continue;
 
     qDebug() << "loading" << fi.absoluteFilePath();
-    KRefPack pack(fi.absoluteFilePath());
+    KPack pack(fi.absoluteFilePath());
     pack.loadAll(0);
     united_pack->addPackToMainTile(pack);
   }

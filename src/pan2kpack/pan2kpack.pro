@@ -10,7 +10,6 @@ SOURCES += \
     ../lib/kbase.cpp \
     ../lib/klocker.cpp \
     ../lib/kpack.cpp \
-    ../lib/krefpack.cpp \
     ../lib/kclass.cpp \
     ../lib/kobject.cpp \
     ../lib/kclassmanager.cpp \
@@ -21,7 +20,6 @@ HEADERS += \
  ../lib/kbase.h \
     ../lib/klocker.h \
     ../lib/kpack.h \
-    ../lib/krefpack.h \
     ../lib/kserialize.h \
     ../lib/kclass.h \
     ../lib/kclassmanager.h \
