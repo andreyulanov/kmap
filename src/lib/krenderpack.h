@@ -1,7 +1,7 @@
 #ifndef KRENDERPACK_H
 #define KRENDERPACK_H
 
-#include "krefpack.h"
+#include "kpack.h"
 
 class KRenderPack: public QObject, public KPack
 {
