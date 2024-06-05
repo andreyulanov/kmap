@@ -9,12 +9,14 @@
 
 struct KFreeObject: public KObject
 {
-  QUuid  guid;
   KClass cl;
 
-  void save(QString path);
-  void load(QString path, double pixel_size_mm);
-  int  getWidthPix(double pixel_size_mm);
+  void  save(QString path);
+  void  load(QString path, double pixel_size_mm);
+  int   getWidthPix(double pixel_size_mm);
+  void  setGuid(QByteArray guid_ba);
+  void  setGuid(QUuid guid);
+  QUuid getGuid() const;
 };
 
 class KFreeObjectManager: public QObject

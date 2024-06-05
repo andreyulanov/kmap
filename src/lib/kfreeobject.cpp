@@ -57,6 +57,21 @@ int KFreeObject::getWidthPix(double pixel_size_mm)
   return round(cl.width_mm / pixel_size_mm);
 }
 
+void KFreeObject::setGuid(QUuid guid)
+{
+  attributes.insert("guid", guid.toRfc4122());
+}
+
+void KFreeObject::setGuid(QByteArray guid_ba)
+{
+  attributes.insert("guid", guid_ba);
+}
+
+QUuid KFreeObject::getGuid() const
+{
+  return QUuid::fromRfc4122(attributes.value("guid"));
+}
+
 KFreeObjectManager::KFreeObjectManager(QString _objects_dir,
                                        double  _pixel_size_mm)
 {
@@ -69,7 +84,8 @@ KFreeObjectManager::KFreeObjectManager(QString _objects_dir,
   {
     KFreeObject obj;
     obj.load(fi.absoluteFilePath(), pixel_size_mm);
-    obj.guid = fi.fileName().remove(".kfree");
+    auto guid = QUuid::fromString(fi.fileName().remove(".kfree"));
+    obj.setGuid(guid);
     objects.append(obj);
   }
   objects_dir   = _objects_dir;
@@ -85,7 +101,8 @@ void KFreeObjectManager::removeObject()
 {
   if (edited_object_idx >= 0)
   {
-    QFile().remove(getObjectPath(objects.at(edited_object_idx).guid));
+    QFile().remove(
+        getObjectPath(objects.at(edited_object_idx).getGuid()));
     objects.remove(edited_object_idx);
     edited_object_idx = -1;
   }
@@ -94,9 +111,9 @@ void KFreeObjectManager::removeObject()
     for (int obj_idx = -1; auto& obj: objects)
     {
       obj_idx++;
-      if (obj.guid == guid)
+      if (obj.getGuid() == guid)
       {
-        QFile().remove(getObjectPath(objects.at(obj_idx).guid));
+        QFile().remove(getObjectPath(objects.at(obj_idx).getGuid()));
         objects.remove(obj_idx);
         break;
       }
@@ -215,7 +232,7 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
   if (!selected_guids.isEmpty())
   {
     auto object_idx    = getObjectIdxAt(p0);
-    auto selected_guid = objects.at(object_idx).guid;
+    auto selected_guid = objects.at(object_idx).getGuid();
     if (!selected_guids.contains(selected_guid))
       selected_guids.append(selected_guid);
     updated();
@@ -238,8 +255,9 @@ void KFreeObjectManager::onTapped(KGeoCoor coor)
         new_selected_object_idx != edited_object_idx)
     {
       selected_guids.clear();
-      selected_guids.append(objects.at(edited_object_idx).guid);
-      selected_guids.append(objects.at(new_selected_object_idx).guid);
+      selected_guids.append(objects.at(edited_object_idx).getGuid());
+      selected_guids.append(
+          objects.at(new_selected_object_idx).getGuid());
       edited_object_idx = -1;
       updated();
       return;
@@ -315,7 +333,7 @@ void KFreeObjectManager::paint(QPainter* p)
     PaintMode mode = PaintMode::Normal;
     if (idx == edited_object_idx)
       mode = PaintMode::Edited;
-    else if (selected_guids.contains(obj.guid))
+    else if (selected_guids.contains(obj.getGuid()))
       mode = PaintMode::Selected;
     paintObject(p, obj, mode);
   }
@@ -327,9 +345,9 @@ void KFreeObjectManager::acceptObject()
   if (edited_object_idx >= 0)
   {
     auto& obj = objects[edited_object_idx];
-    if (obj.guid.isNull())
-      obj.guid = QUuid::createUuid();
-    QString file_name = getObjectPath(obj.guid.toString());
+    if (obj.getGuid().isNull())
+      obj.setGuid(QUuid::createUuid());
+    QString file_name = getObjectPath(obj.getGuid().toString());
     obj.save(file_name);
     saved(file_name);
     is_creating_new_object = false;
