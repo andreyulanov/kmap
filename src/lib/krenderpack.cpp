@@ -42,7 +42,7 @@ void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
   {
     QWriteLocker big_locker(&main_lock);
     addCollectionToIndex(main);
-    main.setStatus(KTile::Loaded);
+    main.status = KTile::Loaded;
     loaded();
   }
 }
@@ -52,7 +52,7 @@ void KRenderPack::loadTile(int tile_idx)
   KPack::loadTile(tile_idx);
   QWriteLocker small_locker(&tile_lock);
   addCollectionToIndex(tiles[tile_idx]);
-  tiles[tile_idx].setStatus(KTile::Loaded);
+  tiles[tile_idx].status = KTile::Loaded;
   loaded();
 }
 

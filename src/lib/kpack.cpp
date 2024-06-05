@@ -7,16 +7,6 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-KTile::Status KTile::getStatus() const
-{
-  return status;
-}
-
-void KTile::setStatus(Status v)
-{
-  status = v;
-}
-
 KPack::KPack(const QString& v)
 {
   path = v;
@@ -29,15 +19,15 @@ KPack::~KPack()
 
 void KPack::clear()
 {
-  if (main.getStatus() != KTile::Loaded)
+  if (main.status != KTile::Loaded)
     return;
-  if (main.getStatus() == KTile::Loading)
+  if (main.status == KTile::Loading)
     return;
 
   main.clear();
   tiles.clear();
   classes.clear();
-  main.setStatus(KTile::Null);
+  main.status = KTile::Null;
 }
 
 void KPack::save(QString new_path) const
@@ -118,7 +108,7 @@ void KPack::save(QString new_path) const
 
 void KPack::loadMain(bool load_objects, double pixel_size_mm)
 {
-  if (main.getStatus() == KTile::Loading)
+  if (main.status == KTile::Loading)
     return;
   QElapsedTimer t;
   t.start();
@@ -131,7 +121,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
   }
 
-  if (main.getStatus() != KTile::Null)
+  if (main.status != KTile::Null)
     return;
 
   QString format_id;
@@ -170,7 +160,7 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
     return;
 
   qDebug() << "loading main from" << path;
-  main.setStatus(KTile::Loading);
+  main.status = KTile::Loading;
   int class_count;
   read(&f, class_count);
   qDebug() << "class_count" << class_count;
@@ -218,9 +208,9 @@ void KPack::loadAll(double pixel_size_mm)
 
 void KPack::loadTile(int tile_idx)
 {
-  if (main.getStatus() != KTile::Loaded)
+  if (main.status != KTile::Loaded)
     return;
-  if (tiles[tile_idx].getStatus() == KTile::Loading)
+  if (tiles[tile_idx].status == KTile::Loading)
     return;
 
   qDebug() << "loading tile" << tile_idx << "from" << path;
@@ -267,8 +257,8 @@ void KPack::loadTile(int tile_idx)
   f.read(ba.data(), ba_count);
   ba = qUncompress(ba);
 
-  tiles[tile_idx].setStatus(KTile::Loading);
-  int pos = 0;
+  tiles[tile_idx].status = KTile::Loading;
+  int pos                = 0;
   for (auto& obj: tiles[tile_idx])
     obj.load(classes, pos, ba);
 }

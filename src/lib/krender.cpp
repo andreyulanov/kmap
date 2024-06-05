@@ -148,7 +148,7 @@ void KRender::checkUnload()
     i++;
     if (i == 0)
       continue;
-    if (pack->main.getStatus() == KTile::Loaded)
+    if (pack->main.status == KTile::Loaded)
     {
       if (!needToLoadPack(pack, draw_rect_m))
         if (loaded_count > 1)
@@ -194,7 +194,7 @@ void KRender::checkLoad()
     if (!needToLoadPack(pack, draw_rect_m))
       continue;
 
-    if (pack->main.getStatus() == KTile::Null &&
+    if (pack->main.status == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
       load_thread_count++;
@@ -207,7 +207,7 @@ void KRender::checkLoad()
           });
       continue;
     }
-    if (pack->main.getStatus() == KTile::Loaded)
+    if (pack->main.status == KTile::Loaded)
     {
       if (needToLoadPack(pack, draw_rect_m))
       {
@@ -224,7 +224,7 @@ void KRender::checkLoad()
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (load_thread_count < QThread::idealThreadCount())
-            if (tile.getStatus() == KTile::Null &&
+            if (tile.status == KTile::Null &&
                 tile_rect_m.intersects(draw_rect_m) &&
                 render_mip < pack->tile_mip)
             {
