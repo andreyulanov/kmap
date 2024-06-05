@@ -1,76 +1,9 @@
 #include "math.h"
-#include "kfreeobject.h"
+#include "kfreeobjectmanager.h"
 #include "kserialize.h"
 #include <QDir>
 #include <QDebug>
 #include <QUuid>
-
-void KFreeObject::save(QString path)
-{
-  QFile f(path);
-  if (!f.open(QIODevice::WriteOnly))
-  {
-    qDebug() << "ERROR: unable to write to" << path;
-    return;
-  }
-
-  using namespace KSerialize;
-
-  cl.save(&f);
-  write(&f, polygons.count());
-  for (auto polygon: polygons)
-  {
-    write(&f, polygon.count());
-    for (auto point: polygon)
-      write(&f, point);
-  }
-  write(&f, attributes);
-}
-
-void KFreeObject::load(QString path, double pixel_size_mm)
-{
-  QFile f(path);
-  if (!f.open(QIODevice::ReadOnly))
-  {
-    qDebug() << "ERROR: unable to write to" << path;
-    return;
-  }
-
-  using namespace KSerialize;
-
-  cl.load(&f, pixel_size_mm);
-  int n;
-  read(&f, n);
-  polygons.resize(n);
-  for (auto& polygon: polygons)
-  {
-    read(&f, n);
-    polygon.resize(n);
-    for (auto& point: polygon)
-      read(&f, point);
-  }
-  read(&f, attributes);
-}
-
-int KFreeObject::getWidthPix(double pixel_size_mm)
-{
-  return round(cl.width_mm / pixel_size_mm);
-}
-
-void KFreeObject::setGuid(QUuid guid)
-{
-  attributes.insert("guid", guid.toRfc4122());
-}
-
-void KFreeObject::setGuid(QByteArray guid_ba)
-{
-  attributes.insert("guid", guid_ba);
-}
-
-QUuid KFreeObject::getGuid() const
-{
-  return QUuid::fromRfc4122(attributes.value("guid"));
-}
 
 KFreeObjectManager::KFreeObjectManager(QString _objects_dir,
                                        double  _pixel_size_mm)

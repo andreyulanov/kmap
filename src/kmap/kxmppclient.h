@@ -7,7 +7,7 @@
 #include <QXmppQt5/QXmppHttpUploadManager.h>
 #include <QXmppQt5/QXmppDiscoveryManager.h>
 #include <QRegularExpression>
-#include "kfreeobject.h"
+#include "kfreeobjectmanager.h"
 #include "kmucmanager.h"
 
 class KXmppDiscoveryManager : public QXmppDiscoveryManager

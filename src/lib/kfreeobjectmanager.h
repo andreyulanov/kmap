@@ -1,23 +1,11 @@
-#ifndef KFREEOBJECT_H
-#define KFREEOBJECT_H
+#ifndef KFREEOBJECTMANAGER_H
+#define KFREEOBJECTMANAGER_H
 
 #include <QFileInfo>
 #include <QUuid>
 #include <QMap>
 #include <QVariant>
 #include "kpack.h"
-
-struct KFreeObject: public KObject
-{
-  KClass cl;
-
-  void  save(QString path);
-  void  load(QString path, double pixel_size_mm);
-  int   getWidthPix(double pixel_size_mm);
-  void  setGuid(QByteArray guid_ba);
-  void  setGuid(QUuid guid);
-  QUuid getGuid() const;
-};
 
 class KFreeObjectManager: public QObject
 {
@@ -76,4 +64,4 @@ private slots:
   void loadFileWithoutUpdate(QString path);
 };
 
-#endif  // KFREEOBJECT_H
+#endif  // KFREEOBJECTMANAGER_H

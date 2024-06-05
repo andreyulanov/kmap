@@ -19,4 +19,16 @@ public:
   KGeoCoor getCenter();
 };
 
+struct KFreeObject: public KObject
+{
+  KClass cl;
+
+  void  save(QString path);
+  void  load(QString path, double pixel_size_mm);
+  int   getWidthPix(double pixel_size_mm);
+  void  setGuid(QByteArray guid_ba);
+  void  setGuid(QUuid guid);
+  QUuid getGuid() const;
+};
+
 #endif  // KOBJECT_H
