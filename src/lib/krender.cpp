@@ -197,14 +197,7 @@ void KRender::checkLoad()
     if (pack->main.status == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
-      load_thread_count++;
-      qDebug() << "loading main, load_thread_count"
-               << load_thread_count;
-      QtConcurrent::run(
-          [this, &pack]()
-          {
-            pack->loadMain(true, pixel_size_mm);
-          });
+      pack->loadMain(true, pixel_size_mm);
       continue;
     }
     if (pack->main.status == KTile::Loaded)
@@ -227,13 +220,7 @@ void KRender::checkLoad()
             if (tile.status == KTile::Null &&
                 tile_rect_m.intersects(draw_rect_m) &&
                 render_mip < pack->tile_mip)
-            {
-              load_thread_count++;
-              qDebug() << "loading tile, load_thread_count"
-                       << load_thread_count;
-              QtConcurrent::run(pack, &KRenderPack::loadTile,
-                                tile_idx);
-            }
+              pack->loadTile(tile_idx);
           tile_idx++;
         }
       }
