@@ -49,6 +49,36 @@ auto joinPolys(KObject& obj)
   return false;
 }
 
+void setObjects(KPack* pack, QVector<KObject> src_obj_list,
+                int max_objects_per_tile)
+{
+  int tile_side_num =
+      std::ceil(1.0 * src_obj_list.count() / max_objects_per_tile);
+  int tile_num = pow(tile_side_num, 2);
+  pack->tiles.resize(tile_num);
+  auto map_size_m     = pack->frame.getSizeMeters();
+  auto map_top_left_m = pack->frame.top_left.toMeters();
+  for (auto& src_obj: src_obj_list)
+  {
+    KObject obj(src_obj);
+    auto    cl = pack->classes[obj.class_idx];
+    if (cl.max_mip == 0 || cl.max_mip > pack->tile_mip)
+      pack->main.append(obj);
+    else
+    {
+      auto   obj_top_left_m = obj.frame.top_left.toMeters();
+      double shift_x_m      = obj_top_left_m.x() - map_top_left_m.x();
+      int    part_idx_x =
+          1.0 * shift_x_m / map_size_m.width() * tile_side_num;
+      int shift_y = obj_top_left_m.y() - map_top_left_m.y();
+      int part_idx_y =
+          1.0 * shift_y / map_size_m.height() * tile_side_num;
+      int tile_idx = part_idx_y * tile_side_num + part_idx_x;
+      pack->tiles[tile_idx].append(obj);
+    }
+  }
+}
+
 int main(int argc, char* argv[])
 {
   using namespace kmath;
@@ -376,7 +406,7 @@ int main(int argc, char* argv[])
     }
     qDebug() << "joinPolys() elapsed" << t.restart();
 
-    pack.setObjects(obj_list, 100000);
+    setObjects(&pack, obj_list, 100000);
 
     qDebug() << "  saving...";
     pack.save();

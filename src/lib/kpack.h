@@ -38,13 +38,13 @@ struct KPack
 
   KPack(const QString& path);
   virtual ~KPack();
-  void save(QString new_path = "") const;
-  void loadMain(bool load_objects, double pixel_size_mm);
-  void loadTile(int tile_idx);
-  void loadAll(double pixel_size_mm);
-  void clear();
-  void setObjects(QVector<KObject> obj_list,
-                  int              max_objects_per_tile);
+  void   save(QString new_path = "") const;
+  void   loadMain(bool load_objects, double pixel_size_mm);
+  void   loadTile(int tile_idx);
+  void   loadAll(double pixel_size_mm);
+  void   clear();
+  qint64 count();
+  void   addObject(KFreeObject free_obj);
 };
 
 #endif  // KPACK_H

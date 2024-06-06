@@ -30,6 +30,14 @@ void KPack::clear()
   main.status = KTile::Null;
 }
 
+qint64 KPack::count()
+{
+  qint64 total_count = main.count();
+  for (auto t: tiles)
+    total_count += t.count();
+  return total_count;
+}
+
 void KPack::save(QString new_path) const
 {
   using namespace KSerialize;
@@ -263,32 +271,40 @@ void KPack::loadTile(int tile_idx)
     obj.load(classes, pos, ba);
 }
 
-void KPack::setObjects(QVector<KObject> src_obj_list,
-                       int              max_objects_per_tile)
+void KPack::addObject(KFreeObject free_obj)
 {
-  int tile_side_num =
-      std::ceil(1.0 * src_obj_list.count() / max_objects_per_tile);
-  int tile_num = pow(tile_side_num, 2);
-  tiles.resize(tile_num);
   auto map_size_m     = frame.getSizeMeters();
   auto map_top_left_m = frame.top_left.toMeters();
-  for (auto& src_obj: src_obj_list)
+
+  KObject obj;
+  obj.name       = free_obj.name;
+  obj.attributes = free_obj.attributes;
+  obj.polygons   = free_obj.polygons;
+
+  obj.class_idx = -1;
+  for (auto cl: classes)
   {
-    KObject obj(src_obj);
-    auto    cl = classes[obj.class_idx];
-    if (cl.max_mip == 0 || cl.max_mip > tile_mip)
-      main.append(obj);
-    else
-    {
-      auto   obj_top_left_m = obj.frame.top_left.toMeters();
-      double shift_x_m      = obj_top_left_m.x() - map_top_left_m.x();
-      int    part_idx_x =
-          1.0 * shift_x_m / map_size_m.width() * tile_side_num;
-      int shift_y = obj_top_left_m.y() - map_top_left_m.y();
-      int part_idx_y =
-          1.0 * shift_y / map_size_m.height() * tile_side_num;
-      int tile_idx = part_idx_y * tile_side_num + part_idx_x;
-      tiles[tile_idx].append(obj);
-    }
+    obj.class_idx++;
+    if (cl.id == free_obj.cl.id)
+      break;
+  }
+
+  if (obj.class_idx == classes.count() - 1)
+    classes.append(free_obj.cl);
+
+  int tile_side_num = sqrt(tiles.count());
+  if (free_obj.cl.max_mip == 0 || free_obj.cl.max_mip > tile_mip)
+    main.append(obj);
+  else
+  {
+    auto   obj_top_left_m = obj.frame.top_left.toMeters();
+    double shift_x_m      = obj_top_left_m.x() - map_top_left_m.x();
+    int    part_idx_x =
+        1.0 * shift_x_m / map_size_m.width() * tile_side_num;
+    int shift_y = obj_top_left_m.y() - map_top_left_m.y();
+    int part_idx_y =
+        1.0 * shift_y / map_size_m.height() * tile_side_num;
+    int tile_idx = part_idx_y * tile_side_num + part_idx_x;
+    tiles[tile_idx].append(obj);
   }
 }
