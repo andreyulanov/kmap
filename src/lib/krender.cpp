@@ -134,7 +134,6 @@ QRectF KRender::getDrawRectM() const
 
 void KRender::checkUnload()
 {
-  qDebug() << Q_FUNC_INFO;
   auto draw_rect_m  = getDrawRectM();
   int  loaded_count = 0;
   for (int i = -1; auto& pack: packs)
@@ -146,12 +145,7 @@ void KRender::checkUnload()
     {
       if (!needToLoadPack(pack, draw_rect_m))
         if (loaded_count > max_loaded_maps_count)
-        {
-          qDebug() << "loaded_count" << loaded_count;
-          qDebug() << "max_loaded_maps_count"
-                   << max_loaded_maps_count;
           pack->clear();
-        }
       loaded_count++;
     }
   }
