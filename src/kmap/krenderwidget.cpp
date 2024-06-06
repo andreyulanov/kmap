@@ -16,6 +16,7 @@ KRenderWidget::KRenderWidget(Settings settings):
   r.setBackgroundColor(settings.background_color);
   r.setRenderWindowSizeCoef(settings.render_window_size_coef);
   max_zoom_speed = settings.max_zoom_speed;
+  r.setMaxLoadedMapsCount(settings.max_loaded_maps_count);
   r.setPixmapSize(size());
 
   setAttribute(Qt::WA_AcceptTouchEvents);

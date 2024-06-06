@@ -47,6 +47,7 @@ class KRender: public QThread
   QColor ocean_color                  = QColor(150, 210, 240);
   QColor land_color                   = QColor(250, 246, 230);
   int    update_interval_ms           = 0;
+  int    max_loaded_maps_count        = 0;
   double max_object_size_with_name_mm = 20.0;
 
   QPointF       render_center_m;
@@ -131,6 +132,7 @@ public:
   void           setBackgroundColor(QColor);
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);
+  void           setMaxLoadedMapsCount(int);
   void           paintPointName(QPainter* p, const QString& text,
                                 const QColor& tcolor);
   static void    paintOutlinedText(QPainter* p, const QString& text,

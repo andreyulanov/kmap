@@ -1,5 +1,6 @@
 #include "krenderpack.h"
 #include "klocker.h"
+#include <QDebug>
 
 KRenderPack::KRenderPack(const QString& path): KPack(path)
 {

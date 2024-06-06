@@ -109,6 +109,7 @@ int main(int argc, char* argv[])
   mapw_settings.render_window_size_coef = 2;
   mapw_settings.update_interval_ms      = 100;
   mapw_settings.max_zoom_speed          = 1.5;
+  mapw_settings.max_loaded_maps_count   = 3;
 
   KRenderWidget      renderw(mapw_settings);
   KPackFetcher       map_fetcher(mapw_settings.map_dir,

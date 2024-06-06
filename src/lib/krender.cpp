@@ -107,6 +107,11 @@ void KRender::setRenderWindowSizeCoef(double v)
   render_window_size_coef = v;
 }
 
+void KRender::setMaxLoadedMapsCount(int v)
+{
+  max_loaded_maps_count = v;
+}
+
 const QPixmap* KRender::getPixmap() const
 {
   return getting_pixmap_enabled ? &render_pixmap : nullptr;
@@ -129,6 +134,7 @@ QRectF KRender::getDrawRectM() const
 
 void KRender::checkUnload()
 {
+  qDebug() << Q_FUNC_INFO;
   auto draw_rect_m  = getDrawRectM();
   int  loaded_count = 0;
   for (int i = -1; auto& pack: packs)
@@ -139,8 +145,13 @@ void KRender::checkUnload()
     if (pack->main.status == KTile::Loaded)
     {
       if (!needToLoadPack(pack, draw_rect_m))
-        if (loaded_count > 1)
+        if (loaded_count > max_loaded_maps_count)
+        {
+          qDebug() << "loaded_count" << loaded_count;
+          qDebug() << "max_loaded_maps_count"
+                   << max_loaded_maps_count;
           pack->clear();
+        }
       loaded_count++;
     }
   }

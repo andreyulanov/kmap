@@ -27,6 +27,7 @@ public:
     QColor  background_color        = QColor(150, 210, 240);
     int     update_interval_ms      = 100;
     double  max_zoom_speed          = 1.1;
+    double  max_loaded_maps_count   = 3;
   };
 
 private:
@@ -41,6 +42,7 @@ private:
   double        zoom_speed                           = 1.1;
   double        max_zoom_speed                       = 1.1;
   const int     min_time_between_pinch_and_scroll_ms = 200;
+  int           max_loaded_maps_count                = 3;
   QElapsedTimer time_since_last_pinch;
   bool          is_pinching = false;
   QTimer        zoom_timer;
@@ -90,18 +92,18 @@ signals:
 
 public:
   KRenderWidget(Settings settings);
-  void            render();
-  void            renderUserObjects();
-  void            setViewPoint(const KGeoCoor& deg, double mip);
-  void            addMap(QString path, bool load_now);
-  const KPack *getWorldPack();
-  void            scroll(QPoint diff);
-  void            scrollTo(const KGeoCoor& coor);
-  void            zoomIn();
-  void            zoomOut();
-  QPoint          deg2scr(const KGeoCoor&) const;
-  QPoint          deg2pix(const KGeoCoor&) const;
-  KGeoCoor        scr2deg(const QPoint&) const;
-  double          getMip();
+  void         render();
+  void         renderUserObjects();
+  void         setViewPoint(const KGeoCoor& deg, double mip);
+  void         addMap(QString path, bool load_now);
+  const KPack* getWorldPack();
+  void         scroll(QPoint diff);
+  void         scrollTo(const KGeoCoor& coor);
+  void         zoomIn();
+  void         zoomOut();
+  QPoint       deg2scr(const KGeoCoor&) const;
+  QPoint       deg2pix(const KGeoCoor&) const;
+  KGeoCoor     scr2deg(const QPoint&) const;
+  double       getMip();
 };
 #endif  // KRENDERWIDGET_H
