@@ -3,10 +3,8 @@
 
 #include "kpack.h"
 
-class KRenderPack: public QObject, public KPack
+class KRenderPack: public KPack
 {
-  Q_OBJECT
-
   struct RenderAddress
   {
     int layer_idx;
@@ -24,9 +22,6 @@ public:
   int                  render_object_count;
 
   void addCollectionToIndex(KTile& collection);
-
-signals:
-  void loaded();
 
 public:
   KRenderPack(const QString& path);

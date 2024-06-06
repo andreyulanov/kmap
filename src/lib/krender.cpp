@@ -48,8 +48,6 @@ void KRender::addMap(QString path, bool load_now)
 void KRender::insertPack(int idx, QString path, bool load_now)
 {
   auto map = new KRenderPack(path);
-  connect(map, &KRenderPack::loaded, this, &KRender::onLoaded,
-          Qt::UniqueConnection);
   map->loadMain(load_now, pixel_size_mm);
   packs.insert(idx, map);
 }
@@ -129,16 +127,6 @@ QRectF KRender::getDrawRectM() const
   return draw_rect_m;
 }
 
-void KRender::onLoaded()
-{
-  load_thread_count--;
-  if (load_thread_count < 0)
-    load_thread_count = 0;
-  qDebug() << "loaded, load_thread_count" << load_thread_count;
-  if (rendering_enabled && load_thread_count == 0)
-    render();
-}
-
 void KRender::checkUnload()
 {
   auto draw_rect_m  = getDrawRectM();
@@ -194,12 +182,8 @@ void KRender::checkLoad()
     if (!needToLoadPack(pack, draw_rect_m))
       continue;
 
-    if (pack->main.status == KTile::Null &&
-        load_thread_count < QThread::idealThreadCount())
-    {
+    if (pack->main.status == KTile::Null)
       pack->loadMain(true, pixel_size_mm);
-      continue;
-    }
     if (pack->main.status == KTile::Loaded)
     {
       if (needToLoadPack(pack, draw_rect_m))
@@ -216,11 +200,10 @@ void KRender::checkLoad()
           double tile_top =
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
-          if (load_thread_count < QThread::idealThreadCount())
-            if (tile.status == KTile::Null &&
-                tile_rect_m.intersects(draw_rect_m) &&
-                render_mip < pack->tile_mip)
-              pack->loadTile(tile_idx);
+          if (tile.status == KTile::Null &&
+              tile_rect_m.intersects(draw_rect_m) &&
+              render_mip < pack->tile_mip)
+            pack->loadTile(tile_idx);
           tile_idx++;
         }
       }
@@ -899,6 +882,7 @@ RenderEntry::~RenderEntry()
   delete p;
   delete pm;
   delete t;
+  delete fut;
 }
 
 void KRender::run()

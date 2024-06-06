@@ -22,16 +22,16 @@ class KRender: public QThread
 
   struct NameHolder
   {
-    int                length_pix  = 0;
-    int                start_idx   = 0;
-    int                end_idx     = 0;
-    int                point_count = 0;
-    double             angle_deg   = 0;
-    QPoint             mid_point;
+    int            length_pix  = 0;
+    int            start_idx   = 0;
+    int            end_idx     = 0;
+    int            point_count = 0;
+    double         angle_deg   = 0;
+    QPoint         mid_point;
     const KObject* obj = nullptr;
-    QColor             tcolor;
-    void               fix(const KPack* pack, const KObject* obj,
-                           const QPoint& start, const QPoint& end);
+    QColor         tcolor;
+    void           fix(const KPack* pack, const KObject* obj,
+                       const QPoint& start, const QPoint& end);
   };
 
   struct PointName
@@ -58,7 +58,6 @@ class KRender: public QThread
   bool          rendering_enabled      = false;
   bool          loading_enabled        = true;
   bool          getting_pixmap_enabled = false;
-  int           load_thread_count      = 0;
 
   QPointF               center_m;
   QSize                 pixmap_size   = {100, 100};
@@ -88,8 +87,7 @@ class KRender: public QThread
   void checkYieldResult();
 
   bool paintObject(QPainter* p, const KRenderPack* map,
-                   const KObject& obj, int render_idx,
-                   int line_iter);
+                   const KObject& obj, int render_idx, int line_iter);
   bool paintPointNames(QPainter* p);
   bool paintLineNames(QPainter* p);
   bool paintPolygonNames(QPainter* p);
@@ -121,28 +119,28 @@ signals:
 
 public:
   virtual ~KRender();
-  void            addMap(QString path, bool load_now);
-  void            setMip(double);
-  double          getMip() const;
-  void            setCenterM(QPointF);
-  QPointF         getCenterM() const;
-  QPointF         getRenderCenterM() const;
-  void            setPixmapSize(QSize);
-  void            setPixelSizeMM(double);
-  void            setUpdateIntervalMs(int ms);
-  void            setBackgroundColor(QColor);
-  double          getRenderWindowSizeCoef() const;
-  void            setRenderWindowSizeCoef(double);
-  void            paintPointName(QPainter* p, const QString& text,
-                                 const QColor& tcolor);
-  static void     paintOutlinedText(QPainter* p, const QString& text,
-                                    const QColor& tcolor);
-  const QPixmap*  getPixmap() const;
-  const KPack *getWorldPack() const;
-  void            render();
-  void            renderUserObjects();
-  void            stopAndWait();
-  void            enableLoading(bool);
+  void           addMap(QString path, bool load_now);
+  void           setMip(double);
+  double         getMip() const;
+  void           setCenterM(QPointF);
+  QPointF        getCenterM() const;
+  QPointF        getRenderCenterM() const;
+  void           setPixmapSize(QSize);
+  void           setPixelSizeMM(double);
+  void           setUpdateIntervalMs(int ms);
+  void           setBackgroundColor(QColor);
+  double         getRenderWindowSizeCoef() const;
+  void           setRenderWindowSizeCoef(double);
+  void           paintPointName(QPainter* p, const QString& text,
+                                const QColor& tcolor);
+  static void    paintOutlinedText(QPainter* p, const QString& text,
+                                   const QColor& tcolor);
+  const QPixmap* getPixmap() const;
+  const KPack*   getWorldPack() const;
+  void           render();
+  void           renderUserObjects();
+  void           stopAndWait();
+  void           enableLoading(bool);
 
   QPoint deg2pix(KGeoCoor) const;
 
