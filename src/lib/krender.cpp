@@ -985,6 +985,8 @@ void KRender::run()
 
   render(&p0, render_maps, 0);
 
+  checkYieldResult();
+
   for (auto render: render_list)
     render->fut->waitForFinished();
 
