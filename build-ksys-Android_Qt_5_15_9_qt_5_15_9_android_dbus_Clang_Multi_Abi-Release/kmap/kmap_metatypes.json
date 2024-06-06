@@ -1,0 +1,682 @@
+[
+    {
+        "classes": [
+            {
+                "className": "KClass",
+                "enums": [
+                    {
+                        "isClass": false,
+                        "isFlag": false,
+                        "name": "Type",
+                        "values": [
+                            "None",
+                            "Point",
+                            "Line",
+                            "Polygon"
+                        ]
+                    },
+                    {
+                        "isClass": false,
+                        "isFlag": false,
+                        "name": "Style",
+                        "values": [
+                            "Solid",
+                            "Dash",
+                            "Hatch",
+                            "BDiag",
+                            "FDiag",
+                            "Horiz",
+                            "Vert",
+                            "Dots"
+                        ]
+                    }
+                ],
+                "gadget": true,
+                "qualifiedClassName": "KClass"
+            }
+        ],
+        "inputFile": "kclass.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KFreeObjectManager",
+                "object": true,
+                "qualifiedClassName": "KFreeObjectManager",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "deg2pix",
+                        "returnType": "QPoint"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "deg2scr",
+                        "returnType": "QPoint"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QPoint"
+                            }
+                        ],
+                        "name": "scr2deg",
+                        "returnType": "KGeoCoor"
+                    },
+                    {
+                        "access": "public",
+                        "name": "updated",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "startEdit",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "finishEdit",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "saved",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "file_info",
+                                "type": "QFileInfo"
+                            }
+                        ],
+                        "name": "loadFileWithoutUpdate",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "loadFileWithoutUpdate",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kfreeobjectmanager.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KRender",
+                "object": true,
+                "qualifiedClassName": "KRender",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QRectF"
+                            }
+                        ],
+                        "name": "started",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "p",
+                                "type": "QPainter*"
+                            }
+                        ],
+                        "name": "paintUserObjects",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "ms_elapsed",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "rendered",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QThread"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "krender.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KAutoScroll",
+                "object": true,
+                "qualifiedClassName": "KAutoScroll",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QPoint"
+                            }
+                        ],
+                        "name": "scroll",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kautoscroll.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KControls",
+                "object": true,
+                "qualifiedClassName": "KControls",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "zoomIn",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "zoomOut",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "zoomReleased",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "scrollTo",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "switchRecording",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "isRecording",
+                        "returnType": "bool"
+                    },
+                    {
+                        "access": "public",
+                        "name": "selectClass",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "acceptObject",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "login",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "removeObject",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kcontrols.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KEditWidget",
+                "object": true,
+                "qualifiedClassName": "KEditWidget",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "saveTrack",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "keditwidget.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KNewObjectWidget",
+                "object": true,
+                "qualifiedClassName": "KNewObjectWidget",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "getUserClassImageList",
+                        "returnType": "KClassImageList"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "getClassById",
+                        "returnType": "KClass"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KClass"
+                            }
+                        ],
+                        "name": "selectedClass",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "sendObject",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "doNotSendObject",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "knewobjectwidget.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KPackFetcher",
+                "object": true,
+                "qualifiedClassName": "KPackFetcher",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "map_name",
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "fetched",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QThread"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kpackfetcher.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KPosGenerator",
+                "object": true,
+                "qualifiedClassName": "KPosGenerator",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KPosition"
+                            }
+                        ],
+                        "name": "generated_pos",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "generated_coor",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "deg",
+                                "type": "double"
+                            }
+                        ],
+                        "name": "generated_angle",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kposgenerator.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KRenderWidget",
+                "object": true,
+                "qualifiedClassName": "KRenderWidget",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "modified",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QPoint"
+                            }
+                        ],
+                        "name": "mousePressed",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QPoint"
+                            }
+                        ],
+                        "name": "mouseMoved",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "mouseReleased",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "pinchStarted",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "zoomFinished",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "movedCenterTo",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QPainter*"
+                            }
+                        ],
+                        "name": "paintUserObjects",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "tapped",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "QRectF"
+                            }
+                        ],
+                        "name": "startedRender",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "canScroll",
+                        "returnType": "bool"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "krenderwidget.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KScaleLabel",
+                "object": true,
+                "qualifiedClassName": "KScaleLabel",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "getMip",
+                        "returnType": "double"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QLabel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kscalelabel.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KTrackManager",
+                "object": true,
+                "qualifiedClassName": "KTrackManager",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "deg2pix",
+                        "returnType": "QPoint"
+                    },
+                    {
+                        "access": "public",
+                        "name": "updated",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "switchRecording",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "ktrackmanager.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KHeadingProvider",
+                "object": true,
+                "qualifiedClassName": "KHeadingProvider",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "double"
+                            }
+                        ],
+                        "name": "headingChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kheading.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "KPositionLabel",
+                "object": true,
+                "qualifiedClassName": "KPositionLabel",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "deg",
+                                "type": "KGeoCoor"
+                            }
+                        ],
+                        "name": "deg2scr",
+                        "returnType": "QPoint"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QLabel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "kpositionlabel.h",
+        "outputRevision": 67
+    }
+]

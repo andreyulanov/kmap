@@ -20,12 +20,12 @@ public:
   QReadWriteLock       tile_lock;
   QList<RenderAddress> render_start_list;
   int                  render_object_count;
+  QString              path;
 
   void addCollectionToIndex(KTile& collection);
 
 public:
   KRenderPack(const QString& path);
-  ~KRenderPack();
   void clear();
   void loadMain(bool load_objects, double pixel_size_mm);
   void loadTile(int tile_idx);

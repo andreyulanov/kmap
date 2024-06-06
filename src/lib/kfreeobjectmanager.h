@@ -23,6 +23,7 @@ class KFreeObjectManager: public QObject
   double               pixel_size_mm = 0;
   QString              objects_dir;
   QVector<KFreeObject> objects;
+  KPack                pack;
   int                  edited_object_idx = -1;
   QVector<QUuid>       selected_guids;
   QPair<int, int>      moving_point_idx       = {-1, -1};

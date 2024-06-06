@@ -2,13 +2,9 @@
 #include "klocker.h"
 #include <QDebug>
 
-KRenderPack::KRenderPack(const QString& path): KPack(path)
+KRenderPack::KRenderPack(const QString& _path)
 {
-}
-
-KRenderPack::~KRenderPack()
-{
-  clear();
+  path = _path;
 }
 
 bool KRenderPack::intersects(QPolygonF polygon_m) const
@@ -38,7 +34,7 @@ void KRenderPack::clear()
 
 void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
 {
-  KPack::loadMain(load_objects, pixel_size_mm);
+  KPack::loadMain(path, load_objects, pixel_size_mm);
   if (load_objects)
   {
     QWriteLocker big_locker(&main_lock);
@@ -49,7 +45,7 @@ void KRenderPack::loadMain(bool load_objects, double pixel_size_mm)
 
 void KRenderPack::loadTile(int tile_idx)
 {
-  KPack::loadTile(tile_idx);
+  KPack::loadTile(path, tile_idx);
   QWriteLocker small_locker(&tile_lock);
   addCollectionToIndex(tiles[tile_idx]);
   tiles[tile_idx].status = KTile::Loaded;

@@ -285,6 +285,7 @@ void KFreeObjectManager::acceptObject()
     saved(file_name);
     is_creating_new_object = false;
     edited_object_idx      = -1;
+    pack.addObject(obj);
   }
   updated();
   finishEdit();

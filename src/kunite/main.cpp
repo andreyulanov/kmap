@@ -6,13 +6,8 @@
 class KWorldPack: public KPack
 {
 public:
-  KWorldPack(const QString& path);
   void addPackToMainTile(const KPack&);
 };
-
-KWorldPack::KWorldPack(const QString& path): KPack(path)
-{
-}
 
 void KWorldPack::addPackToMainTile(const KPack& m)
 {
@@ -51,9 +46,9 @@ int main(int argc, char* argv[])
 
   QFile().remove(result_path);
 
-  QString     first_pack_path = QString(argv[1]) + "/" + argv[2];
-  KWorldPack* united_pack     = new KWorldPack(first_pack_path);
-  united_pack->loadAll(0);
+  QString    first_pack_path = QString(argv[1]) + "/" + argv[2];
+  KWorldPack united_pack;
+  united_pack.loadAll(first_pack_path, 0);
 
   for (auto& fi: fi_list)
   {
@@ -64,11 +59,10 @@ int main(int argc, char* argv[])
       continue;
 
     qDebug() << "loading" << fi.absoluteFilePath();
-    KPack pack(fi.absoluteFilePath());
-    pack.loadAll(0);
-    united_pack->addPackToMainTile(pack);
+    KPack pack;
+    pack.loadAll(fi.absoluteFilePath(), 0);
+    united_pack.addPackToMainTile(pack);
   }
   qDebug() << "saving united pack...";
-  if (united_pack)
-    united_pack->save(result_path);
+  united_pack.save(result_path);
 }

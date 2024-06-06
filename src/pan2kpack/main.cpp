@@ -127,12 +127,12 @@ int main(int argc, char* argv[])
     is_analyzing_local_map = true;
 
   auto  world_map_path = output_dir + "/world.kpack";
-  KPack world_pack(world_map_path);
+  KPack world_pack;
 
   if (is_analyzing_local_map)
   {
     if (QFile(world_map_path).exists())
-      world_pack.loadAll(0);
+      world_pack.loadAll(world_map_path, 0);
     else
     {
       qDebug() << "ERROR: world map not found!";
@@ -160,7 +160,7 @@ int main(int argc, char* argv[])
     path.remove(".sitx");
     path.remove(".sitz");
     path.remove(".mptz");
-    KPack pack(path);
+    KPack pack;
 
     if (is_analyzing_local_map)
     {
@@ -409,7 +409,7 @@ int main(int argc, char* argv[])
     setObjects(&pack, obj_list, 100000);
 
     qDebug() << "  saving...";
-    pack.save();
+    pack.save(path);
 
     mapCloseData(hMap);
 

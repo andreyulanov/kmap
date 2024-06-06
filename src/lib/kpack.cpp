@@ -7,16 +7,6 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-KPack::KPack(const QString& v)
-{
-  path = v;
-}
-
-KPack::~KPack()
-{
-  clear();
-}
-
 void KPack::clear()
 {
   if (main.status != KTile::Loaded)
@@ -38,15 +28,11 @@ qint64 KPack::count()
   return total_count;
 }
 
-void KPack::save(QString new_path) const
+void KPack::save(QString path) const
 {
   using namespace KSerialize;
 
-  auto _path = path;
-  if (!new_path.isEmpty())
-    _path = new_path;
-
-  QFile f(_path);
+  QFile f(path);
   if (!f.open(QIODevice::WriteOnly))
   {
     qDebug() << "write error:" << path;
@@ -114,7 +100,8 @@ void KPack::save(QString new_path) const
   write(&f, small_idx_start_pos);
 }
 
-void KPack::loadMain(bool load_objects, double pixel_size_mm)
+void KPack::loadMain(QString path, bool load_objects,
+                     double pixel_size_mm)
 {
   if (main.status == KTile::Loading)
     return;
@@ -207,14 +194,14 @@ void KPack::loadMain(bool load_objects, double pixel_size_mm)
   tiles.resize(small_count);
 }
 
-void KPack::loadAll(double pixel_size_mm)
+void KPack::loadAll(QString path, double pixel_size_mm)
 {
-  loadMain(true, pixel_size_mm);
+  loadMain(path, true, pixel_size_mm);
   for (int i = 0; i < tiles.count(); i++)
-    loadTile(i);
+    loadTile(path, i);
 }
 
-void KPack::loadTile(int tile_idx)
+void KPack::loadTile(QString path, int tile_idx)
 {
   if (main.status != KTile::Loaded)
     return;
