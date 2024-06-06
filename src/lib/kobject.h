@@ -23,6 +23,7 @@ struct KFreeObject: public KObject
 {
   KClass cl;
 
+  KFreeObject(KObject obj = KObject());
   void  save(QString path);
   void  load(QString path, double pixel_size_mm);
   int   getWidthPix(double pixel_size_mm);

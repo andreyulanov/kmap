@@ -106,6 +106,14 @@ void KObject::save(const QVector<KClass>& class_list,
   }
 }
 
+KFreeObject::KFreeObject(KObject src_obj)
+{
+  name       = src_obj.name;
+  attributes = src_obj.attributes;
+  frame      = src_obj.frame;
+  polygons   = src_obj.polygons;
+}
+
 void KFreeObject::save(QString path)
 {
   QFile f(path);

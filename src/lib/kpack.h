@@ -35,14 +35,15 @@ struct KPack
   KTile                main;
   QVector<KTile>       tiles;
 
-  void   save(QString path) const;
-  void   loadMain(QString path, bool load_objects,
-                  double pixel_size_mm);
-  void   loadTile(QString path, int tile_idx);
-  void   loadAll(QString path, double pixel_size_mm);
-  void   clear();
-  qint64 count();
-  void   addObject(KFreeObject free_obj);
+  void                 save(QString path) const;
+  void                 loadMain(QString path, bool load_objects,
+                                double pixel_size_mm);
+  void                 loadTile(QString path, int tile_idx);
+  void                 loadAll(QString path, double pixel_size_mm);
+  void                 clear();
+  qint64               count();
+  void                 addObject(KFreeObject free_obj);
+  QVector<KFreeObject> getObjects();
 };
 
 #endif  // KPACK_H

@@ -260,13 +260,16 @@ void KPack::loadTile(QString path, int tile_idx)
 
 void KPack::addObject(KFreeObject free_obj)
 {
+  if (frame.isNull())
+    frame = free_obj.polygons.first().getFrame();
+  else
+    frame =
+        free_obj.frame.united(free_obj.polygons.first().getFrame());
+
   auto map_size_m     = frame.getSizeMeters();
   auto map_top_left_m = frame.top_left.toMeters();
 
-  KObject obj;
-  obj.name       = free_obj.name;
-  obj.attributes = free_obj.attributes;
-  obj.polygons   = free_obj.polygons;
+  KObject obj = free_obj;
 
   obj.class_idx = -1;
   for (auto cl: classes)
@@ -294,4 +297,16 @@ void KPack::addObject(KFreeObject free_obj)
     int tile_idx = part_idx_y * tile_side_num + part_idx_x;
     tiles[tile_idx].append(obj);
   }
+}
+
+QVector<KFreeObject> KPack::getObjects()
+{
+  QVector<KFreeObject> free_objects;
+  for (auto src_obj: main)
+  {
+    KFreeObject free_obj = src_obj;
+    free_obj.cl          = classes[src_obj.class_idx];
+    free_objects.append(free_obj);
+  }
+  return free_objects;
 }

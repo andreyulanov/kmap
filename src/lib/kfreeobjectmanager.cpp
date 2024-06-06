@@ -23,6 +23,9 @@ KFreeObjectManager::KFreeObjectManager(QString _objects_dir,
   }
   objects_dir   = _objects_dir;
   pixel_size_mm = _pixel_size_mm;
+
+  pack.main_mip = 200;
+  pack.tile_mip = 50;
 }
 
 QString KFreeObjectManager::getObjectPath(QUuid object_guid)
