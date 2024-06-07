@@ -406,7 +406,7 @@ int main(int argc, char* argv[])
     }
     qDebug() << "joinPolys() elapsed" << t.restart();
 
-    setObjects(&pack, obj_list, 100000);
+    setObjects(&pack, obj_list, 200000);
 
     qDebug() << "  saving...";
     pack.save(path);
