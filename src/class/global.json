@@ -3,15 +3,6 @@
   "default_coor_precision_coef" : 10000
 },
 {
-    "id"     : "land",
-    "type"   : "Polygon",
-    "code"   : 1000000002,
-    "layer"  : 2,
-    "pen"    : [1, 1, 1],
-    "brush"  : [250, 246, 230],
-    "coor_precision_coef" : 100
-},
-{
     "id"     : "admin0",
     "type"   : "Polygon",
     "code"   : 1000000002,
@@ -95,15 +86,6 @@
     "layer"  : 7,
     "width_mm" : 0.5,
     "pen"    : [252, 0, 84]
-},
-{
-    "id"     : "океан, море",
-    "type"   : "Polygon",
-    "code"   : 31110000,
-    "layer"  : 0,
-    "brush"  : [150, 210, 240],
-    "tcolor" : [79, 147, 184],
-    "name_code": 1
 },
 {
     "id"     : "complex_water",
