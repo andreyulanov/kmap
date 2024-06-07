@@ -39,7 +39,7 @@ KRender::~KRender()
   stopAndWait();
 }
 
-void KRender::addMap(QString path, bool load_now)
+void KRender::addPack(QString path, bool load_now)
 {
   stopAndWait();
   insertPack(packs.count(), path, load_now);

@@ -62,7 +62,7 @@ void KRenderWidget::scan(QString map_dir)
 
 void KRenderWidget::addMap(QString path, bool load_now)
 {
-  r.addMap(path, load_now);
+  r.addPack(path, load_now);
 }
 
 const KPack* KRenderWidget::getWorldPack()

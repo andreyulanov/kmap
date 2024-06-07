@@ -120,7 +120,7 @@ signals:
 
 public:
   virtual ~KRender();
-  void           addMap(QString path, bool load_now);
+  void           addPack(QString path, bool load_now);
   void           setMip(double);
   double         getMip() const;
   void           setCenterM(QPointF);
