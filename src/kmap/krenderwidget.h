@@ -52,6 +52,7 @@ private:
   QPoint mouse_pos;
   QPoint start_mouse_pos;
   QPoint total_pan_pos;
+  QPoint prev_total_shift;
   double intermediate_zoom_coef = 1;
   QPoint zoom_focus_shift;
 
