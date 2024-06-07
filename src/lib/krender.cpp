@@ -947,34 +947,34 @@ void KRender::run()
       intersecting_maps.append(map_idx);
   }
 
-  QVector<KRenderPack*> render_maps;
-  for (int map_idx = -1; auto& map: packs)
+  QVector<KRenderPack*> render_packs;
+  for (int pack_idx = -1; auto& pack: packs)
   {
-    map_idx++;
+    pack_idx++;
 
-    if (map_idx > 0)
-      if (!intersecting_maps.contains(map_idx))
+    if (pack_idx > 0)
+      if (!intersecting_maps.contains(pack_idx))
         continue;
 
-    KLocker big_locker(&map->main_lock, KLocker::Read);
+    KLocker big_locker(&pack->main_lock, KLocker::Read);
     if (!big_locker.hasLocked())
       continue;
 
-    if (map_idx > 0 && !needToLoadPack(map, render_frame_m))
+    if (pack_idx > 0 && !needToLoadPack(pack, render_frame_m))
       continue;
 
-    auto map_rect_m = map->frame.toMeters();
-    if (map_idx > 0 && !render_frame_m.intersects(map_rect_m))
+    auto pack_rect_m = pack->frame.toMeters();
+    if (pack_idx > 0 && !render_frame_m.intersects(pack_rect_m))
       continue;
 
-    KLocker small_locker(&map->tile_lock, KLocker::Read);
+    KLocker small_locker(&pack->tile_lock, KLocker::Read);
     if (!small_locker.hasLocked())
       continue;
 
-    if (map->render_start_list.isEmpty())
+    if (pack->render_start_list.isEmpty())
       continue;
 
-    render_maps.append(map);
+    render_packs.append(pack);
   }
 
   QList<RenderEntry*> render_list;
@@ -984,11 +984,11 @@ void KRender::run()
     auto render =
         new RenderEntry(render_idx, render_pixmap.size(), &f);
     *render->fut = QtConcurrent::run(
-        this, &KRender::render, render->p, render_maps, render_idx);
+        this, &KRender::render, render->p, render_packs, render_idx);
     render_list.append(render);
   }
 
-  render(&p0, render_maps, 0);
+  render(&p0, render_packs, 0);
 
   checkYieldResult();
 
