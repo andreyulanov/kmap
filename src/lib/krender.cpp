@@ -571,10 +571,18 @@ void KRender::paintLineObject(QPainter*          painter,
 
     QPen pen;
     if (line_iter == 0)
-      pen =
-          QPen(cl->brush, w * 2, style, Qt::RoundCap, Qt::RoundJoin);
+    {
+      double coef = 2;
+      if (w > 20)
+        coef = 1.5;
+      if (w > 50)
+        coef = 1.2;
+      int w2 = w * coef;
+      pen    = QPen(cl->brush, w2, Qt::SolidLine, Qt::FlatCap,
+                    Qt::RoundJoin);
+    }
     else
-      pen = QPen(cl->pen, w, style, Qt::RoundCap, Qt::RoundJoin);
+      pen = QPen(cl->pen, w, style, Qt::FlatCap, Qt::RoundJoin);
     painter->setPen(pen);
     painter->drawPolyline(pl);
     if (sizeable_w > 7 && w > 0)
