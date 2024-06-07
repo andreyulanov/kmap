@@ -265,7 +265,11 @@ void KRenderWidget::updateLabel(const QPixmap* pm, int ms_elapsed)
   updateLabelPixmap(&label);
 
   if (ms_elapsed == 0 || !shifted_after_zoom)
+  {
     updateLabelPixmap(&full_label);
+    if (!total_shift.isNull())
+      render();
+  }
 }
 
 void KRenderWidget::checkZoomFinished()
