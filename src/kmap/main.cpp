@@ -106,9 +106,9 @@ int main(int argc, char* argv[])
   mapw_settings.map_dir                 = storage_man.packsPath();
   mapw_settings.pixel_size_mm           = pixel_size_mm;
   mapw_settings.window_size             = screen_size_pix;
-  mapw_settings.render_window_size_coef = 2;
-  mapw_settings.update_interval_ms      = 100;
-  mapw_settings.max_zoom_speed          = 1.5;
+  mapw_settings.render_window_size_coef = 1.5;
+  mapw_settings.update_interval_ms      = 50;
+  mapw_settings.max_zoom_speed          = 1.2;
   mapw_settings.max_loaded_maps_count   = 3;
 
   KRenderWidget      renderw(mapw_settings);

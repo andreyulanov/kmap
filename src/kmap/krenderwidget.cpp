@@ -351,13 +351,13 @@ void KRenderWidget::startZoom(KRenderWidget::ZoomMode mode,
 
 void KRenderWidget::zoomIn()
 {
-  zoom_speed = 1.15;
+  zoom_speed = 1.1;
   startZoom(ZoomMode::In);
 }
 
 void KRenderWidget::zoomOut()
 {
-  zoom_speed = 1.15;
+  zoom_speed = 1.1;
   startZoom(ZoomMode::Out);
 }
 
