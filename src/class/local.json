@@ -780,7 +780,30 @@
     "id"     : "улица2",
     "type"   : "Line",
     "key"    : "478-000-L",
-    "attrname" : "Описание дорожной сети",
+    "attrval" : "asphalt",
+    "layer"  : 17,
+    "width_mm"  : 0.4,
+    "pen"    : [255, 255, 255],
+    "brush"  : [155, 155, 155],
+    "max_mip": 30,
+    "coor_precision_coef" : 10,
+    "attributes":
+    [
+    {
+    "code"   : 3196,
+    "name"   : "oneway"
+    },
+    {
+    "code"   : 50,
+    "name"   : "lanes"
+    }
+    ]
+},
+{
+    "id"     : "улица3",
+    "type"   : "Line",
+    "key"    : "l_admin-8",
+    "attrval" : "asphalt",
     "layer"  : 17,
     "width_mm"  : 0.4,
     "pen"    : [255, 255, 255],
@@ -1030,7 +1053,7 @@
     "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
     "max_mip": 3,
-    "name_code": 0
+    "name_code": 2
 },
 {
     "id"     : "wall",
@@ -1253,17 +1276,7 @@
     "image"  : "atm.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 0.5,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.1
-    }
-    ]
+    "max_mip": 0.5
 },
 {
     "id"     : "shop",
@@ -1272,17 +1285,7 @@
     "image"  : "shop.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 0.5,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 0.5
 },
 {
     "id"     : "bus_stop",
@@ -1291,17 +1294,7 @@
     "image"  : "bus_stop.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 0.5,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 0.5
 },
 {
     "id"     : "crossing",
@@ -1329,17 +1322,7 @@
     "image"  : "bank.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 0.5,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 0.5
 },
 {
     "id"     : "fast_food",
@@ -1348,17 +1331,7 @@
     "image"  : "fast_food.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 0.5,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 0.5
 },
 {
     "id"     : "pharmacy",
@@ -1367,17 +1340,7 @@
     "image"  : "pharmacy.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 1,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 1
 },
 {
     "id"     : "doctors",
@@ -1386,17 +1349,7 @@
     "image"  : "doctors.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 1,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 1
 },
 {
     "id"     : "police",
@@ -1405,17 +1358,7 @@
     "image"  : "police.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 1,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 1
 },
 {
     "id"     : "pub",
@@ -1424,17 +1367,7 @@
     "image"  : "pub.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 1,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.3
-    }
-    ]
+    "max_mip": 1
 },
 {
     "id"     : "restaurant",
@@ -1479,17 +1412,7 @@
     "image"  : "university.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 3,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
-    "max_mip": 0.5
-    }
-    ]
+    "max_mip": 3
 
 },
 {
@@ -1527,17 +1450,7 @@
     "image"  : "monument.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 0.5,
-    "name_code": 1,
-    "attributes":
-    [
-    {
-    "code"   : 9,
-    "name"   : "name",
-    "visible": true,
     "max_mip": 0.5
-    }
-    ]
 },
 {
     "id"     : "food_court",
@@ -1752,15 +1665,6 @@
     "image"  : "peak.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 3,
-    "attributes":
-    [
-    {
-      "code"   : 4,
-      "name"   : "height",
-      "visible": true,
-      "max_mip": 3
-    }
-    ]
+    "max_mip": 3
 }
 ]
