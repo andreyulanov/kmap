@@ -941,18 +941,18 @@ void KRender::run()
   f.setBold(true);
   p0.setFont(f);
 
-  QVector<int> intersecting_maps;
+  QVector<int> intersecting_packs;
   auto         draw_rect = getDrawRectM();
-  for (int map_idx = -1; auto& map: packs)
+  for (int pack_idx = -1; auto& pack: packs)
   {
-    if (map->main_mip > 0 && render_mip > map->main_mip)
+    if (pack->main_mip > 0 && render_mip > pack->main_mip)
       continue;
-    map_idx++;
-    if (map_idx == 0)
+    pack_idx++;
+    if (pack_idx == 0)
       continue;
 
-    if (needToLoadPack(map, draw_rect))
-      intersecting_maps.append(map_idx);
+    if (needToLoadPack(pack, draw_rect))
+      intersecting_packs.append(pack_idx);
   }
 
   QVector<KRenderPack*> render_packs;
@@ -961,7 +961,7 @@ void KRender::run()
     pack_idx++;
 
     if (pack_idx > 0)
-      if (!intersecting_maps.contains(pack_idx))
+      if (!intersecting_packs.contains(pack_idx))
         continue;
 
     KLocker big_locker(&pack->main_lock, KLocker::Read);
