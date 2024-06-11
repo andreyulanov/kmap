@@ -697,7 +697,7 @@ bool KRender::paintPointNames(QPainter* p)
         p->save();
         p->translate(pos);
         auto f = p->font();
-        f.setPixelSize(w * 0.7);
+        f.setPixelSize(w);
         p->setFont(f);
         for (auto str: item.str_list)
         {

@@ -54,14 +54,11 @@ int main(int argc, char* argv[])
   QSize  screen_size_pix = screen->availableSize();
   QSizeF screen_size_mm  = screen->physicalSize();
 
-  auto   physical_diag_mm = sqrt(pow(screen_size_mm.width(), 2) +
-                                 pow(screen_size_mm.height(), 2));
-  auto   pixel_diag       = sqrt(pow(screen_size_pix.width(), 2) +
-                                 pow(screen_size_pix.height(), 2));
-  double pixel_size_mm    = physical_diag_mm / pixel_diag;
+  double pixel_size_mm =
+      screen_size_mm.width() / screen_size_pix.width();
 
   if (!is_device)
-    pixel_size_mm /= 2;
+    pixel_size_mm *= 0.5;
 
   KEditWidget editw;
   editw.setFixedSize(screen_size_pix);
