@@ -456,7 +456,7 @@
     "pen"    : [116, 116, 116],
     "brush"  : [168, 168, 168],
     "style"  : "BDiag",
-    "max_mip": 3
+    "max_mip": 200
 },
 {
     "id"     : "строение 2",
@@ -760,8 +760,8 @@
     "key"    : "190-100-L",
     "layer"  : 17,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "max_mip": 30,
     "coor_precision_coef" : 10,
     "attributes":
@@ -783,8 +783,8 @@
     "attrval" : "asphalt",
     "layer"  : 17,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "max_mip": 30,
     "coor_precision_coef" : 10,
     "attributes":
@@ -806,8 +806,8 @@
     "attrval" : "asphalt",
     "layer"  : 17,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "max_mip": 30,
     "coor_precision_coef" : 10,
     "attributes":
@@ -828,8 +828,8 @@
     "key"    : "190-100-L_b",
     "layer"  : 17,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "max_mip": 30,
     "coor_precision_coef" : 10,
     "attributes":
@@ -850,8 +850,8 @@
     "key"    : "189-000-L",
     "layer"  : 15,
     "width_mm"  : 0.3,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"  : [155, 155, 155],
+    "brush"    : [255, 255, 255],
     "max_mip": 3,
     "coor_precision_coef" : 10,
     "attributes":
@@ -873,8 +873,8 @@
     "code"   : 45200002,
     "layer"  : 15,
     "width_mm"  : 0.5,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"  : [155, 155, 155],
+    "brush"    : [255, 255, 255],
     "style"  : "Dash",
     "max_mip": 3,
     "coor_precision_coef" : 10,
@@ -918,8 +918,8 @@
     "key"    : "191-000-L",
     "layer"  : 15,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "max_mip": 30,
     "coor_precision_coef" : 10,
     "attributes":
@@ -941,8 +941,8 @@
     "code"   : 61310100,
     "layer"  : 15,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "style"  : "Dash",
     "max_mip": 30,
     "coor_precision_coef" : 10,
@@ -964,8 +964,8 @@
     "key"    : "191-000-L_b",
     "layer"  : 15,
     "width_mm"  : 0.4,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [247, 200, 121],
+    "brush"  : [255, 255, 255],
     "max_mip": 30,
     "coor_precision_coef" : 10,
     "attributes":
@@ -984,11 +984,10 @@
     "id"     : "полевая, лесная дорога",
     "type"   : "Line",
     "key"    : "193-200-L",
-    "style"  : "Dash",
     "layer"  : 14,
     "width_mm"  : 0.3,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [235, 191, 137],
+    "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
     "max_mip": 30
 },
@@ -996,11 +995,10 @@
     "id"     : "полевая, лесная дорога, мост",
     "type"   : "Line",
     "key"    : "193-200-L_b",
-    "style"  : "Dash",
     "layer"  : 14,
     "width_mm"  : 0.3,
-    "pen"    : [255, 255, 255],
-    "brush"  : [155, 155, 155],
+    "pen"    : [235, 191, 137],
+    "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
     "max_mip": 30
 },
@@ -1011,7 +1009,7 @@
     "style"  : "Dash",
     "layer"  : 15,
     "width_mm"  : 0.2,
-    "pen"    : [168, 168, 168],
+    "pen"    : [171, 116, 24],
     "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
     "max_mip": 3
@@ -1023,7 +1021,7 @@
     "style"  : "Dash",
     "layer"  : 13,
     "width_mm"  : 0.2,
-    "pen"    : [168, 168, 168],
+    "pen"    : [171, 116, 24],
     "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
     "max_mip": 3
@@ -1099,8 +1097,9 @@
     "attrval" : 1,
     "layer"  : 23,
     "width_mm"  : 0.5,
+    "style"  : "Dash",
     "pen"    : [255, 255, 255],
-    "brush"  : [116, 116, 116],
+    "brush"  : [155, 155, 155],
     "max_mip": 200
 },
 {
@@ -1109,8 +1108,9 @@
     "code"   : 61111000,
     "layer"  : 21,
     "width_mm"  : 0.3,
-    "pen"    : [150, 150, 150],
-    "brush"  : [116, 116, 116],
+    "style"  : "Dash",
+    "pen"    : [255, 255, 255],
+    "brush"  : [155, 155, 155],
     "max_mip": 200
 },
 {
@@ -1119,8 +1119,9 @@
     "type"   : "Line",
     "layer"  : 22,
     "width_mm"  : 0.1,
-    "pen"    : [150, 150, 150],
-    "brush"  : [116, 116, 116],
+    "style"  : "Dash",
+    "pen"    : [255, 255, 255],
+    "brush"  : [155, 155, 155],
     "max_mip": 10
 },
 {
@@ -1128,9 +1129,10 @@
     "code"   : 61121100,
     "type"   : "Line",
     "layer"  : 22,
-    "width_mm"  : 0.3,
-    "pen"    : [150, 150, 150],
-    "brush"  : [116, 116, 116],
+    "width_mm"  : 0.2,
+    "style"  : "Dash",
+    "pen"    : [255, 255, 255],
+    "brush"  : [155, 155, 155],
     "max_mip": 10
 },
 {
@@ -1139,8 +1141,8 @@
     "type"   : "Line",
     "layer"  : 22,
     "width_mm"  : 0.3,
-    "pen"    : [100, 100, 100],
-    "brush"  : [200, 200, 200],
+    "pen"    : [160, 160, 160],
+    "brush"  : [255, 255, 255],
     "max_mip": 10
 },
 {
