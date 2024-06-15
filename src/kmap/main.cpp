@@ -348,8 +348,7 @@ int main(int argc, char* argv[])
   QString jidResource = "flowerpot";
   QString proxy       = "proxy.macaw.me";
 
-  KXmppClient client(storage_man.objectsPath(), proxy);
-  client.logger()->setLogFilePath(storage_man.logsPath() +
+  KXmppClient client(storage_man.objectsPath(), proxy); client.logger()->setLogFilePath(storage_man.logsPath() +
                                   "/client.log");
   client.logger()->setLoggingType(QXmppLogger::FileLogging);
 
@@ -391,11 +390,11 @@ int main(int argc, char* argv[])
   QQmlContext*        muc_context = muc_view.engine()->rootContext();
   KMucRoomsController muc_controller;
   KMucRoomsModel      muc_rooms_model(
-           client.findExtension<QXmppMucManager>());
+           client.findExtension<QXmppMucManager>(), nullptr);
   muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
   muc_context->setContextProperty("_mucBackEnd", &muc_controller);
   muc_view.setSource(QUrl("qrc:KMuc.qml"));
-  // muc_view.show();
+  muc_view.show();
   QObject::connect(
       &muc_controller, &KMucRoomsController::addRoom,
       [client_p = &client](QString room_jid)

@@ -3,7 +3,7 @@ else:QT += core gui widgets positioning sensors network
 CONFIG += c++2a
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
-QT += qml quick
+QT += qml quick sql
 
 !linux-buildroot-g++: DEFINES += BUILD_WITH_SENSORS
 !android: DEFINES += BUILD_WITH_XMPP

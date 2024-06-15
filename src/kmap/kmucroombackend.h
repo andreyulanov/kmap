@@ -7,7 +7,9 @@
 #include <QtQml/qqml.h>
 #include <QXmppQt5/QXmppMucManager.h>
 #include <QRegularExpression>
+#include <QtSql/QSqlDatabase>
 
+/// \brief Contorller of MUC rooms.
 class KMucRoomsController : public QObject
 {
     Q_OBJECT
@@ -17,6 +19,8 @@ public:
     explicit KMucRoomsController(QObject *parent = nullptr);
     QString roomJid();
     void setRoomJid(QString _room_jid);
+    /// \brief Add a new room.
+    /// Do not use this function if a room with _room_jid is already in QXmppMucManager::rooms()
     Q_INVOKABLE void add();
 public slots:
     void showRoom(QXmppMucRoom*);
@@ -49,16 +53,33 @@ public:
         SubjectRole
     };
 
-    KMucRoomsModel(QXmppMucManager* _manager, QObject *parent = 0);
+    /// \brief Constructs a new KMucRoomsModel.
+    ///
+    /// _manager and _databse must be ready for work
+    KMucRoomsModel(QXmppMucManager* _manager,
+                   QSqlDatabase* _database = nullptr,
+                   QObject *parent = nullptr);
 
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
     void setManager(QXmppMucManager* _manager);
+    /// Sets the databse.
+    ///
+    ///	Database mast be ready for openning.
+    /// If database == nullptr or database can not be opened
+    ///  couthen the model will not store data in a database.
+    void setDatabase(QSqlDatabase*);
+    /// Loads chats from database and adds them to the manager.
+    bool loadFromDatabase();
 private:
     QXmppMucManager* manager = nullptr;
+    /// if database == nullptr then the model will not store data in a database
+    QSqlDatabase* database = nullptr;
+    const QString table_name = "MUC_rooms";
 private slots:
+    /// Adds room to the database
     void roomAddedSlot(QXmppMucRoom*);
 };
 

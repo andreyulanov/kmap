@@ -36,3 +36,13 @@ void KMUCManager::slotRoomAdded(QXmppMucRoom *room)
         room->join();
     }
 }
+
+QXmppMucRoom*  KMUCManager::getRoomByJid(const QString& jid)
+{
+    QList< QXmppMucRoom * > _rooms;
+    for (QXmppMucRoom* room : _rooms)
+    {
+        if (room->jid() == jid) return room;
+    }
+    return nullptr;
+}
