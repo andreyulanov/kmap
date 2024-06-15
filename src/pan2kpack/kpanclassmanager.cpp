@@ -1,97 +1,15 @@
-#include "kshape.h"
-#include "kserialize.h"
-#include <math.h>
-#include <QFile>
+#include "kpanclassmanager.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMetaEnum>
 
-void KShape::save(QFile* f)
+KPanClassManager::KPanClassManager(QString image_dir):
+    KClassManager(image_dir)
 {
-  using namespace KSerialize;
-  write(f, id);
-  write(f, type);
-  write(f, style);
-  write(f, layer);
-  write(f, width_mm);
-  write(f, min_mip);
-  write(f, max_mip);
-  write(f, coor_precision_coef);
-  write(f, (uchar)pen.red());
-  write(f, (uchar)pen.green());
-  write(f, (uchar)pen.blue());
-  write(f, (uchar)pen.alpha());
-  write(f, (uchar)brush.red());
-  write(f, (uchar)brush.green());
-  write(f, (uchar)brush.blue());
-  write(f, (uchar)brush.alpha());
-  write(f, (uchar)tcolor.red());
-  write(f, (uchar)tcolor.green());
-  write(f, (uchar)tcolor.blue());
-  write(f, (uchar)tcolor.alpha());
-  write(f, image);
-  write(f, int(attributes.count()));
-  for (auto attr: attributes)
-  {
-    write(f, attr.name);
-    write(f, attr.code);
-    write(f, attr.visible);
-    write(f, attr.max_mip);
-  }
 }
 
-int KShape::getWidthPix()
-{
-  return round(width_mm / pixel_size_mm);
-}
-
-void KShape::load(QFile* f)
-{
-  using namespace KSerialize;
-  read(f, id);
-  read(f, type);
-  read(f, style);
-  read(f, layer);
-  read(f, width_mm);
-  read(f, min_mip);
-  read(f, max_mip);
-  read(f, coor_precision_coef);
-  uchar red, green, blue, alpha;
-  read(f, red);
-  read(f, green);
-  read(f, blue);
-  read(f, alpha);
-  pen = QColor(red, green, blue, alpha);
-  read(f, red);
-  read(f, green);
-  read(f, blue);
-  read(f, alpha);
-  brush = QColor(red, green, blue, alpha);
-  read(f, red);
-  read(f, green);
-  read(f, blue);
-  read(f, alpha);
-  tcolor = QColor(red, green, blue, alpha);
-  QImage img;
-  read(f, img);
-  if (!img.isNull())
-    image =
-        img.scaledToWidth(getWidthPix(), Qt::SmoothTransformation);
-  int n;
-  read(f, n);
-  for (int i = 0; i < n; i++)
-  {
-    KAttribute attr;
-    read(f, attr.name);
-    read(f, attr.code);
-    read(f, attr.visible);
-    read(f, attr.max_mip);
-    attributes.append(attr);
-  }
-}
-
-void KShapeManager::loadShapes(QString path, QString images_dir)
+void KPanClassManager::loadClasses(QString path, QString images_dir)
 {
   QFile         f(path);
   QSet<QString> id_set;
@@ -111,27 +29,27 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         auto obj = json_val.toObject();
         if (obj.isEmpty())
           continue;
-        auto _main_mip = obj.value("main_mip").toDouble();
-        if (_main_mip > 0)
+        auto main_mip = obj.value("main_mip").toDouble();
+        if (main_mip > 0)
         {
-          main_mip = _main_mip;
+          setMainMip(main_mip);
           continue;
         }
-        auto _tile_mip = obj.value("tile_mip").toDouble();
-        if (_tile_mip > 0)
+        auto tile_mip = obj.value("tile_mip").toDouble();
+        if (tile_mip > 0)
         {
-          tile_mip = _tile_mip;
+          setTileMip(tile_mip);
           continue;
         }
-        auto _coor_precision_coef =
+        auto default_coor_precision_coef =
             obj.value("default_coor_precision_coef").toInt();
-        if (_coor_precision_coef > 0)
+        if (default_coor_precision_coef > 0)
         {
-          default_coor_precision_coef = _coor_precision_coef;
+          setDefaultCoorPrecisionCoef(default_coor_precision_coef);
           continue;
         }
 
-        auto sh = new KShape;
+        auto sh = new KPanClass;
 
         sh->id = obj.value("id").toString();
         if (id_set.contains(sh->id))
@@ -149,8 +67,8 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         if (!type_str.isEmpty())
         {
           bool ok  = false;
-          sh->type = static_cast<KShape::Type>(
-              QMetaEnum::fromType<KShape::Type>().keyToValue(
+          sh->type = static_cast<KClass::Type>(
+              QMetaEnum::fromType<KClass::Type>().keyToValue(
                   type_str.toUtf8(), &ok));
           if (!ok)
           {
@@ -159,13 +77,13 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
           }
         }
 
-        sh->style      = KShape::Solid;
+        sh->style      = KClass::Solid;
         auto style_str = obj.value("style").toString();
         if (!style_str.isEmpty())
         {
           bool ok   = false;
-          sh->style = static_cast<KShape::Style>(
-              QMetaEnum::fromType<KShape::Style>().keyToValue(
+          sh->style = static_cast<KClass::Style>(
+              QMetaEnum::fromType<KClass::Style>().keyToValue(
                   style_str.toUtf8(), &ok));
           if (!ok)
           {
@@ -228,7 +146,7 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
             auto attr_obj = attr_entry.toObject();
             if (obj.isEmpty())
               continue;
-            KAttribute attr;
+            KPanAttribute attr;
             attr.code    = attr_obj.value("code").toInt();
             attr.name    = attr_obj.value("name").toString();
             attr.visible = attr_obj.value("visible").toBool();
@@ -242,42 +160,22 @@ void KShapeManager::loadShapes(QString path, QString images_dir)
         if (sh->coor_precision_coef == 0)
           sh->coor_precision_coef = default_coor_precision_coef;
 
-        shapes.append(sh);
+        pan_classes.append(sh);
       }
     }
   }
 }
 
-KShapeManager::KShapeManager(QString _images_dir)
+QVector<KPanClass*> KPanClassManager::getClasses()
 {
-  images_dir = _images_dir;
+  return pan_classes;
 }
 
-int KShapeManager::getShapeIdxById(QString id)
+int KPanClassManager::getClassIdx(int code, QString key,
+                                  QStringList attr_names,
+                                  QStringList attr_values)
 {
-  for (int i = -1; auto sh: shapes)
-  {
-    i++;
-    if (sh->id == id)
-      return i;
-  }
-  return -1;
-}
-
-KShape KShapeManager::getShapeById(QString id)
-{
-  auto idx = getShapeIdxById(id);
-  if (idx >= 0)
-    return *shapes.at(idx);
-  else
-    return KShape();
-}
-
-int KShapeManager::getShapeIdx(int code, QString key,
-                               QStringList attr_names,
-                               QStringList attr_values)
-{
-  for (int idx = -1; auto& sh: shapes)
+  for (int idx = -1; auto& sh: pan_classes)
   {
     idx++;
     bool code_match = true;
@@ -301,23 +199,4 @@ int KShapeManager::getShapeIdx(int code, QString key,
       return idx;
   }
   return -1;
-}
-
-QVector<KShape> KShapeManager::getShapes()
-{
-  QVector<KShape> ret;
-  for (auto sh1: shapes)
-  {
-    auto sh2 = *sh1;
-    ret.append(sh2);
-  }
-  return ret;
-}
-
-KShapeImageList KShapeManager::getShapeImageList()
-{
-  QVector<KShapeImage> ret;
-  for (auto sh: shapes)
-    ret.append({sh->id, sh->image});
-  return ret;
 }

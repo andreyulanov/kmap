@@ -61,7 +61,7 @@ signals:
   void scrollTo(const KGeoCoor&);
   void switchRecording();
   bool isRecording();
-  void selectShape();
+  void selectClass();
   void acceptObject();
   void login();
   void removeObject();

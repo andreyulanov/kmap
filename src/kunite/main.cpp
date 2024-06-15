@@ -3,6 +3,41 @@
 #include <QDebug>
 #include "kpack.h"
 
+class KWorldPack: public KPack
+{
+public:
+  KWorldPack(const QString& path);
+  void addPackToMainTile(const KPack&);
+};
+
+KWorldPack::KWorldPack(const QString& path): KPack(path)
+{
+}
+
+void KWorldPack::addPackToMainTile(const KPack& m)
+{
+  frame = frame.united(m.frame);
+  for (auto new_obj: m.main)
+  {
+    auto new_cl = &m.classes[new_obj.class_idx];
+    bool found  = false;
+    for (int class_idx = -1; auto& cl: classes)
+    {
+      class_idx++;
+      if (new_cl->id == cl.id)
+      {
+        new_obj.class_idx = class_idx;
+        found             = true;
+        break;
+      }
+    }
+    if (!found)
+      qDebug() << "ERROR: class" << new_cl->id
+               << "not found in primary classifier!";
+    main.append(new_obj);
+  }
+}
+
 int main(int argc, char* argv[])
 {
   QCoreApplication a(argc, argv);
@@ -16,9 +51,9 @@ int main(int argc, char* argv[])
 
   QFile().remove(result_path);
 
-  QString first_pack_path = QString(argv[1]) + "/" + argv[2];
-  KPack*  united_pack     = new KPack(first_pack_path);
-  united_pack->loadAll();
+  QString     first_pack_path = QString(argv[1]) + "/" + argv[2];
+  KWorldPack* united_pack     = new KWorldPack(first_pack_path);
+  united_pack->loadAll(0);
 
   for (auto& fi: fi_list)
   {
@@ -29,9 +64,9 @@ int main(int argc, char* argv[])
       continue;
 
     qDebug() << "loading" << fi.absoluteFilePath();
-    KPack* pack = new KPack(fi.absoluteFilePath());
-    pack->loadAll();
-    united_pack->add(pack);
+    KPack pack(fi.absoluteFilePath());
+    pack.loadAll(0);
+    united_pack->addPackToMainTile(pack);
   }
   qDebug() << "saving united pack...";
   if (united_pack)

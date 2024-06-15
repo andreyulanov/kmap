@@ -1,7 +1,7 @@
 #ifndef KRENDER_H
 #define KRENDER_H
 
-#include "kpack.h"
+#include "krenderpack.h"
 #include <QReadWriteLock>
 #include <QThread>
 #include <QSet>
@@ -14,7 +14,7 @@ class KRender: public QThread
   struct DrawTextEntry
   {
     QString       text;
-    KShape*       shape;
+    const KClass* cl;
     QRect         rect;
     QRect         actual_rect;
     Qt::Alignment alignment;
@@ -22,22 +22,23 @@ class KRender: public QThread
 
   struct NameHolder
   {
-    int                length_pix  = 0;
-    int                start_idx   = 0;
-    int                end_idx     = 0;
-    int                point_count = 0;
-    double             angle_deg   = 0;
-    QPoint             mid_point;
-    const KPackObject* obj = nullptr;
-    void fix(const KPackObject* obj, const QPoint& start,
-             const QPoint& end);
+    int            length_pix  = 0;
+    int            start_idx   = 0;
+    int            end_idx     = 0;
+    int            point_count = 0;
+    double         angle_deg   = 0;
+    QPoint         mid_point;
+    const KObject* obj = nullptr;
+    QColor         tcolor;
+    void           fix(const KPack* pack, const KObject* obj,
+                       const QPoint& start, const QPoint& end);
   };
 
   struct PointName
   {
-    QRect       rect;
-    QStringList str_list;
-    KShape*     shape;
+    QRect         rect;
+    QStringList   str_list;
+    const KClass* cl;
   };
 
   Q_OBJECT
@@ -59,15 +60,15 @@ class KRender: public QThread
   bool          getting_pixmap_enabled = false;
   int           load_thread_count      = 0;
 
-  QPointF              center_m;
-  QSize                pixmap_size   = {100, 100};
-  double               pixel_size_mm = 0.1;
-  KRenderMapCollection maps;
-  QFont                font;
+  QPointF               center_m;
+  QSize                 pixmap_size   = {100, 100};
+  double                pixel_size_mm = 0.1;
+  KRenderPackCollection packs;
+  QFont                 font;
 
-  QVector<PointName>     point_names[KRenderMap::render_count];
-  QVector<DrawTextEntry> draw_text_array[KRenderMap::render_count];
-  QVector<NameHolder>    name_holder_array[KRenderMap::render_count];
+  QVector<PointName>     point_names[KRenderPack::render_count];
+  QVector<DrawTextEntry> draw_text_array[KRenderPack::render_count];
+  QVector<NameHolder>    name_holder_array[KRenderPack::render_count];
   QVector<QRect>         text_rect_array;
   QSizeF                 size_m;
   QPointF                render_top_left_m;
@@ -76,18 +77,18 @@ class KRender: public QThread
 
   void run();
   void start() = delete;
-  void insertMap(int idx, QString path, bool load_now);
-  void renderMap(QPainter* p, KRenderMap* map, int render_idx,
-                 int line_iter);
-  void render(QPainter* p, QVector<KRenderMap*> render_maps,
+  void insertPack(int idx, QString path, bool load_now);
+  void renderPack(QPainter* p, const KRenderPack* pack,
+                  int render_idx, int line_iter);
+  void render(QPainter* p, QVector<KRenderPack*> render_packs,
               int render_idx);
 
-  bool checkMipRange(const KPackObject* obj);
+  bool checkMipRange(const KPack* pack, const KObject* obj);
   bool canContinue();
   void checkYieldResult();
 
-  bool paintObject(QPainter* p, const KPackObject* obj,
-                   int render_idx, int line_iter);
+  bool paintObject(QPainter* p, const KRenderPack* map,
+                   const KObject& obj, int render_idx, int line_iter);
   bool paintPointNames(QPainter* p);
   bool paintLineNames(QPainter* p);
   bool paintPolygonNames(QPainter* p);
@@ -98,24 +99,28 @@ class KRender: public QThread
                         DrawTextEntry           new_dte);
 
   QPolygon poly2pix(const KGeoPolygon& polygon);
-  void     paintPointObject(QPainter* p, const KPackObject* obj,
-                            int render_idx);
-  void     paintPolygonObject(QPainter* p, const KPackObject* obj,
-                              int render_idx);
-  void     paintLineObject(QPainter* painter, const KPackObject* obj,
-                           int render_idx, int line_iter);
+  void     paintPointObject(QPainter* p, const KRenderPack& pack,
+                            const KObject& obj, int render_idx);
+  void     paintPolygonObject(QPainter* p, const KRenderPack& pack,
+                              const KObject& obj, int render_idx);
+  void     paintLineObject(QPainter* painter, const KRenderPack& pack,
+                           const KObject& obj, int render_idx,
+                           int line_iter);
   QRectF   getDrawRectM() const;
-  bool     needToLoadMap(const KRenderMap*, const QRectF& draw_rect);
+  bool     needToLoadPack(const KRenderPack* pack,
+                          const QRectF&      draw_rect);
   void     checkLoad();
   void     checkUnload();
   void     onLoaded();
 
 signals:
   void started(QRectF);
+  void loaded();
   void paintUserObjects(QPainter* p);
   void rendered(int ms_elapsed);
 
 public:
+  KRender();
   virtual ~KRender();
   void           addMap(QString path, bool load_now);
   void           setMip(double);
@@ -129,14 +134,16 @@ public:
   void           setBackgroundColor(QColor);
   double         getRenderWindowSizeCoef() const;
   void           setRenderWindowSizeCoef(double);
+  void           paintPointName(QPainter* p, const QString& text,
+                                const QColor& tcolor);
   static void    paintOutlinedText(QPainter* p, const QString& text,
                                    const QColor& tcolor);
   const QPixmap* getPixmap() const;
-  const KRenderMapCollection* getMaps() const;
-  void                        renderMap();
-  void                        renderUserObjects();
-  void                        stopAndWait();
-  void                        enableLoading(bool);
+  const KPack*   getWorldPack() const;
+  void           render();
+  void           renderUserObjects();
+  void           stopAndWait();
+  void           enableLoading(bool);
 
   QPoint deg2pix(KGeoCoor) const;
 

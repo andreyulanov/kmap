@@ -36,6 +36,7 @@
     "layer"  : 11,
     "pen"    : [50, 155, 50],
     "brush"  : [150, 255, 150],
+    "tcolor" : [50, 155, 50],
     "style"  : "BDiag",
     "width_mm"  : 0.2,
     "max_mip": 200
@@ -45,7 +46,7 @@
     "type"   : "Point",
     "code"   : 41000001,
     "key"    : "p_city_2",
-    "layer"  : 21,
+    "layer"  : 23,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
     "width_mm"  : 3,
@@ -56,7 +57,7 @@
     "type"   : "Point",
     "code"   : 41000002,
     "key"    : "p_city_3",
-    "layer"  : 21,
+    "layer"  : 23,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
     "width_mm"  : 3,
@@ -67,10 +68,32 @@
     "type"   : "Point",
     "code"   : 41100001,
     "key"    : "P0041100001",
-    "layer"  : 21,
+    "layer"  : 22,
     "pen"    : [0, 0, 0],
     "brush"  : [255, 255, 255],
     "width_mm"  : 2,
+    "max_mip": 200
+},
+{
+    "id"     : "Посёлок сельского типа",
+    "type"   : "Point",
+    "code"   : 42100000,
+    "key"    : "P0042100000",
+    "layer"  : 21,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "width_mm" : 1.5,
+    "max_mip": 200
+},
+{
+    "id"     : "Деревня",
+    "type"   : "Point",
+    "code"   : 42100001,
+    "key"    : "P0042100001",
+    "layer"  : 21,
+    "pen"    : [0, 0, 0],
+    "brush"  : [255, 255, 255],
+    "width_mm" : 1.5,
     "max_mip": 200
 },
 {
@@ -204,7 +227,7 @@
     "type"   : "Polygon",
     "style"  : "Hatch",
     "code"   : 72312000,
-    "layer"  : 20,
+    "layer"  : 13,
     "pen"    : [37, 151, 194],
     "brush"  : [166, 220, 238],
     "tcolor" : [37, 151, 194],
@@ -215,7 +238,7 @@
     "type"   : "Polygon",
     "style"  : "FDiag",
     "code"   : 31263100,
-    "layer"  : 20,
+    "layer"  : 13,
     "pen"    : [0, 168, 0],
     "brush"  : [0, 168, 0],
     "tcolor" : [0, 168, 0],
@@ -226,7 +249,7 @@
     "type"   : "Polygon",
     "style"  : "BDiag",
     "code"   : 31263200,
-    "layer"  : 20,
+    "layer"  : 13,
     "pen"    : [0, 168, 0],
     "brush"  : [0, 168, 0],
     "tcolor" : [0, 168, 0],
@@ -237,7 +260,7 @@
     "type"   : "Polygon",
     "style"  : "BDiag",
     "code"   : 31263300,
-    "layer"  : 20,
+    "layer"  : 13,
     "pen"    : [0, 168, 0],
     "brush"  : [0, 168, 0],
     "tcolor" : [0, 168, 0],
@@ -406,19 +429,23 @@
     "type"   : "Point",
     "code"   : 47100001,
     "layer"  : 22,
-    "width_mm"  : 3.0,
+    "width_mm"  : 2.0,
     "image"  : "entrance.png",
     "name_code": 3206,
-    "attributes":
-    [
-    {
-    "code"   : 3109,
-    "name"   : "flats",
-    "visible": true,
-    "max_mip": 0.1
-    }
-    ],
     "max_mip": 0.25
+},
+{
+    "id"     : "playground",
+    "type"   : "Polygon",
+    "code"   : 53600000,
+    "key"    : "D-53600000-S",
+    "attrval": "playground",
+    "layer"  : 20,
+    "width_mm"  : 2.0,
+    "pen"    : [100, 150, 100],
+    "brush"  : [200, 255, 200],
+    "image"  : "playground.png",
+    "max_mip": 3
 },
 {
     "id"     : "объект социально-культурного назначения",
@@ -507,6 +534,7 @@
     "id"     : "город крупный",
     "type"   : "Polygon",
     "code"   : 41100000,
+    "name_code": 1,
     "layer"  : 10,
     "brush"  : [253, 234, 215],
     "max_mip": 200
@@ -515,6 +543,7 @@
     "id"     : "город прочий",
     "type"   : "Polygon",
     "code"   : 41100001,
+    "name_code": 1,
     "layer"  : 10,
     "brush"  : [253, 234, 215],
     "max_mip": 200
@@ -523,17 +552,19 @@
     "id"     : "посёлок сельского типа",
     "type"   : "Polygon",
     "code"   : 42100000,
+    "name_code": 1,
     "layer"  : 14,
     "brush"  : [253, 234, 215],
-    "max_mip": 30
+    "max_mip": 200
 },
 {
     "id"     : "деревня",
     "type"   : "Polygon",
     "code"   : 42100001,
+    "name_code": 1,
     "layer"  : 14,
     "brush"  : [253, 234, 215],
-    "max_mip": 100
+    "max_mip": 200
 },
 {
     "id"     : "locality",
@@ -998,7 +1029,8 @@
     "pen"    : [100, 100, 100],
     "brush"  : [255, 255, 255],
     "coor_precision_coef" : 10,
-    "max_mip": 3
+    "max_mip": 3,
+    "name_code": 0
 },
 {
     "id"     : "wall",
@@ -1037,39 +1069,55 @@
     "max_mip": 10
 },
 {
+    "id"     : "железная дорога ширококолейная, мост",
+    "type"   : "Line",
+    "code"   : 61111000,
+    "attrname" : "Уровень",
+    "attrval" : 1,
+    "layer"  : 23,
+    "width_mm"  : 0.5,
+    "pen"    : [255, 255, 255],
+    "brush"  : [116, 116, 116],
+    "max_mip": 200
+},
+{
     "id"     : "железная дорога ширококолейная",
     "type"   : "Line",
     "code"   : 61111000,
-    "layer"  : 15,
-    "width_mm"  : 0.2,
-    "pen"    : [116, 116, 116],
+    "layer"  : 21,
+    "width_mm"  : 0.3,
+    "pen"    : [150, 150, 150],
+    "brush"  : [116, 116, 116],
     "max_mip": 200
 },
 {
     "id"     : "станционный путь вспомогательный",
     "code"   : 61121200,
     "type"   : "Line",
-    "layer"  : 15,
-    "width_mm"  : 0.2,
-    "pen"    : [116, 116, 116],
+    "layer"  : 22,
+    "width_mm"  : 0.1,
+    "pen"    : [150, 150, 150],
+    "brush"  : [116, 116, 116],
     "max_mip": 10
 },
 {
     "id"     : "станционный путь главный",
     "code"   : 61121100,
     "type"   : "Line",
-    "layer"  : 15,
-    "width_mm"  : 0.2,
-    "pen"    : [116, 116, 116],
+    "layer"  : 22,
+    "width_mm"  : 0.3,
+    "pen"    : [150, 150, 150],
+    "brush"  : [116, 116, 116],
     "max_mip": 10
 },
 {
     "id"     : "трамвайные линии",
     "code"   : 61124000,
     "type"   : "Line",
-    "layer"  : 15,
-    "width_mm"  : 0.2,
-    "pen"    : [116, 116, 116],
+    "layer"  : 22,
+    "width_mm"  : 0.3,
+    "pen"    : [100, 100, 100],
+    "brush"  : [200, 200, 200],
     "max_mip": 10
 },
 {
@@ -1168,18 +1216,6 @@
     "pen"    : [100, 100, 100],
     "brush"  : [200, 200, 200],
     "image"  : "parking.png",
-    "max_mip": 3
-},
-{
-    "id"     : "playground",
-    "type"   : "Polygon",
-    "key"    : "D-53600000-S",
-    "attrval": "playground",
-    "layer"  : 20,
-    "width_mm"  : 2.0,
-    "pen"    : [100, 150, 100],
-    "brush"  : [200, 255, 200],
-    "image"  : "playground.png",
     "max_mip": 3
 },
 {
@@ -1443,7 +1479,18 @@
     "image"  : "university.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 3
+    "max_mip": 3,
+    "name_code": 1,
+    "attributes":
+    [
+    {
+    "code"   : 9,
+    "name"   : "name",
+    "visible": true,
+    "max_mip": 0.5
+    }
+    ]
+
 },
 {
     "id"     : "kindergarten",
@@ -1480,7 +1527,17 @@
     "image"  : "monument.png",
     "layer"  : 22,
     "width_mm"  : 2.0,
-    "max_mip": 1
+    "max_mip": 0.5,
+    "name_code": 1,
+    "attributes":
+    [
+    {
+    "code"   : 9,
+    "name"   : "name",
+    "visible": true,
+    "max_mip": 0.5
+    }
+    ]
 },
 {
     "id"     : "food_court",

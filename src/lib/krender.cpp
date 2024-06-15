@@ -33,6 +33,12 @@ QPointF KRender::pix2meters(QPointF pix) const
   return {xm, ym};
 }
 
+KRender::KRender()
+{
+  connect(this, &KRender::loaded, this, &KRender::onLoaded,
+          Qt::UniqueConnection);
+}
+
 KRender::~KRender()
 {
   QThreadPool().globalInstance()->waitForDone();
@@ -42,16 +48,14 @@ KRender::~KRender()
 void KRender::addMap(QString path, bool load_now)
 {
   stopAndWait();
-  insertMap(maps.count(), path, load_now);
+  insertPack(packs.count(), path, load_now);
 }
 
-void KRender::insertMap(int idx, QString path, bool load_now)
+void KRender::insertPack(int idx, QString path, bool load_now)
 {
-  auto map = new KRenderMap(path);
-  connect(map, &KRenderMap::loaded, this, &KRender::onLoaded,
-          Qt::UniqueConnection);
-  map->loadMain(load_now);
-  maps.insert(idx, map);
+  auto map = new KRenderPack(this, path);
+  map->loadMain(load_now, pixel_size_mm);
+  packs.insert(idx, map);
 }
 
 void KRender::setMip(double v)
@@ -114,9 +118,9 @@ const QPixmap* KRender::getPixmap() const
   return getting_pixmap_enabled ? &render_pixmap : nullptr;
 }
 
-const KRenderMapCollection* KRender::getMaps() const
+const KPack* KRender::getWorldPack() const
 {
-  return &maps;
+  return packs.first();
 }
 
 QRectF KRender::getDrawRectM() const
@@ -136,34 +140,34 @@ void KRender::onLoaded()
     load_thread_count = 0;
   qDebug() << "loaded, load_thread_count" << load_thread_count;
   if (rendering_enabled && load_thread_count == 0)
-    renderMap();
+    render();
 }
 
 void KRender::checkUnload()
 {
   auto draw_rect_m  = getDrawRectM();
   int  loaded_count = 0;
-  for (int i = -1; auto& map: maps)
+  for (int i = -1; auto& pack: packs)
   {
     i++;
     if (i == 0)
       continue;
-    if (map->getMain().status == KObjectCollection::Loaded)
+    if (pack->main.getStatus() == KTile::Loaded)
     {
-      if (!needToLoadMap(map, draw_rect_m))
+      if (!needToLoadPack(pack, draw_rect_m))
         if (loaded_count > 1)
-          map->clear();
+          pack->clear();
       loaded_count++;
     }
   }
 }
 
-bool KRender::needToLoadMap(const KRenderMap* map,
-                            const QRectF&     draw_rect_m)
+bool KRender::needToLoadPack(const KRenderPack* pack,
+                             const QRectF&      draw_rect_m)
 {
-  if (map->getMainMip() > 0 && render_mip > map->getMainMip())
+  if (pack->main_mip > 0 && render_mip > pack->main_mip)
     return false;
-  auto map_rect_m       = map->getFrame().toMeters();
+  auto map_rect_m       = pack->frame.toMeters();
   bool frame_intersects = draw_rect_m.intersects(map_rect_m);
   if (!frame_intersects)
     return false;
@@ -179,7 +183,7 @@ bool KRender::needToLoadMap(const KRenderMap* map,
   rect << frame_m.topRight();
   rect << frame_m.bottomLeft();
   rect << frame_m.bottomRight();
-  if (map->intersects(rect))
+  if (pack->intersects(rect))
     return true;
   return false;
 }
@@ -187,34 +191,34 @@ bool KRender::needToLoadMap(const KRenderMap* map,
 void KRender::checkLoad()
 {
   auto draw_rect_m = getDrawRectM();
-  for (auto& map: maps)
+  for (auto& pack: packs)
   {
-    auto map_rect_m = map->getFrame().toMeters();
+    auto map_rect_m = pack->frame.toMeters();
 
-    if (!needToLoadMap(map, draw_rect_m))
+    if (!needToLoadPack(pack, draw_rect_m))
       continue;
 
-    if (map->getMain().status == KObjectCollection::Null &&
+    if (pack->main.getStatus() == KTile::Null &&
         load_thread_count < QThread::idealThreadCount())
     {
       load_thread_count++;
       qDebug() << "loading main, load_thread_count"
                << load_thread_count;
       QtConcurrent::run(
-          [&map]()
+          [this, &pack]()
           {
-            map->loadMain(true);
+            pack->loadMain(true, pixel_size_mm);
           });
       continue;
     }
-    if (map->getMain().status == KObjectCollection::Loaded)
+    if (pack->main.getStatus() == KTile::Loaded)
     {
-      if (needToLoadMap(map, draw_rect_m))
+      if (needToLoadPack(pack, draw_rect_m))
       {
-        int    tile_side_count = sqrt(map->getTiles().count());
+        int    tile_side_count = sqrt(pack->tiles.count());
         QSizeF tile_size_m = {map_rect_m.width() / tile_side_count,
                               map_rect_m.height() / tile_side_count};
-        for (int tile_idx = 0; auto& tile: map->getTiles())
+        for (int tile_idx = 0; auto& tile: pack->tiles)
         {
           int    tile_idx_y = tile_idx / tile_side_count;
           int    tile_idx_x = tile_idx - tile_idx_y * tile_side_count;
@@ -224,21 +228,45 @@ void KRender::checkLoad()
               map_rect_m.y() + tile_idx_y * tile_size_m.height();
           QRectF tile_rect_m = {{tile_left, tile_top}, tile_size_m};
           if (load_thread_count < QThread::idealThreadCount())
-
-            if (!tile && tile_rect_m.intersects(draw_rect_m) &&
-                render_mip < map->getTileMip())
+            if (tile.getStatus() == KTile::Null &&
+                tile_rect_m.intersects(draw_rect_m) &&
+                render_mip < pack->tile_mip)
             {
               load_thread_count++;
               qDebug() << "loading tile, load_thread_count"
                        << load_thread_count;
-              QtConcurrent::run(map, &KRenderMap::loadTile, tile_idx,
-                                tile_rect_m);
+              QtConcurrent::run(pack, &KRenderPack::loadTile,
+                                tile_idx);
             }
           tile_idx++;
         }
       }
     }
   }
+}
+
+void KRender::paintPointName(QPainter* p, const QString& text,
+                             const QColor& tcolor)
+{
+  QRect rect;
+  int   w = 20.0 / pixel_size_mm;
+  rect.setSize({w, w});
+
+  p->setPen(Qt::white);
+  auto shifts = {-2, 0, 2};
+  int  flags  = Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap |
+              Qt::TextDontClip;
+  for (auto x: shifts)
+    for (auto y: shifts)
+    {
+      p->save();
+      p->translate(x, y);
+      p->drawText(rect, flags, text);
+      p->restore();
+    }
+
+  p->setPen(tcolor);
+  p->drawText(rect, flags, text);
 }
 
 void KRender::paintOutlinedText(QPainter* p, const QString& text,
@@ -258,6 +286,7 @@ void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
 {
   p->setPen(Qt::white);
   auto shifts = {-2, 0, 2};
+
   for (auto x: shifts)
     for (auto y: shifts)
     {
@@ -269,7 +298,7 @@ void KRender::paintOutlinedText(QPainter* p, const DrawTextEntry& dte)
       p->restore();
     }
 
-  p->setPen(dte.shape->pen);
+  p->setPen(dte.cl->tcolor);
   p->drawText(dte.rect,
               dte.alignment | Qt::TextWordWrap | Qt::TextDontClip,
               dte.text);
@@ -298,42 +327,31 @@ QPoint KRender::deg2pix(KGeoCoor kp) const
           int((m.y() - render_top_left_m.y()) / render_mip)};
 }
 
-void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
-                               int render_idx)
+void KRender::paintPointObject(QPainter* p, const KRenderPack& pack,
+                               const KObject& obj, int render_idx)
 {
-  auto& frame = obj->frame;
+  auto frame = obj.frame;
 
   auto coor_m = frame.top_left.toMeters();
 
   if (!render_frame_m.contains(coor_m))
     return;
 
-  auto sh = obj->shape;
-  p->setPen(QPen(sh->pen, 2));
-  p->setBrush(sh->brush);
-  auto        kpos       = obj->polygons.first()->first();
+  auto cl = &pack.classes[obj.class_idx];
+  p->setPen(QPen(cl->pen, 2));
+  p->setBrush(cl->brush);
+  auto        kpos       = obj.polygons.first().first();
   QPoint      pos        = deg2pix(kpos);
   int         max_length = 0;
   QStringList str_list;
-  if (!obj->name.isEmpty())
+  if (!obj.name.isEmpty())
   {
-    str_list += obj->name;
-    max_length = obj->name.count();
+    str_list += obj.name;
+    max_length = obj.name.count();
   }
 
-  for (auto attr: obj->shape->attributes)
-    if (attr.visible && render_mip < attr.max_mip)
-    {
-      auto str = obj->attributes.value(attr.name);
-      if (str == obj->name)
-        continue;
-      str_list += str;
-      max_length = std::max(max_length, str.count());
-    }
-
-  auto rect =
-      QRect{pos.x(), pos.y(), max_length * obj->shape->getWidthPix(),
-            str_list.count() * obj->shape->getWidthPix()};
+  auto rect = QRect{pos.x(), pos.y(), max_length * cl->getWidthPix(),
+                    str_list.count() * cl->getWidthPix()};
 
   bool intersects = false;
   for (auto item: point_names[render_idx])
@@ -347,7 +365,7 @@ void KRender::paintPointObject(QPainter* p, const KPackObject* obj,
   if (intersects)
     return;
 
-  point_names[render_idx].append({rect, str_list, sh});
+  point_names[render_idx].append({rect, str_list, cl});
 }
 
 QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
@@ -369,16 +387,17 @@ QPolygon KRender::poly2pix(const KGeoPolygon& polygon)
   return pl;
 }
 
-void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
-                                 int render_idx)
+void KRender::paintPolygonObject(QPainter* p, const KRenderPack& pack,
+                                 const KObject& obj, int render_idx)
 {
-  auto& frame = obj->frame;
+  auto  frame = obj.frame;
   QRect obj_frame_pix;
 
   auto   top_left_m     = frame.top_left.toMeters();
   auto   bottom_right_m = frame.bottom_right.toMeters();
   QRectF obj_frame_m    = {top_left_m, bottom_right_m};
 
+  auto cl = &pack.classes[obj.class_idx];
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
@@ -386,41 +405,40 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
                              pow(obj_frame_m.height(), 2));
   int    obj_span_pix = obj_span_m / render_mip;
 
-  auto sh = obj->shape;
-  if (sh->pen == Qt::black)
+  if (cl->pen == Qt::black)
     p->setPen(Qt::NoPen);
   else
-    p->setPen(sh->pen);
-  if (sh->style == KShape::Hatch)
-    p->setBrush(QBrush(sh->brush, Qt::HorPattern));
-  else if (sh->style == KShape::BDiag)
-    p->setBrush(QBrush(sh->brush, Qt::BDiagPattern));
-  else if (sh->style == KShape::FDiag)
-    p->setBrush(QBrush(sh->brush, Qt::FDiagPattern));
-  else if (sh->style == KShape::Horiz)
-    p->setBrush(QBrush(sh->brush, Qt::HorPattern));
-  else if (sh->style == KShape::Vert)
-    p->setBrush(QBrush(sh->brush, Qt::VerPattern));
+    p->setPen(cl->pen);
+  if (cl->style == KClass::Hatch)
+    p->setBrush(QBrush(cl->brush, Qt::HorPattern));
+  else if (cl->style == KClass::BDiag)
+    p->setBrush(QBrush(cl->brush, Qt::BDiagPattern));
+  else if (cl->style == KClass::FDiag)
+    p->setBrush(QBrush(cl->brush, Qt::FDiagPattern));
+  else if (cl->style == KClass::Horiz)
+    p->setBrush(QBrush(cl->brush, Qt::HorPattern));
+  else if (cl->style == KClass::Vert)
+    p->setBrush(QBrush(cl->brush, Qt::VerPattern));
   else
-    p->setBrush(sh->brush);
+    p->setBrush(cl->brush);
 
   QPainterPath path;
-  for (int polygon_idx = -1; auto polygon: obj->polygons)
+  for (int polygon_idx = -1; auto polygon: obj.polygons)
   {
     polygon_idx++;
 
-    auto pl = poly2pix(*polygon);
+    auto pl = poly2pix(polygon);
 
-    if ((polygon_idx == 0 && !obj->name.isEmpty() &&
+    if ((polygon_idx == 0 && !obj.name.isEmpty() &&
          obj_span_pix < std::min(pixmap_size.width(),
                                  pixmap_size.height() / 2) &&
          obj_span_pix >
              max_object_size_with_name_mm / pixel_size_mm) ||
-        !obj->shape->image.isNull())
+        !cl->image.isNull())
     {
 
-      QPoint top_left_pix     = deg2pix(obj->frame.top_left);
-      QPoint bottom_right_pix = deg2pix(obj->frame.bottom_right);
+      QPoint top_left_pix     = deg2pix(obj.frame.top_left);
+      QPoint bottom_right_pix = deg2pix(obj.frame.bottom_right);
       obj_frame_pix           = {top_left_pix, bottom_right_pix};
 
       auto  c = obj_frame_pix.center();
@@ -431,11 +449,11 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
       actual_rect.translate({-w / 2, -w / 2});
 
       addDrawTextEntry(draw_text_array[render_idx],
-                       {obj->name, sh, obj_frame_pix, actual_rect,
+                       {obj.name, cl, obj_frame_pix, actual_rect,
                         Qt::AlignCenter});
     }
 
-    if (obj->polygons.count() == 1)
+    if (obj.polygons.count() == 1)
     {
       p->drawPolygon(pl);
       continue;
@@ -452,10 +470,11 @@ void KRender::paintPolygonObject(QPainter* p, const KPackObject* obj,
 }
 
 void KRender::paintLineObject(QPainter*          painter,
-                              const KPackObject* obj, int render_idx,
+                              const KRenderPack& pack,
+                              const KObject& obj, int render_idx,
                               int line_iter)
 {
-  auto& frame = obj->frame;
+  auto frame = obj.frame;
 
   auto top_left_m     = frame.top_left.toMeters();
   auto bottom_right_m = frame.bottom_right.toMeters();
@@ -465,23 +484,23 @@ void KRender::paintLineObject(QPainter*          painter,
   if (!obj_frame_m.intersects(render_frame_m))
     return;
 
-  auto sh = obj->shape;
+  auto cl = &pack.classes[obj.class_idx];
 
   Qt::PenStyle style = Qt::SolidLine;
-  if (sh->style == KShape::Dash)
+  if (cl->style == KClass::Dash)
     style = Qt::DashLine;
-  if (sh->style == KShape::Dots)
+  if (cl->style == KClass::Dots)
     style = Qt::DotLine;
   int obj_name_width = 0;
-  if (!obj->name.isEmpty())
+  if (!obj.name.isEmpty())
     obj_name_width =
-        painter->font().pixelSize() * obj->name.count() * 0.3;
+        painter->font().pixelSize() * obj.name.count() * 0.3;
 
-  auto         fixed_w    = sh->getWidthPix();
+  auto         fixed_w    = cl->getWidthPix();
   int          sizeable_w = 0;
   int          w          = fixed_w;
   bool         one_way    = false;
-  QMapIterator it(obj->attributes);
+  QMapIterator it(obj.attributes);
   while (it.hasNext())
   {
     it.next();
@@ -495,23 +514,23 @@ void KRender::paintLineObject(QPainter*          painter,
     }
   }
 
-  painter->setPen(QPen(sh->pen, w, style));
+  painter->setPen(QPen(cl->pen, w, style));
   painter->setBrush(Qt::NoBrush);
 
-  for (int poly_idx = -1; auto polygon: obj->polygons)
+  for (int poly_idx = -1; auto polygon: obj.polygons)
   {
     poly_idx++;
     NameHolder nh;
     QPoint     p0;
     double     a0 = 0;
 
-    auto pl = poly2pix(*polygon);
+    auto pl = poly2pix(polygon);
 
-    auto size_m       = polygon->getFrame().getSizeMeters();
+    auto size_m       = polygon.getFrame().getSizeMeters();
     auto size_pix     = (size_m.width() + size_m.height()) / mip;
     auto hatch_length = size_pix * 0.05;
     if (hatch_length > 5)
-      if (sh->style == KShape::Hatch)
+      if (cl->style == KClass::Hatch)
       {
         if (hatch_length > 5)
           hatch_length = 5;
@@ -539,7 +558,7 @@ void KRender::paintLineObject(QPainter*          painter,
         }
       }
 
-    if (!obj->name.isEmpty() && poly_idx == 0)
+    if (!obj.name.isEmpty() && poly_idx == 0)
       for (int point_idx = -1; auto p: pl)
       {
         point_idx++;
@@ -559,11 +578,12 @@ void KRender::paintLineObject(QPainter*          painter,
         else if (da < -M_PI)
           da += 2 * M_PI;
         da = fabs(da);
-        if (da > deg2rad(5) || point_idx == polygon->count() - 1)
+        if (da > deg2rad(5) || point_idx == polygon.count() - 1)
         {
           if (nh.length_pix > obj_name_width)
           {
-            nh.fix(obj, pl.at(nh.start_idx), pl.at(nh.end_idx));
+            nh.fix(&pack, &obj, pl.at(nh.start_idx),
+                   pl.at(nh.end_idx));
             name_holder_array[render_idx].append(nh);
           }
           nh           = NameHolder();
@@ -581,9 +601,9 @@ void KRender::paintLineObject(QPainter*          painter,
     QPen pen;
     if (line_iter == 0)
       pen =
-          QPen(sh->brush, w * 2, style, Qt::RoundCap, Qt::RoundJoin);
+          QPen(cl->brush, w * 2, style, Qt::RoundCap, Qt::RoundJoin);
     else
-      pen = QPen(sh->pen, w, style, Qt::RoundCap, Qt::RoundJoin);
+      pen = QPen(cl->pen, w, style, Qt::RoundCap, Qt::RoundJoin);
     painter->setPen(pen);
     painter->drawPolyline(pl);
     if (sizeable_w > 7 && w > 0)
@@ -614,7 +634,7 @@ void KRender::paintLineObject(QPainter*          painter,
   }
 }
 
-void KRender::NameHolder::fix(const KPackObject* _obj,
+void KRender::NameHolder::fix(const KPack* pack, const KObject* _obj,
                               const QPoint& start, const QPoint& end)
 {
   obj       = _obj;
@@ -624,6 +644,7 @@ void KRender::NameHolder::fix(const KPackObject* _obj,
     angle_deg -= 180;
   if (angle_deg < -90)
     angle_deg += 180;
+  tcolor = pack->classes[_obj->class_idx].tcolor;
 }
 
 bool KRender::isCluttering(const QRect& rect)
@@ -638,27 +659,28 @@ bool KRender::isCluttering(const QRect& rect)
   return clutter_flag;
 }
 
-bool KRender::checkMipRange(const KPackObject* obj)
+bool KRender::checkMipRange(const KPack* pack, const KObject* obj)
 {
-  return (obj->shape->min_mip == 0 ||
-          render_mip >= obj->shape->min_mip) &&
-         (obj->shape->max_mip == 0 ||
-          render_mip <= obj->shape->max_mip);
+  auto cl = &pack->classes[obj->class_idx];
+  return (cl->min_mip == 0 || render_mip >= cl->min_mip) &&
+         (cl->max_mip == 0 || render_mip <= cl->max_mip);
 }
 
-bool KRender::paintObject(QPainter* p, const KPackObject* obj,
-                          int render_idx, int line_iter)
+bool KRender::paintObject(QPainter* p, const KRenderPack* map,
+                          const KObject& obj, int render_idx,
+                          int line_iter)
 {
-  switch (obj->shape->type)
+  auto cl = &map->classes[obj.class_idx];
+  switch (cl->type)
   {
-  case KShape::Point:
-    paintPointObject(p, obj, render_idx);
+  case KClass::Point:
+    paintPointObject(p, *map, obj, render_idx);
     break;
-  case KShape::Line:
-    paintLineObject(p, obj, render_idx, line_iter);
+  case KClass::Line:
+    paintLineObject(p, *map, obj, render_idx, line_iter);
     break;
-  case KShape::Polygon:
-    paintPolygonObject(p, obj, render_idx);
+  case KClass::Polygon:
+    paintPolygonObject(p, *map, obj, render_idx);
     break;
   default:
     break;
@@ -685,36 +707,36 @@ void KRender::checkYieldResult()
 
 bool KRender::paintPointNames(QPainter* p)
 {
-  for (int render_idx = 0; render_idx < KRenderMap::render_count;
+  for (int render_idx = 0; render_idx < KRenderPack::render_count;
        render_idx++)
     for (auto item: point_names[render_idx])
     {
-      auto text_shift = item.shape->getWidthPix();
-      auto pos        = item.rect.topLeft();
-      auto w          = item.shape->getWidthPix();
+      auto pos = item.rect.topLeft();
+      auto w   = item.cl->getWidthPix();
       if (w > 0)
       {
         p->save();
         p->translate(pos);
         auto f = p->font();
-        f.setPixelSize(w);
+        f.setPixelSize(w * 0.7);
         p->setFont(f);
-        p->translate(QPoint(0, item.shape->image.height() / 2));
         for (auto str: item.str_list)
         {
-          p->translate(QPoint(0, text_shift));
-          paintOutlinedText(p, str, item.shape->tcolor);
+          p->translate(
+              QPoint(item.cl->image.width() * 0.8, -w * 0.3));
+          paintPointName(p, str, item.cl->tcolor);
         }
         p->restore();
       }
-      if (item.shape)
+      if (item.cl)
       {
-        auto pos2 = QPoint{pos.x() - item.shape->image.width() / 2,
-                           pos.y() - item.shape->image.height() / 2};
-        p->drawImage(pos2, item.shape->image);
+        auto pos2 = QPoint{pos.x() - item.cl->image.width() / 2,
+                           pos.y() - item.cl->image.height() / 2};
+        p->drawImage(pos2, item.cl->image);
       }
       else
-        p->drawEllipse(pos, 5, 5);
+        p->drawEllipse(pos, int(1.0 / pixel_size_mm),
+                       int(1.0 / pixel_size_mm));
       if (!canContinue())
         return false;
     }
@@ -724,7 +746,12 @@ bool KRender::paintPointNames(QPainter* p)
 bool KRender::paintLineNames(QPainter* p)
 {
   text_rect_array.clear();
-  for (int render_idx = 0; render_idx < KRenderMap::render_count;
+  auto f = p->font();
+  auto w = round(1.5 / pixel_size_mm);
+  f.setPixelSize(w);
+  p->setFont(f);
+
+  for (int render_idx = 0; render_idx < KRenderPack::render_count;
        render_idx++)
     for (auto nh: name_holder_array[render_idx])
     {
@@ -748,7 +775,7 @@ bool KRender::paintLineNames(QPainter* p)
 
       p->setTransform(tr);
       text_rect_array.append(mapped_rect);
-      paintOutlinedText(p, nh.obj->name, nh.obj->shape->tcolor);
+      paintOutlinedText(p, nh.obj->name, nh.tcolor);
       p->restore();
       if (!canContinue())
         return false;
@@ -758,7 +785,7 @@ bool KRender::paintLineNames(QPainter* p)
 
 bool KRender::paintPolygonNames(QPainter* p)
 {
-  for (int render_idx = 0; render_idx < KRenderMap::render_count;
+  for (int render_idx = 0; render_idx < KRenderPack::render_count;
        render_idx++)
     for (auto& dte: draw_text_array[render_idx])
     {
@@ -775,17 +802,17 @@ bool KRender::paintPolygonNames(QPainter* p)
         continue;
       paintOutlinedText(p, dte);
 
-      if (!dte.shape->image.isNull() &&
-          dte.rect.width() > dte.shape->image.width() * 2 &&
-          dte.rect.height() > dte.shape->image.height() * 2)
+      if (!dte.cl->image.isNull() &&
+          dte.rect.width() > dte.cl->image.width() * 2 &&
+          dte.rect.height() > dte.cl->image.height() * 2)
       {
         auto obj_center = dte.rect.center();
         auto pos =
-            QPoint{obj_center.x() - dte.shape->image.width() / 2,
-                   obj_center.y() - dte.shape->image.height() / 2};
+            QPoint{obj_center.x() - dte.cl->image.width() / 2,
+                   obj_center.y() - dte.cl->image.height() / 2};
         if (!dte.text.isEmpty())
-          pos -= QPoint(0, dte.shape->getWidthPix() + 5);
-        p->drawImage(pos, dte.shape->image);
+          pos -= QPoint(0, dte.cl->getWidthPix() + 5);
+        p->drawImage(pos, dte.cl->image);
       }
 
       text_rect_array.append(dte.rect);
@@ -795,10 +822,10 @@ bool KRender::paintPolygonNames(QPainter* p)
   return true;
 }
 
-void KRender::render(QPainter* p, QVector<KRenderMap*> render_maps,
+void KRender::render(QPainter* p, QVector<KRenderPack*> render_packs,
                      int render_idx)
 {
-  for (auto map: render_maps)
+  for (auto map: render_packs)
   {
     KLocker main_locker(&map->main_lock, KLocker::Read);
     if (!main_locker.hasLocked())
@@ -806,54 +833,53 @@ void KRender::render(QPainter* p, QVector<KRenderMap*> render_maps,
     KLocker tile_locker(&map->tile_lock, KLocker::Read);
     if (!tile_locker.hasLocked())
       continue;
+
     for (int line_iter = 0; line_iter < 2; line_iter++)
-      renderMap(p, map, render_idx, line_iter);
+      renderPack(p, map, render_idx, line_iter);
   }
 }
 
-void KRender::renderMap(QPainter* p, KRenderMap* map, int render_idx,
-                        int line_iter)
+void KRender::renderPack(QPainter* p, const KRenderPack* pack,
+                         int render_idx, int line_iter)
 {
-  if (!map || render_idx > map->render_start_list.count() - 1)
+  if (!pack || render_idx > pack->render_start_list.count() - 1)
     return;
 
-  auto start        = map->render_start_list[render_idx];
+  auto start        = pack->render_start_list[render_idx];
   int  object_count = 0;
-
-  auto render_frame_m = getDrawRectM();
 
   p->setRenderHint(QPainter::Antialiasing);
   for (int layer_idx = start.layer_idx;
-       layer_idx < KRenderMap::max_layer_count; layer_idx++)
+       layer_idx < KRenderPack::max_layer_count; layer_idx++)
   {
     int start_obj_idx = 0;
     if (layer_idx == start.layer_idx)
       start_obj_idx = start.obj_idx;
+    auto& layer     = pack->render_data[layer_idx];
+    auto  obj_count = layer.count();
 
-    for (int obj_idx = start_obj_idx;
-         obj_idx < map->render_data[layer_idx].count(); obj_idx++)
+    for (int obj_idx = start_obj_idx; obj_idx < obj_count; obj_idx++)
     {
-      auto obj = map->render_data[layer_idx][obj_idx];
+      auto obj = layer[obj_idx];
       object_count++;
-      if (object_count == map->render_object_count)
+      if (object_count == pack->render_object_count)
         return;
       if (!obj)
         continue;
 
-      if (obj->shape->type != KShape::Line && line_iter == 1)
+      auto cl = &pack->classes[obj->class_idx];
+
+      if (cl->type != KClass::Line && line_iter == 1)
         continue;
 
-      if (obj->shape->type == KShape::Line && line_iter == 0 &&
-          obj->shape->brush == Qt::black)
+      if (cl->type == KClass::Line && line_iter == 0 &&
+          cl->brush == Qt::black)
         continue;
 
-      if (!checkMipRange(obj))
+      if (!checkMipRange(pack, obj))
         continue;
-      if (obj->tile_frame_m.isValid())
-        if (!obj->tile_frame_m.intersects(render_frame_m))
-          continue;
 
-      if (!paintObject(p, obj, render_idx, line_iter))
+      if (!paintObject(p, pack, *obj, render_idx, line_iter))
       {
         emit rendered(0);
         return;
@@ -897,7 +923,7 @@ void KRender::run()
   render_center_m = center_m;
   render_mip      = mip;
 
-  for (int i = 0; i < KRenderMap::render_count; i++)
+  for (int i = 0; i < KRenderPack::render_count; i++)
   {
     point_names[i].clear();
     draw_text_array[i].clear();
@@ -937,20 +963,20 @@ void KRender::run()
 
   QVector<int> intersecting_maps;
   auto         draw_rect = getDrawRectM();
-  for (int map_idx = -1; auto& map: maps)
+  for (int map_idx = -1; auto& map: packs)
   {
-    if (map->getMainMip() > 0 && render_mip > map->getMainMip())
+    if (map->main_mip > 0 && render_mip > map->main_mip)
       continue;
     map_idx++;
     if (map_idx == 0)
       continue;
 
-    if (needToLoadMap(map, draw_rect))
+    if (needToLoadPack(map, draw_rect))
       intersecting_maps.append(map_idx);
   }
 
-  QVector<KRenderMap*> render_maps;
-  for (int map_idx = -1; auto& map: maps)
+  QVector<KRenderPack*> render_maps;
+  for (int map_idx = -1; auto& map: packs)
   {
     map_idx++;
 
@@ -962,10 +988,10 @@ void KRender::run()
     if (!big_locker.hasLocked())
       continue;
 
-    if (map_idx > 0 && !needToLoadMap(map, render_frame_m))
+    if (map_idx > 0 && !needToLoadPack(map, render_frame_m))
       continue;
 
-    auto map_rect_m = map->getFrame().toMeters();
+    auto map_rect_m = map->frame.toMeters();
     if (map_idx > 0 && !render_frame_m.intersects(map_rect_m))
       continue;
 
@@ -980,7 +1006,7 @@ void KRender::run()
   }
 
   QList<RenderEntry*> render_list;
-  for (int render_idx = 1; render_idx < KRenderMap::render_count;
+  for (int render_idx = 1; render_idx < KRenderPack::render_count;
        render_idx++)
   {
     auto render =
@@ -1049,7 +1075,7 @@ void KRender::renderUserObjects()
   time_since_last_repaint.start();
 }
 
-void KRender::renderMap()
+void KRender::render()
 {
   if (isRunning())
     return;

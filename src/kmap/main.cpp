@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QtQuick/QQuickView>
 #include <QtQml/QQmlEngine>
 #include <QQmlContext>
@@ -14,13 +15,16 @@
 #include "kcontrols.h"
 #include "keditwidget.h"
 #include "kpack.h"
+#include "kclassmanager.h"
 #include "kposgenerator.h"
 #include "ktrackmanager.h"
 #include "knewobjectwidget.h"
 #include "kpackfetcher.h"
 #include "kscalelabel.h"
 #include "ksettings.h"
+#include "kstoragemanager.h"
 #ifdef BUILD_WITH_XMPP
+  #include "kmucroombackend.h"
   #include "kxmppclient.h"
   #include "kloginwidget.h"
   #include "krosterwidget.h"
@@ -83,40 +87,54 @@ int main(int argc, char* argv[])
     }
   }
   else
-    mmc_path = argv[1];
+  {
+    if (argc > 1)
+      mmc_path = argv[1];
+    else
+    {
+      mmc_path = QStandardPaths::writableLocation(
+          QStandardPaths::AppDataLocation);
+      if (mmc_path.isEmpty())
+      {
+        qCritical("Standard app's data diricory is not writable");
+      }
+    }
+  }
+  kStorageManager storage_man(mmc_path);
 
   KRenderWidget::Settings mapw_settings;
-  mapw_settings.map_dir                 = mmc_path + "/packs";
+  mapw_settings.map_dir                 = storage_man.packsPath();
   mapw_settings.pixel_size_mm           = pixel_size_mm;
   mapw_settings.window_size             = screen_size_pix;
   mapw_settings.render_window_size_coef = 2;
   mapw_settings.update_interval_ms      = 100;
   mapw_settings.max_zoom_speed          = 1.5;
 
-  KRenderWidget  renderw(mapw_settings);
-  KPackFetcher   map_fetcher(mapw_settings.map_dir,
-                             renderw.getWorldMap());
-  KShapeManager  user_shape_man(mmc_path + "/class");
-  KTrackManager  track_man(mmc_path + "/tracks");
-  KObjectManager object_man(mmc_path + "/objects", pixel_size_mm);
-  KAutoScroll    auto_scroll;
+  KRenderWidget      renderw(mapw_settings);
+  KPackFetcher       map_fetcher(mapw_settings.map_dir,
+                                 renderw.getWorldPack());
+  KClassManager      user_class_man(storage_man.classPath());
+  KTrackManager      track_man(storage_man.tracksPath());
+  KFreeObjectManager object_man(storage_man.objectsPath(),
+                                pixel_size_mm);
+  KAutoScroll        auto_scroll;
 
   QObject::connect(&map_fetcher, &KPackFetcher::fetched,
                    [&renderw](QString map_path)
                    {
                      renderw.addMap(map_path, true);
-                     renderw.renderMap();
+                     renderw.render();
                    });
 
-  QDir        dir(mmc_path + "/class");
+  QDir        dir(storage_man.classPath());
   QStringList filters;
   filters << "*.json";
   dir.setNameFilters(filters);
 
   auto path_list = dir.entryList();
   for (auto path: path_list)
-    user_shape_man.loadShapes(mmc_path + "/class/" + path,
-                              mmc_path + "/class");
+    user_class_man.loadClasses(storage_man.classPath() + "/" + path,
+                               storage_man.classPath());
 
   QObject::connect(&editw, &KEditWidget::saveTrack, &track_man,
                    &KTrackManager::saveTrack);
@@ -126,15 +144,16 @@ int main(int argc, char* argv[])
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::mousePressed,
-                   &object_man, &KObjectManager::startMovingPoint);
+                   &object_man,
+                   &KFreeObjectManager::startMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::mouseMoved, &auto_scroll,
                    &KAutoScroll::accumulate);
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,
                    &auto_scroll, &KAutoScroll::start);
   QObject::connect(&renderw, &KRenderWidget::mouseReleased,
-                   &object_man, &KObjectManager::stopMovingPoint);
+                   &object_man, &KFreeObjectManager::stopMovingPoint);
   QObject::connect(&renderw, &KRenderWidget::tapped, &object_man,
-                   &KObjectManager::onTapped);
+                   &KFreeObjectManager::onTapped);
   QObject::connect(&renderw, &KRenderWidget::pinchStarted,
                    &auto_scroll, &KAutoScroll::stop);
   QObject::connect(&renderw, &KRenderWidget::startedRender,
@@ -143,7 +162,7 @@ int main(int argc, char* argv[])
                    &KRenderWidget::scroll);
 
   QObject::connect(&renderw, &KRenderWidget::mouseMoved, &object_man,
-                   &KObjectManager::movePoint);
+                   &KFreeObjectManager::movePoint);
   double edge_mm        = 15;
   double step_mm        = 30;
   double button_size_mm = 15;
@@ -175,7 +194,7 @@ int main(int argc, char* argv[])
   QObject::connect(&controls, &KControls::switchRecording, &track_man,
                    &KTrackManager::onSwitchRecording);
   QObject::connect(&controls, &KControls::acceptObject, &object_man,
-                   &KObjectManager::acceptObject);
+                   &KFreeObjectManager::acceptObject);
   QObject::connect(&track_man, &KTrackManager::switchRecording,
                    [&track_man, &editw]()
                    {
@@ -187,18 +206,18 @@ int main(int argc, char* argv[])
                    });
   QObject::connect(&controls, &KControls::isRecording, &track_man,
                    &KTrackManager::isRecording);
-  QObject::connect(&controls, &KControls::selectShape, &newobjw,
+  QObject::connect(&controls, &KControls::selectClass, &newobjw,
                    &KNewObjectWidget::show);
   QObject::connect(&controls, &KControls::removeObject, &object_man,
-                   &KObjectManager::removeObject);
+                   &KFreeObjectManager::removeObject);
 
-  QObject::connect(&newobjw, &KNewObjectWidget::getUserShapeImageList,
-                   &user_shape_man,
-                   &KShapeManager::getShapeImageList);
-  QObject::connect(&newobjw, &KNewObjectWidget::selectedShape,
-                   &object_man, &KObjectManager::createObject);
-  QObject::connect(&newobjw, &KNewObjectWidget::getShapeById,
-                   &user_shape_man, &KShapeManager::getShapeById);
+  QObject::connect(&newobjw, &KNewObjectWidget::getUserClassImageList,
+                   &user_class_man,
+                   &KClassManager::getClassImageList);
+  QObject::connect(&newobjw, &KNewObjectWidget::selectedClass,
+                   &object_man, &KFreeObjectManager::createObject);
+  QObject::connect(&newobjw, &KNewObjectWidget::getClassById,
+                   &user_class_man, &KClassManager::getClassById);
 
   QObject::connect(&renderw, &KRenderWidget::zoomFinished, &controls,
                    &KControls::checkZoomRepeat);
@@ -228,29 +247,33 @@ int main(int argc, char* argv[])
                    &track_man, &KTrackManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&renderw, &KRenderWidget::paintUserObjects,
-                   &object_man, &KObjectManager::paint,
+                   &object_man, &KFreeObjectManager::paint,
                    Qt::DirectConnection);
   QObject::connect(&renderw, &KRenderWidget::canScroll, &object_man,
-                   &KObjectManager::canScroll, Qt::DirectConnection);
+                   &KFreeObjectManager::canScroll,
+                   Qt::DirectConnection);
   QObject::connect(&track_man, &KTrackManager::deg2pix, &renderw,
                    &KRenderWidget::deg2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::deg2pix, &renderw,
-                   &KRenderWidget::deg2pix, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::deg2scr, &renderw,
-                   &KRenderWidget::deg2scr, Qt::DirectConnection);
-  QObject::connect(&object_man, &KObjectManager::scr2deg, &renderw,
-                   &KRenderWidget::scr2deg, Qt::DirectConnection);
+  QObject::connect(&object_man, &KFreeObjectManager::deg2pix,
+                   &renderw, &KRenderWidget::deg2pix,
+                   Qt::DirectConnection);
+  QObject::connect(&object_man, &KFreeObjectManager::deg2scr,
+                   &renderw, &KRenderWidget::deg2scr,
+                   Qt::DirectConnection);
+  QObject::connect(&object_man, &KFreeObjectManager::scr2deg,
+                   &renderw, &KRenderWidget::scr2deg,
+                   Qt::DirectConnection);
   QObject::connect(&position_label, &KPositionLabel::deg2scr,
                    &renderw, &KRenderWidget::deg2scr,
                    Qt::DirectConnection);
 
   QObject::connect(&track_man, &KTrackManager::updated, &renderw,
                    &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KObjectManager::updated, &renderw,
-                   &KRenderWidget::renderUserObjects);
-  QObject::connect(&object_man, &KObjectManager::startEdit, &controls,
-                   &KControls::startEdit);
-  QObject::connect(&object_man, &KObjectManager::finishEdit,
+  QObject::connect(&object_man, &KFreeObjectManager::updated,
+                   &renderw, &KRenderWidget::renderUserObjects);
+  QObject::connect(&object_man, &KFreeObjectManager::startEdit,
+                   &controls, &KControls::startEdit);
+  QObject::connect(&object_man, &KFreeObjectManager::finishEdit,
                    &controls, &KControls::finishEdit);
 
   QGeoPositionInfoSource* geo =
@@ -322,14 +345,12 @@ int main(int argc, char* argv[])
   QString alicePassword = "very-secure-password-for-knav-alice";
   QString bobJid        = "knav.bob@macaw.me";
   QString bobPassword   = "very-secure-password-for-knav-bob";
-  QString log_path      = "client.log";
   // QString jidResource	 	= String("QXmpp");
   QString jidResource = "flowerpot";
-  QString objects_dir = "./objects";
   QString proxy       = "proxy.macaw.me";
 
-  KXmppClient client(objects_dir, proxy);
-  client.logger()->setLogFilePath(log_path);
+  KXmppClient client(storage_man.objectsPath(), proxy); client.logger()->setLogFilePath(storage_man.logsPath() +
+                                  "/client.log");
   client.logger()->setLoggingType(QXmppLogger::FileLogging);
 
   KSettings k_settings;
@@ -358,13 +379,31 @@ int main(int argc, char* argv[])
                    &sender,
                    &KPortableObjectSender::turnOffSendOnReady);
   QObject::connect(&client, &KXmppClient::fileDownloaded, &object_man,
-                   qOverload<QString>(&KObjectManager::loadFile));
+                   qOverload<QString>(&KFreeObjectManager::loadFile));
   QObject::connect(&sender, &KPortableObjectSender::send, &client,
                    &KXmppClient::sendFile);
   QObject::connect(&roster_widget, &KRosterWidget::jidSelected,
                    &sender, &KPortableObjectSender::setJid);
-  QObject::connect(&object_man, &KObjectManager::saved, &sender,
+  QObject::connect(&object_man, &KFreeObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
+
+  QQuickView          muc_view;
+  QQmlContext*        muc_context = muc_view.engine()->rootContext();
+  KMucRoomsController muc_controller;
+  KMucRoomsModel      muc_rooms_model(
+           client.findExtension<QXmppMucManager>(), nullptr);
+  muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
+  muc_context->setContextProperty("_mucBackEnd", &muc_controller);
+  muc_view.setSource(QUrl("qrc:KMuc.qml"));
+  muc_view.show();
+  QObject::connect(
+      &muc_controller, &KMucRoomsController::addRoom,
+      [client_p = &client](QString room_jid)
+      {
+        qDebug() << "adding muc room" << room_jid;
+        client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
+      });
+
 #endif
 
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

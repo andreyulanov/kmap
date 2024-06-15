@@ -7,16 +7,24 @@ INCLUDEPATH += /home/user/gisdesigner/14/include
 INCLUDEPATH += ../lib
 LIBS += -lmapcomponents -lqdmapacces
 SOURCES += \
+    ../lib/kbase.cpp \
     ../lib/klocker.cpp \
     ../lib/kpack.cpp \
-    ../lib/kshape.cpp \
+    ../lib/kclass.cpp \
+    ../lib/kobject.cpp \
+    ../lib/kclassmanager.cpp \
+    kpanclassmanager.cpp \
     main.cpp
 
 HEADERS += \
+ ../lib/kbase.h \
     ../lib/klocker.h \
     ../lib/kpack.h \
     ../lib/kserialize.h \
-    ../lib/kshape.h \
+    ../lib/kclass.h \
+    ../lib/kclassmanager.h \
+ kpanclass.h \
+ kpanclassmanager.h
 
 
 

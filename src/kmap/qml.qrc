@@ -8,5 +8,6 @@
         <file>CircleButton.qml</file>
         <file>FancyTextField.qml</file>
         <file>ContactCard.qml</file>
+        <file>KMuc.qml</file>
     </qresource>
 </RCC>
