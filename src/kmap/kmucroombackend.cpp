@@ -129,6 +129,11 @@ void KMucRoomsModel::setDatabase(QSqlDatabase* _database)
                     << database->lastError().text();
         database = nullptr;
     }
+    else
+    {
+        createTable();
+        loadFromDatabase();
+    }
 }
 
 void KMucRoomsModel::roomAddedSlot(QXmppMucRoom* room)
@@ -158,8 +163,9 @@ void KMucRoomsModel::roomAddedSlot(QXmppMucRoom* room)
 bool KMucRoomsModel::loadFromDatabase()
 {
     if (database == nullptr) return false;
+    qDebug() << "Going to load MUC rooms from database";
     QSqlQuery query(*database);
-    query.prepare("SELECT jid, nickname, password from" + table_name);
+    query.exec("SELECT jid, nickname, password from " + table_name);
     if (query.lastError().isValid())
     {
         qDebug() << "Failed to load rooms:" << query.lastError();
@@ -167,9 +173,29 @@ bool KMucRoomsModel::loadFromDatabase()
     }
     while (query.next())
     {
+        qDebug() << "From database loaded room:" << query.value(0).toString();
         QXmppMucRoom* room = manager->addRoom(query.value(0).toString());
         if (!query.value(1).isNull()) room->setNickName(query.value(1).toString());
         if (!query.value(2).isNull()) room->setPassword(query.value(2).toString());
+    }
+    return true;
+}
+
+bool KMucRoomsModel::createTable()
+{
+    if (database == nullptr)
+        return false;
+    QSqlQuery query(*database);
+    query.prepare("CREATE TABLE IF NOT EXISTS\"" + table_name + "\" ("
+        "\"jid\"	TEXT NOT NULL UNIQUE,"
+        "\"nickname\"	TEXT,"
+        "\"password\"	TEXT,"
+        "PRIMARY KEY(\"jid\")"
+    ")");
+    if (!query.exec())
+    {
+        qCritical() << "Unable to save MUC room:" << query.lastError().text();
+        return false;
     }
     return true;
 }

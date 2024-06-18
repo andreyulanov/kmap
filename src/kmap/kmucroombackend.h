@@ -73,6 +73,8 @@ public:
     void setDatabase(QSqlDatabase*);
     /// Loads chats from database and adds them to the manager.
     bool loadFromDatabase();
+    /// Create table of chats in the database.
+    bool createTable();
 private:
     QXmppMucManager* manager = nullptr;
     /// if database == nullptr then the model will not store data in a database

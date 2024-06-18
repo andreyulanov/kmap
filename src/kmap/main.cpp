@@ -9,6 +9,7 @@
 #include <QtQuick/QQuickView>
 #include <QtQml/QQmlEngine>
 #include <QQmlContext>
+#include <QSqlDatabase>
 
 #include "krenderwidget.h"
 #include "kautoscroll.h"
@@ -386,14 +387,28 @@ int main(int argc, char* argv[])
                    &sender, &KPortableObjectSender::setJid);
   QObject::connect(&object_man, &KFreeObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
+  // some database stuff
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  qDebug() << "Connecting to the database:" << mmc_path + "/main.db";
+  db.setDatabaseName(mmc_path + "/main.db");
 
   QQuickView          muc_view;
   QQmlContext*        muc_context = muc_view.engine()->rootContext();
   KMucRoomsController muc_controller;
-  KMucRoomsModel      muc_rooms_model(
-           client.findExtension<QXmppMucManager>(), nullptr);
+  KMucRoomsModel muc_rooms_model(
+              client.findExtension<QXmppMucManager>(), nullptr);
+  if (!db.open())
+  {
+      qWarning() << "Error: connection with database failed";
+  }
+  else
+  {
+      qDebug() << "Database: connection ok";
+      muc_rooms_model.setDatabase(&db);
+  }
   muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
   muc_context->setContextProperty("_mucBackEnd", &muc_controller);
+
   muc_view.setSource(QUrl("qrc:KMuc.qml"));
   muc_view.show();
   QObject::connect(
@@ -424,8 +439,7 @@ int main(int argc, char* argv[])
   QObject::connect(root_item, SIGNAL(connectToServer(QString, QString)),
                    &client, SLOT(reconnectToServer(QString, QString)));
 
-  view.engine()->rootContext()->setContextProperty("kClient",&client);
-
+  view.engine()->rootContext()->setContextProperty("kClient", &client);
   view.show();
 
   return a.exec();
