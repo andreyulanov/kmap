@@ -14,6 +14,7 @@ class kStorageManager
     QString objects_path;
     QString packs_path;
     QString tracks_path;
+    QString database_path;
     void create(QString dir);
 
 public:
@@ -24,6 +25,7 @@ public:
     QString tracksPath() 	{return tracks_path;}
     QString objectsPath() 	{return objects_path;}
     QString logsPath() 		{return logs_path;}
+    QString databasePath()  {return database_path;}
 
 };
 

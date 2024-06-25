@@ -389,14 +389,13 @@ int main(int argc, char* argv[])
                    &KPortableObjectSender::setFilename);
   // some database stuff
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  qDebug() << "Connecting to the database:" << mmc_path + "/main.db";
-  db.setDatabaseName(mmc_path + "/main.db");
+  db.setDatabaseName(storage_man.databasePath());
 
   QQuickView          muc_view;
   QQmlContext*        muc_context = muc_view.engine()->rootContext();
   KMucRoomsController muc_controller;
-  KMucRoomsModel muc_rooms_model(
-              client.findExtension<QXmppMucManager>(), nullptr);
+  KMucRoomsModel muc_rooms_model(client.findExtension<QXmppMucManager>(),
+                                 &muc_controller);
   if (!db.open())
   {
       qWarning() << "Error: connection with database failed";
@@ -406,18 +405,19 @@ int main(int argc, char* argv[])
       qDebug() << "Database: connection ok";
       muc_rooms_model.setDatabase(&db);
   }
+  //muc_rooms_model.removeRow(1);
   muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
   muc_context->setContextProperty("_mucBackEnd", &muc_controller);
 
   muc_view.setSource(QUrl("qrc:KMuc.qml"));
   muc_view.show();
-  QObject::connect(
-      &muc_controller, &KMucRoomsController::addRoom,
-      [client_p = &client](QString room_jid)
-      {
-        qDebug() << "adding muc room" << room_jid;
-        client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
-      });
+  // QObject::connect(
+  //     &muc_controller, &KMucRoomsController::addRoom,
+  //     [client_p = &client](QString room_jid)
+  //     {
+  //       qDebug() << "adding muc room" << room_jid;
+  //       client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
+  //     });
 
 #endif
 

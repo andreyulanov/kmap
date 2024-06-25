@@ -14,6 +14,7 @@ kStorageManager::kStorageManager(QString _mmc_path)
     objects_path 	= mmc_path + "/objects";
     packs_path 		= mmc_path + "/packs";
     tracks_path 	= mmc_path + "/tracks";
+    database_path	= mmc_path + "/main.db";
     create(mmc_path);
     create(class_path);
     create(logs_path);

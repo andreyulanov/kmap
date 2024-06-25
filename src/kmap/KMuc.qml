@@ -28,7 +28,7 @@ Item {
                     id: addFormGrid
                     TextField {
                         id: roomJidTextField
-                        width: 250
+                        width: 200
                         text: _mucBackEnd.room_jid
                         placeholderText: qsTr("Room Jid")
                         onEditingFinished: _mucBackEnd.room_jid = text
@@ -39,6 +39,13 @@ Item {
                         onClicked: {
                             _mucBackEnd.add();
                             console.log("_mucBackend.roomJid: " + _mucBackEnd.room_jid)
+                        }
+                    }
+                    Button {
+                        text: "Remove"
+                        onClicked: {
+                            console.log("Going to remove room with index" + view.currentIndex);
+                            _mucRoomsModel.removeRows(view.currentIndex,1)
                         }
                     }
                 }

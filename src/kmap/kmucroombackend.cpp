@@ -37,45 +37,36 @@ void KMucRoomsController::add()
     }
     addRoom(room_jid);
 }
-void KMucRoomsController::showRoom(QXmppMucRoom* room)
-{
-    //FIXME
-    qDebug() << "Going to show MUC room" << room->jid();
-    return;
-}
 
-KMucRoomsModel::KMucRoomsModel(QXmppMucManager* _manager,
-                   QSqlDatabase* _database,
-                   QObject *parent):
+KMucRoomsModel::KMucRoomsModel(QXmppMucManager* manager,
+                               KMucRoomsController* controller,
+                               QSqlDatabase* database,
+                               QObject *parent):
     QAbstractListModel(parent)
 {
-    setManager(_manager);
-    setDatabase(_database);
+    setManager(manager);
+    setController(controller);
+    setDatabase(database);
 }
 
-int KMucRoomsModel::rowCount(const QModelIndex &parent) const
+int KMucRoomsModel::rowCount(const QModelIndex&) const
 {
-    if (parent.isValid() || manager == nullptr) {
-        qWarning() << "KMucRoomsModel: Invalid parent of manager == nullptr";
-        return 0;
-    }
-    return manager->rooms().size();
+    return rooms.size();
 }
 
+QXmppMucRoom* KMucRoomsModel::roomByIndex(const QModelIndex &index) const
+{
+    int indx = index.row();
+    if (!index.isValid() || indx >= rooms.length() || indx < 0) return nullptr;
+    return rooms.at(indx);
+}
 QVariant KMucRoomsModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || manager == nullptr) {
+    QXmppMucRoom* room = roomByIndex(index);
+    if (room == nullptr) {
         qWarning() << "KMucRoomsModel: Invalid index";
         return QVariant();
     }
-
-    QXmppMucRoom* room = manager->rooms()[index.row()];
-    if (room == nullptr)
-    {
-        qWarning() << "KMucRoomsModel: room = nullptr";
-        return QVariant();
-    }
-
     switch (role) {
     case NameRole:
         return room->name();
@@ -84,6 +75,7 @@ QVariant KMucRoomsModel::data(const QModelIndex &index, int role) const
     case SubjectRole:
         return room->subject();
     default:
+        qWarning() << "KMucRoomsModel::data: Invalid role";
         return QVariant();
     }
 }
@@ -100,23 +92,13 @@ QHash<int, QByteArray> KMucRoomsModel::roleNames() const
 
 void KMucRoomsModel::setManager(QXmppMucManager* _manager)
 {
-    if (manager != nullptr)
-    {
-        disconnect(manager, &QXmppMucManager::roomAdded,
-                   this, &KMucRoomsModel::roomAddedSlot);
-    }
-    manager = _manager;
-    if (manager != nullptr)
-    {
-        connect(manager, &QXmppMucManager::roomAdded,
-                this, &KMucRoomsModel::roomAddedSlot);
-    }
+   manager = _manager;
 }
 void KMucRoomsModel::setDatabase(QSqlDatabase* _database)
 {
     if (_database == nullptr)
     {
-        qCritical() << "KMucRoomsModel: database points to null";
+        qWarning() << "KMucRoomsModel: database points to null";
         database = nullptr;
         return;
     }
@@ -135,34 +117,58 @@ void KMucRoomsModel::setDatabase(QSqlDatabase* _database)
         loadFromDatabase();
     }
 }
-
-void KMucRoomsModel::roomAddedSlot(QXmppMucRoom* room)
+void KMucRoomsModel::setController(KMucRoomsController* controller)
 {
-    /// FIXME: if two or more rooms added it works bad
-    int number_of_rows = rowCount(QModelIndex());
-    int row_to_add = number_of_rows == 0 ? 0 : number_of_rows - 1;
-    qDebug() << "KMucRoomsModel: adding row number" << row_to_add;
+    if (controller == nullptr) return;
+    connect(controller, &KMucRoomsController::addRoom,
+            this, &KMucRoomsModel::roomAddedSlot);
+}
+
+
+QXmppMucRoom* KMucRoomsModel::createRoom(const QString& room_jid)
+{
+    int row_to_add = rowCount(QModelIndex());
     beginInsertRows(QModelIndex(), row_to_add, row_to_add);
-    // saving to the database if there is one
-    if (database != nullptr)
-    {
-        QSqlQuery query(*database);
-        query.prepare("INSERT INTO " + table_name + "(jid, nickname, password)"
-                      "VALUES (:jid, :nickname, :password)");
-        query.bindValue(":jid", room->jid());
-        query.bindValue(":nickname", room->nickName());
-        query.bindValue(":password", room->password()); /// FIXME: We should store passwords in more secure way...
-        if (!query.exec())
-            qCritical() << "Unable to save MUC room:"
-                        << query.lastError().text();
-    }
+    qDebug() << "KMucRoomsModel: adding row number" << row_to_add;
+    QXmppMucRoom* room = manager->addRoom(room_jid);
+    rooms.append(room);
     endInsertRows();
-    qDebug() << "rowCount:" << rowCount(QModelIndex());
+    return room;
+}
+bool KMucRoomsModel::saveRoomToDatabase(QXmppMucRoom* room)
+{
+    if (noDatabaseMode()) return true;
+    QSqlQuery query(*database);
+    query.prepare("INSERT INTO " + table_name + "(jid, nickname, password)"
+                  "VALUES (:jid, :nickname, :password)");
+    query.bindValue(":jid", room->jid());
+    query.bindValue(":nickname", room->nickName());
+    query.bindValue(":password", room->password()); /// FIXME: We should store passwords in more secure way...
+    if (!query.exec())
+    {
+        qCritical() << "Unable to save MUC room:"
+                    << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+QXmppMucRoom* KMucRoomsModel::roomAddedSlot(const QString& room_jid)
+{
+    QXmppMucRoom* room = createRoom(room_jid);
+    if (!saveRoomToDatabase(room)) // clean up if failed to save
+    {
+        int row = rowCount(QModelIndex()) - 1;
+        beginRemoveRows(QModelIndex(), row, row);
+        destryRoom(room);
+        endRemoveRows();
+        return nullptr;
+    }
+    return room;
 }
 
 bool KMucRoomsModel::loadFromDatabase()
 {
-    if (database == nullptr) return false;
+    if (noDatabaseMode()) return false;
     qDebug() << "Going to load MUC rooms from database";
     QSqlQuery query(*database);
     query.exec("SELECT jid, nickname, password from " + table_name);
@@ -174,7 +180,7 @@ bool KMucRoomsModel::loadFromDatabase()
     while (query.next())
     {
         qDebug() << "From database loaded room:" << query.value(0).toString();
-        QXmppMucRoom* room = manager->addRoom(query.value(0).toString());
+        QXmppMucRoom* room = createRoom(query.value(0).toString());
         if (!query.value(1).isNull()) room->setNickName(query.value(1).toString());
         if (!query.value(2).isNull()) room->setPassword(query.value(2).toString());
     }
@@ -183,8 +189,7 @@ bool KMucRoomsModel::loadFromDatabase()
 
 bool KMucRoomsModel::createTable()
 {
-    if (database == nullptr)
-        return false;
+    if (noDatabaseMode()) return false;
     QSqlQuery query(*database);
     query.prepare("CREATE TABLE IF NOT EXISTS\"" + table_name + "\" ("
         "\"jid\"	TEXT NOT NULL UNIQUE,"
@@ -198,4 +203,69 @@ bool KMucRoomsModel::createTable()
         return false;
     }
     return true;
+}
+
+bool KMucRoomsModel::removeRoom(QXmppMucRoom* room)
+{
+    // The laziness of && is used here.
+   return removeRoomFromDatabase(room) && destryRoom(room);
+}
+
+bool KMucRoomsModel::destryRoom(QXmppMucRoom* room)
+{
+    if (room->isJoined()) room->leave();
+    int index = roomIndex(room);
+    if (index > -1) rooms.remove(index);
+    else
+    {
+        qWarning() << "Can't find the room to remove in the rooms vector.\n"
+        << "I'll destry it antyway, but it's clear that something have gone wrong...";
+    }
+    //room->deleteLater();
+    return true;
+}
+
+bool KMucRoomsModel::removeRoomFromDatabase(QXmppMucRoom* room)
+{
+    if (noDatabaseMode()) return true;
+    QSqlQuery query(*database);
+    query.prepare("DELETE FROM MUC_rooms WHERE jid = :jid;");
+    query.bindValue(":jid", room->jid());
+    if (!query.exec())
+    {
+        qWarning() << "Failed to remove room from the database:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool KMucRoomsModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    beginRemoveRows(parent, row, row + count - 1);
+    if (row < 0 || row + count > rowCount(parent))
+    {
+        qWarning() << "KMucRoomsModel::removeRows: index out of range." << Qt::endl
+                   << "It tries to remove" << count << "rows from" << row << Qt::endl
+                   << "But there are only" << manager->rooms().length() << "of them.";
+        endRemoveRows();
+        return false;
+    }
+    QList<QXmppMucRoom*> rooms_to_remove = manager->rooms().mid(row, count);
+    bool result = true;
+    for (int i = 0; i < rooms_to_remove.size(); i++)
+    {
+        result &= removeRoom(rooms_to_remove.at(i));
+    }
+    endRemoveRows();
+    return result;
+}
+
+int KMucRoomsModel::roomIndex(QXmppMucRoom* room)
+{
+    int row_count = rowCount(QModelIndex());
+    for (int i = 0; i < row_count; i++)
+    {
+        if (rooms[i] == room) return i;
+    }
+    return -1;
 }
