@@ -8,6 +8,7 @@
         <file>CircleButton.qml</file>
         <file>FancyTextField.qml</file>
         <file>ContactCard.qml</file>
-        <file>KMuc.qml</file>
+        <file>ConnectedByJID.qml</file>
+        <file>MapArea.qml</file>
     </qresource>
 </RCC>

@@ -20,7 +20,7 @@ Popup {
         anchors.centerIn: parent
 
         color: "white"
-        border.color: mainWindow.logInError ? "red" : "black"
+        border.color: root.logInError ? "red" : "black"
         radius: height/5
 
         property bool showPass : false
@@ -73,7 +73,7 @@ Popup {
         anchors.horizontalCenter: passwordTextFild.horizontalCenter
         anchors.margins: 30
 
-        borderColor: mainWindow.logInError ? "red" : "black"
+        borderColor: root.logInError ? "red" : "black"
 
         placeholderText: "Email"
 
@@ -98,7 +98,7 @@ Popup {
             text: qsTr("OK")
 
             onClicked: {
-                mainWindow.connectToServer(emailTextFild.text, passwordTextFildin.text);
+                root.connectToServer(emailTextFild.text, passwordTextFildin.text);
                 // mainWindow.logInFlag = true;
                 // popupLogIn.close();
             }

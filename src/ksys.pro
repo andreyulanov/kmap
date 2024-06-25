@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
-android: SUBDIRS += kmap
-else: SUBDIRS += pan2kpack kunite kmap
+android: SUBDIRS += kmap klocationplugin
+else: SUBDIRS += pan2kpack kunite kmap klocationplugin
 
 
 

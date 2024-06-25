@@ -30,6 +30,7 @@ bool KMucRoomsController::isJidValid()
 }
 void KMucRoomsController::add()
 {
+    qDebug() << "it works!";
     if (!isJidValid())
     {
         invalidJid();
@@ -92,7 +93,7 @@ QHash<int, QByteArray> KMucRoomsModel::roleNames() const
 
 void KMucRoomsModel::setManager(QXmppMucManager* _manager)
 {
-   manager = _manager;
+    manager = _manager;
 }
 void KMucRoomsModel::setDatabase(QSqlDatabase* _database)
 {

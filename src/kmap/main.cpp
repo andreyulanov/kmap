@@ -391,8 +391,6 @@ int main(int argc, char* argv[])
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
   db.setDatabaseName(storage_man.databasePath());
 
-  QQuickView          muc_view;
-  QQmlContext*        muc_context = muc_view.engine()->rootContext();
   KMucRoomsController muc_controller;
   KMucRoomsModel muc_rooms_model(client.findExtension<QXmppMucManager>(),
                                  &muc_controller);
@@ -405,12 +403,6 @@ int main(int argc, char* argv[])
       qDebug() << "Database: connection ok";
       muc_rooms_model.setDatabase(&db);
   }
-  //muc_rooms_model.removeRow(1);
-  muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
-  muc_context->setContextProperty("_mucBackEnd", &muc_controller);
-
-  muc_view.setSource(QUrl("qrc:KMuc.qml"));
-  muc_view.show();
   // QObject::connect(
   //     &muc_controller, &KMucRoomsController::addRoom,
   //     [client_p = &client](QString room_jid)
@@ -418,8 +410,6 @@ int main(int argc, char* argv[])
   //       qDebug() << "adding muc room" << room_jid;
   //       client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
   //     });
-
-#endif
 
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QQuickView view(QUrl("qrc:/Main.qml"));
@@ -439,8 +429,13 @@ int main(int argc, char* argv[])
   QObject::connect(root_item, SIGNAL(connectToServer(QString, QString)),
                    &client, SLOT(reconnectToServer(QString, QString)));
 
-  view.engine()->rootContext()->setContextProperty("kClient", &client);
+  view.engine()->rootContext()->setContextProperty("kClient",&client);
+  view.engine()->rootContext()->setContextProperty("_mucRoomsModel", &muc_rooms_model);
+  view.engine()->rootContext()->setContextProperty("_mucBackEnd", &muc_controller);
+
   view.show();
 
   return a.exec();
 }
+
+#endif
