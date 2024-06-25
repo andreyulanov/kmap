@@ -387,24 +387,13 @@ int main(int argc, char* argv[])
   QObject::connect(&object_man, &KFreeObjectManager::saved, &sender,
                    &KPortableObjectSender::setFilename);
 
-  QQuickView          muc_view;
-  QQmlContext*        muc_context = muc_view.engine()->rootContext();
   KMucRoomsController muc_controller;
   KMucRoomsModel      muc_rooms_model(
            client.findExtension<QXmppMucManager>(), nullptr);
-  muc_context->setContextProperty("_mucRoomsModel", &muc_rooms_model);
-  muc_context->setContextProperty("_mucBackEnd", &muc_controller);
-  muc_view.setSource(QUrl("qrc:KMuc.qml"));
-  muc_view.show();
-  QObject::connect(
-      &muc_controller, &KMucRoomsController::addRoom,
-      [client_p = &client](QString room_jid)
-      {
-        qDebug() << "adding muc room" << room_jid;
-        client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
-      });
+  if(client.findExtension<QXmppMucManager>() != nullptr){
+      qDebug() << "ok not nullptr";
+    }
 
-#endif
 
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QQuickView view(QUrl("qrc:/Main.qml"));
@@ -424,9 +413,21 @@ int main(int argc, char* argv[])
   QObject::connect(root_item, SIGNAL(connectToServer(QString, QString)),
                    &client, SLOT(reconnectToServer(QString, QString)));
 
+  QObject::connect(
+      &muc_controller, &KMucRoomsController::addRoom,
+      [client_p = &client](QString room_jid)
+      {
+          qDebug() << "adding muc room" << room_jid;
+          client_p->findExtension<QXmppMucManager>()->addRoom(room_jid);
+      });
+
   view.engine()->rootContext()->setContextProperty("kClient",&client);
+  view.engine()->rootContext()->setContextProperty("_mucRoomsModel", &muc_rooms_model);
+  view.engine()->rootContext()->setContextProperty("_mucBackEnd", &muc_controller);
 
   view.show();
 
   return a.exec();
 }
+
+#endif

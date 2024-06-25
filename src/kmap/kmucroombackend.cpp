@@ -30,6 +30,7 @@ bool KMucRoomsController::isJidValid()
 }
 void KMucRoomsController::add()
 {
+    qDebug() << "it works!";
     if (!isJidValid())
     {
         invalidJid();
@@ -100,16 +101,22 @@ QHash<int, QByteArray> KMucRoomsModel::roleNames() const
 
 void KMucRoomsModel::setManager(QXmppMucManager* _manager)
 {
+// fix me
     if (manager != nullptr)
     {
         disconnect(manager, &QXmppMucManager::roomAdded,
                    this, &KMucRoomsModel::roomAddedSlot);
+    }else{
+        qWarning() << "Manager is nullptr";
     }
+
     manager = _manager;
     if (manager != nullptr)
     {
         connect(manager, &QXmppMucManager::roomAdded,
                 this, &KMucRoomsModel::roomAddedSlot);
+    }else{
+        qWarning() << "Manager is nullptr";
     }
 }
 void KMucRoomsModel::setDatabase(QSqlDatabase* _database)

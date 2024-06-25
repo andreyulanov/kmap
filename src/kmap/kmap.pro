@@ -1,6 +1,6 @@
 linux-buildroot-g++: QT += core gui widgets
 else:QT += core gui widgets positioning sensors network
-QT += qml quick
+QT += qml quick location
 CONFIG += c++2a
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 

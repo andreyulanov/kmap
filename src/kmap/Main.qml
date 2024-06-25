@@ -1,10 +1,12 @@
 import QtQuick 2.5
 import QtQuick.Window 2.5
 import QtQuick.Controls 2.5
+import QtLocation 5.15
+import QtQuick.Layouts 1.11
 
 
 Item {
-    id: mainWindow
+    id: root
     visible: true
     anchors.fill: parent
 
@@ -30,15 +32,25 @@ Item {
         height: parent.height
         width: 400
 
-        FancyButton{
-            id: logOutButton
-            anchors.centerIn: parent
-            width: parent.width - 10
+        ColumnLayout{
+            anchors.fill: parent
 
-            text: qsTr("Log Out")
+            FancyButton{
+                id: logOutButton
+                text: qsTr("Log Out")
 
-            onClicked: {
-                kClient.disconnectFromServer();
+                onClicked: {
+                    kClient.disconnectFromServer();
+                }
+            }
+
+            FancyButton{
+                id: connectToChate
+                text: qsTr("Connectetd by JID")
+
+                onClicked: {
+
+                }
             }
         }
     }
@@ -110,7 +122,8 @@ Item {
 
         Item{
             id: chats
-            visible: logInFlag
+            // visible: logInFlag
+            visible: true
 
             anchors.top: chatAreaHead.bottom
             anchors.bottom: parent.bottom
@@ -118,72 +131,90 @@ Item {
             anchors.left: parent.left
             height: 50
 
-            ContactCard {
-                width: parent.width
+            ListView {
+                id: view
 
-                name: "User Name"
-                time: "12:24"
-                lastMessage: "Last Message"
+                anchors.margins: 10
+                anchors.fill: parent
+                spacing: 10
+                model: _mucRoomsModel
+                clip: true
+
+                highlight: Rectangle {
+                    color: "skyblue"
+                }
+                highlightFollowsCurrentItem: true
+
+                header: Rectangle {
+                    width: view.width
+                    height: 40
+
+                    Grid {
+                        id: addFormGrid
+                        TextField {
+                            id: roomJidTextField1
+                            width: 150
+                            text: _mucBackEnd.room_jid
+                            placeholderText: qsTr("Room Jid")
+                            onEditingFinished: _mucBackEnd.room_jid = text
+                            onFocusChanged: color = "black"
+                        }
+                        Button {
+                            text: "Add"
+                            onClicked: {
+                                _mucBackEnd.add();
+                                console.log("_mucBackend.roomJid: " + _mucBackEnd.room_jid)
+                            }
+                        }
+                    }
+
+                    Connections {
+                        target: _mucBackEnd
+                        function onInvalidJid() {
+                            roomJidTextField1.color = "red"
+                        }
+                    }
+                }
+
+                delegate: Item {
+                    id: listDelegate
+
+                    property var view: ListView.view
+                    property var isCurrent: ListView.isCurrentItem
+
+                    width: view.width
+                    height: 60
+
+                    ContactCard {
+                        anchors.margins: 2
+                        anchors.fill: parent
+
+                        name: "%1 (%2)".arg(model.name).arg(model.jid)
+                        lastMessage: "%1".arg(model.subject)
+                        // time: qsTr("")
+
+                        onClicked: {
+                            view.currentIndex = model.index
+                        }
+                    }
+                }
             }
         }
     }
 
-    Item {
+    MapArea {
         id: mapAria
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+
         x: 300
         width: parent.width - x
-
-        Item{
-            id: mapAreaHead
-
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.left: parent.left
-            height: 50
-
-            Rectangle {
-                anchors.fill: parent
-                color: "white"
-                border.color: "gainsboro"
-            }
-        }
-
-        Item{
-            id: map
-
-            anchors.top: mapAreaHead.bottom
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: parent.left
-
-            Rectangle {
-                color: "green"
-                anchors.fill: parent
-            }
-
-            FancyButton {
-                anchors.centerIn: parent
-
-                text: qsTr("Open map [WIP]")
-            }
-        }
-
-        MouseArea {
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.horizontalCenter: mapAria.left
-            width: 5
-            cursorShape: Qt.SizeHorCursor
-
-            drag.target: mapAria
-            drag.axis: Drag.XAxis
-            drag.minimumX: 200
-            drag.maximumX: 1500
-        }
     }
+
+    // property string name
+    // property string time
+    // property string lastMessage
 
     Connections {
         target: kClient
