@@ -151,19 +151,30 @@ Item {
 
                     Grid {
                         id: addFormGrid
-                        TextField {
-                            id: roomJidTextField1
-                            width: 150
-                            text: _mucBackEnd.room_jid
-                            placeholderText: qsTr("Room Jid")
-                            onEditingFinished: _mucBackEnd.room_jid = text
-                            onFocusChanged: color = "black"
-                        }
-                        Button {
-                            text: "Add"
-                            onClicked: {
-                                _mucBackEnd.add();
-                                console.log("_mucBackend.roomJid: " + _mucBackEnd.room_jid)
+                        RowLayout {
+                            width: view.width
+                            TextField {
+                                id: roomJidTextField1
+                                anchors.fill: parent
+                                Layout.fillWidth: true
+                                text: _mucBackEnd.room_jid
+                                placeholderText: qsTr("Room Jid")
+                                onEditingFinished: _mucBackEnd.room_jid = text
+                                onFocusChanged: color = "black"
+                            }
+                            Button {
+                                text: "Add"
+                                onClicked: {
+                                    _mucBackEnd.add();
+                                    console.log("_mucBackend.roomJid: " + _mucBackEnd.room_jid)
+                                }
+                            }
+                            Button {
+                                text: "Remove"
+                                onClicked: {
+                                    console.log("Removeing rooom at row" + view.currentIndex);
+                                    _mucRoomsModel.removeRows(view.currentIndex,1);
+                                }
                             }
                         }
                     }

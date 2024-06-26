@@ -30,7 +30,6 @@ bool KMucRoomsController::isJidValid()
 }
 void KMucRoomsController::add()
 {
-    qDebug() << "it works!";
     if (!isJidValid())
     {
         invalidJid();
